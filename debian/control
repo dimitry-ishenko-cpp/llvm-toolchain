@@ -43,7 +43,9 @@ Vcs-Browser: https://salsa.debian.org/pkg-llvm-team/llvm-toolchain/tree/snapshot
 Package: clang-18
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs},
- ${dep:devlibs-objc}, libclang-common-18-dev (= ${binary:Version}),
+ ${dep:devlibs-objc},
+ libllvm18 (= ${binary:Version}),
+ libclang-common-18-dev (= ${source:Version}),
  llvm-18-linker-tools (= ${binary:Version}),
  libclang1-18 (= ${binary:Version}), libc6-dev, binutils
 Provides: c-compiler, objc-compiler, c++-compiler
@@ -91,7 +93,8 @@ Description: Tool to format C/C++/Obj-C code
 Package: clang-tidy-18
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python3,
- libllvm18 (= ${binary:Version}), libclang-common-18-dev,
+ libllvm18 (= ${binary:Version}),
+ libclang-common-18-dev (= ${source:Version}),
  clang-tools-18, python3-yaml
 Description: clang-based C++ linter tool
  Provide an extensible framework for diagnosing and fixing typical programming
@@ -102,7 +105,8 @@ Description: clang-based C++ linter tool
 Package: clangd-18
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libclang-common-18-dev (= ${binary:Version})
+ libllvm18 (= ${binary:Version}),
+ libclang-common-18-dev (= ${source:Version}),
 Description: Language server that provides IDE-like features to editors
  clangd understands your C++ code and adds smart features to your editor:
   - code completion
@@ -115,6 +119,7 @@ Description: Language server that provides IDE-like features to editors
 
 Package: clang-18-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${shlibs:Depends}, ${misc:Depends}, libjs-mathjax
 Description: C, C++ and Objective-C compiler - Documentation
@@ -153,7 +158,7 @@ Architecture: any
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs},
  ${dep:devlibs-objc}, libclang1-18 (= ${binary:Version}),
- libclang-common-18-dev (= ${binary:Version})
+ libclang-common-18-dev (= ${source:Version})
 Description: Clang library - Development package
  Clang project is a C, C++, Objective C and Objective C++ front-end
  based on the LLVM compiler. Its goal is to offer a replacement to the
@@ -166,9 +171,10 @@ Description: Clang library - Development package
  libclang1-18.
 
 Package: libclang-common-18-dev
-Architecture: any
+Architecture: all
+Multi-Arch: foreign
 Section: libdevel
-Depends: ${shlibs:Depends}, ${misc:Depends}, libllvm18 (= ${binary:Version})
+Depends: ${shlibs:Depends}, ${misc:Depends},
 Recommends: libclang-rt-18-dev (>= 1:16~++20230115053056+df5fc4504b86-1~exp1)
 Description: Clang library - Common development package
  Clang project is a C, C++, Objective C and Objective C++ front-end
@@ -313,7 +319,8 @@ Description: Clang Python Bindings
  This binding package provides access to the Clang compiler and libraries.
 
 Package: clang-18-examples
-Architecture: any
+Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Clang examples
@@ -469,6 +476,7 @@ Description: Modular compiler and toolchain technologies, OCaml bindings
 Package: llvm-18-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}, libjs-jquery, libjs-underscore
 Description: Modular compiler and toolchain technologies, documentation
  LLVM is a collection of libraries and tools that make it easy to build
@@ -636,6 +644,7 @@ Description: LLVM OpenMP runtime
 Package: libomp-18-doc
 Section: doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends}, libjs-jquery
 Replaces: libiomp-x.y-doc
 Breaks: libiomp-x.y-doc
@@ -677,6 +686,7 @@ Section: libdevel
 Architecture: any
 Multi-Arch: same
 Depends: libc++1-18 (= ${binary:Version}), ${misc:Depends},
+ libc++abi-18-dev (= ${binary:Version}),
  libunwind-18-dev [amd64 arm64 armhf i386 loong64 ppc64el ppc64 riscv64]
 Breaks: libc++-dev (<< 44), libc++abi-18-dev (<< 1:18~++20231211102647+75193b192ad9-1)
 Provides: libc++-x.y-dev
@@ -922,7 +932,7 @@ Description: Post-link optimizer
 Package: flang-18
 # no 32bit support
 # https://github.com/llvm/llvm-project/issues/59845
-Architecture: amd64 arm64 mips64el ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64
+Architecture: amd64 arm64 mips64el ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs}, libflang-18-dev (= ${binary:Version}),
 Provides: fortran-compiler, gfortran-mod-15
 Description: Fortran compiler
@@ -933,7 +943,7 @@ Description: Fortran compiler
  of examples, some functionalities are still missing.
 
 Package: libflang-18-dev
-Architecture: amd64 arm64 mips64el ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64
+Architecture: amd64 arm64 mips64el ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs},
 Description: Flang library - Development package
