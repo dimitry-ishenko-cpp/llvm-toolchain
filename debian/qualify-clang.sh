@@ -1395,7 +1395,7 @@ int main() {
   EmitBackendOutput(*diags, *hsOpts, *cgOpts, *tOpts, *lOpts, *tDesc, m, *action, VFS, std::move(AsmOutStream));
 }
 EOF
-clang++-$VERSION foo.cpp -o test -lclangBasic -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangCodeGen -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangFrontend -lclangDriver -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -lclangBasic -ldl  /usr/lib/llvm-$VERSION/lib/libLLVM-$VERSION.so -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -ldl  -I /usr/lib/llvm-$VERSION/include/ -L/usr/lib/llvm-$VERSION/lib/ -lPolly -lPollyISL
+clang++-$VERSION foo.cpp -o test -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangCodeGen -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangFrontend -lclangDriver -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -lclangAPINotes -lclangSupport -lclangBasic -ldl  /usr/lib/llvm-$VERSION/lib/libLLVM-$VERSION.so -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -ldl  -I /usr/lib/llvm-$VERSION/include/ -L/usr/lib/llvm-$VERSION/lib/ -lPolly -lPollyISL
 
 if test ! -f /usr/bin/lldb-$VERSION; then
     echo "Install lldb-$VERSION";
@@ -1521,7 +1521,7 @@ rm -rf cmaketest && mkdir cmaketest
 cat > cmaketest/CMakeLists.txt <<EOF
 cmake_minimum_required(VERSION 3.7)
 project(SanityCheck)
-find_package(LLVM $VERSION REQUIRED CONFIG)
+find_package(LLVM $VERSION.1 REQUIRED CONFIG)
 message(STATUS "LLVM_CMAKE_DIR: \${LLVM_CMAKE_DIR}")
 if(NOT EXISTS "\${LLVM_TOOLS_BINARY_DIR}/clang")
 message(FATAL_ERROR "Invalid LLVM_TOOLS_BINARY_DIR: \${LLVM_TOOLS_BINARY_DIR}")

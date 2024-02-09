@@ -16,16 +16,71 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 25 Jan 2024 14:51:10 +0100
 
-llvm-toolchain-18 (1:18~++20240124100819+22683463740e-1~exp1) experimental; urgency=medium
+llvm-toolchain-18 (1:18.1.0~rc2-2) unstable; urgency=medium
+
+  [ Gianfranco Costamagna ]
+  * Try gold linker on mips64el
+  * Add also lfs on top of time64, to fix FTBFS on 32bit
+
+  [ Sylvestre Ledru ]
+  * add new symbols in libomp5
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Thu, 08 Feb 2024 16:38:35 +0100
+
+llvm-toolchain-18 (1:18.1.0~rc2-1) unstable; urgency=medium
+
+  * New snapshot release
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 07 Feb 2024 21:15:53 +0100
+
+llvm-toolchain-18 (1:18.1.0~rc1-3) unstable; urgency=medium
+
+  * Fix previus upload, time64 is effective only in one specific place of
+    rules file
+  * Fix some test using still clang-17
+  * Switch testing to 18 line
+  * Fix an underlinking on qualify-clang.sh
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 07 Feb 2024 15:05:08 +0100
+
+llvm-toolchain-18 (1:18.1.0~rc1-2) unstable; urgency=medium
+
+  [ Steve Langasek ]
+  * Use ABI time64 to avoid a transition for a new package
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 05 Feb 2024 08:26:26 +0100
+
+llvm-toolchain-18 (1:18.1.0~rc1-1) unstable; urgency=medium
+
+  [ Samuel Thibault ]
+  * control: Avoid hello build-dep getting pulled in on buildds.
+
+  [ Gianfranco Costamagna ]
+  * Fixup rc versioning, and go for sid
+
+  [ Sylvestre Ledru ]
+  * hwasan_symbolize is now built also on i386
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Wed, 31 Jan 2024 10:36:07 +0100
+
+llvm-toolchain-18 (1:18.1.0-rc1-1~exp1) experimental; urgency=medium
+
+  * First RC
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 30 Jan 2024 09:01:06 +0100
+
+llvm-toolchain-18 (1:18.1.0~++20240126095841+0991d3c7b53d-1~exp1) experimental; urgency=medium
 
   * Branching of 18
+    note that it is normal that the versionning starts from 18.1
+    See https://discourse.llvm.org/t/rfc-name-the-first-release-from-a-branch-n-1-0-instead-of-n-0-0/75384
   * refresh libomp5 symbol list
   * For the usage of -DLIBCXXABI_USE_LLVM_UNWINDER=OFF when we don't build unwind
     https://github.com/llvm/llvm-project/issues/77846
   * remove the unconditionnaly defined -DLIBUNWIND_USE_COMPILER_RT=ON
   * Also pass -DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=OFF to libcxx-wasm32-wasi builds
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 24 Jan 2024 22:14:15 +0100
+ -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Jan 2024 09:44:56 +0100
 
 llvm-toolchain-snapshot (1:18~++20231211102647+75193b192ad9-1~exp1) experimental; urgency=medium
 

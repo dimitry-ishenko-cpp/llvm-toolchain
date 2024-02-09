@@ -65,7 +65,9 @@ CONFIGURE_EXTRA =
 
 # dpkg-buildflags support
 # disable fixfilepath in favor of the llvm-project supplied flavor, disable lto
-export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto
+# remove +time64,+lfs once the time64_t transition starts
+export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto abi=+time64,+lfs
+
 # these are handled on a per stage / build basis
 ifeq ($(VENDOR)-$(DEB_HOST_ARCH),Ubuntu-ppc64el)
   export DEB_CFLAGS_MAINT_STRIP = -g -O3
@@ -292,7 +294,7 @@ ifeq ($(LLVM_SPIRV_INSTALLED),yes)
 	LIBCLC_LLVM_SPIRV = -DLLVM_SPIRV=$(LLVM_SPIRV)
 endif
 
-BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 kfreebsd-amd64 kfreebsd-i386
+BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 kfreebsd-amd64 kfreebsd-i386 mips64el
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' binutils) ge 2.23.1-1~exp3 ; echo $$?),0)
 ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
 	STAGE_ALL_CMAKE_EXTRA += -DLLVM_USE_LINKER=gold
@@ -722,10 +724,10 @@ ifeq (${SCCACHE_ENABLE},yes)
 	$(SCCACHE_CMD) --stop-server||true
 ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
 # Start the sccache server with the right set of options to use GCP
-		SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_GCS_KEY_PATH=$(SCCACHE_PATH)/secret-gcp-storage.json SCCACHE_GCS_BUCKET=apt-llvm-org-sccache SCCACHE_GCS_RW_MODE=READ_WRITE $(SCCACHE_CMD) --start-server
+	SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_GCS_KEY_PATH=$(SCCACHE_PATH)/secret-gcp-storage.json SCCACHE_GCS_BUCKET=apt-llvm-org-sccache SCCACHE_GCS_RW_MODE=READ_WRITE $(SCCACHE_CMD) --start-server
 else
 # on s390x machine, use a local cache
-	SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_DIR=/opt/sccache/cache/ SCCACHE_DIRECT=true $(SCCACHE_CMD) --start-server
+	SCCACHE_CACHE_SIZE=20G SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_DIR=/opt/sccache/cache/ SCCACHE_DIRECT=true $(SCCACHE_CMD) --start-server
 endif
 endif
 	echo "Running tests: $(RUN_TEST)"
