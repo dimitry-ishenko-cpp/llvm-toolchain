@@ -6,6 +6,7 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp2) UNRELEASED; 
 
   [ John Paul Adrian Glaubitz ]
   * Install *clang_rt* on sparc and sparc64
+  * Run chrpath for libclang on sparc and sparc64
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 25 Jan 2024 17:45:39 +0100
 
