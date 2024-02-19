@@ -34,9 +34,28 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental
 
 llvm-toolchain-18 (1:18.1.0~rc2-4) unstable; urgency=medium
 
+<<<<<<<
   * Fix 32bit builds, exclude i386, don't build clang-rt there
   * Revert gold linker on mips64el
   * Disable stack protector on mips64el
+=======
+  [ John Paul Adrian Glaubitz ]
+  * Install *clang_rt* on sparc and sparc64
+  * Run chrpath for libclang on sparc and sparc64
+
+  [ Sylvestre Ledru ]
+  * add -DLIBCXX_INSTALL_MODULES=ON
+    see https://discourse.llvm.org/t/libc-c-23-module-installation-support/77061/1
+    Ship libc++-18-dev /usr/lib/llvm-18/lib/libc++.modules.json /usr/lib/llvm-18/include/c++/v1/std.compat.cppm
+    /usr/lib/llvm-18/include/c++/v1/std.cppm
+  [ John Paul Adrian Glaubitz ]
+  * Install *clang_rt* on sparc and sparc64
+  * Run chrpath for libclang on sparc and sparc64
+
+  [ Sylvestre Ledru ]
+  * add -DLIBCXX_INSTALL_MODULES=ON to install libc++ C++-20 modules
+    see https://discourse.llvm.org/t/libc-c-23-module-installation-support/77061/1
+>>>>>>>
 
  -- Gianfranco Costamagna <locutusofborg@debian.org>  Fri, 09 Feb 2024 20:59:07 +0100
 
