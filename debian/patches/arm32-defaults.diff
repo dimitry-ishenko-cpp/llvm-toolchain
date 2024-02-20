@@ -1,6 +1,8 @@
---- a/llvm/lib/TargetParser/ARMTargetParser.cpp
-+++ b/llvm/lib/TargetParser/ARMTargetParser.cpp
-@@ -637,9 +637,9 @@ StringRef ARM::getARMCPUForArch(const ll
+Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/llvm/lib/TargetParser/ARMTargetParser.cpp
+===================================================================
+--- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/llvm/lib/TargetParser/ARMTargetParser.cpp
++++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/llvm/lib/TargetParser/ARMTargetParser.cpp
+@@ -636,9 +636,9 @@ StringRef ARM::getARMCPUForArch(const ll
      case llvm::Triple::EABIHF:
      case llvm::Triple::GNUEABIHF:
      case llvm::Triple::MuslEABIHF:

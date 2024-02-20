@@ -1,9 +1,9 @@
 if libatomic is found only link it if libgcc is the rtlib
-Index: llvm-toolchain-snapshot_18~++20231213094656+c02d07fdf007/libcxx/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/libcxx/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_18~++20231213094656+c02d07fdf007.orig/libcxx/CMakeLists.txt
-+++ llvm-toolchain-snapshot_18~++20231213094656+c02d07fdf007/libcxx/CMakeLists.txt
-@@ -685,13 +685,16 @@ function(cxx_link_system_libraries targe
+--- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/libcxx/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/libcxx/CMakeLists.txt
+@@ -691,13 +691,16 @@ function(cxx_link_system_libraries targe
        endif()
      elseif (LIBCXX_HAS_GCC_LIB)
        target_link_libraries(${target} PRIVATE gcc)

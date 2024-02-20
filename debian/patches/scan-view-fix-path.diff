@@ -1,8 +1,8 @@
-Index: llvm-toolchain-snapshot_15~++20220407011631+46f0e2ceb487/clang/tools/scan-view/bin/scan-view
+Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/tools/scan-view/bin/scan-view
 ===================================================================
---- llvm-toolchain-snapshot_15~++20220407011631+46f0e2ceb487.orig/clang/tools/scan-view/bin/scan-view
-+++ llvm-toolchain-snapshot_15~++20220407011631+46f0e2ceb487/clang/tools/scan-view/bin/scan-view
-@@ -65,7 +65,7 @@ def start_browser(port, options):
+--- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/clang/tools/scan-view/bin/scan-view
++++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/tools/scan-view/bin/scan-view
+@@ -64,7 +64,7 @@ def start_browser(port, options):
  
  def run(port, options, root):
      # Prefer to look relative to the installed binary

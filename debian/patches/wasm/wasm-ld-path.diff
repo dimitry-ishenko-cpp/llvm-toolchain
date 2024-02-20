@@ -1,7 +1,7 @@
-Index: llvm-toolchain-snapshot_15~++20220724113059+7feab85df8e8/clang/lib/Driver/ToolChains/WebAssembly.h
+Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.h
 ===================================================================
---- llvm-toolchain-snapshot_15~++20220724113059+7feab85df8e8.orig/clang/lib/Driver/ToolChains/WebAssembly.h
-+++ llvm-toolchain-snapshot_15~++20220724113059+7feab85df8e8/clang/lib/Driver/ToolChains/WebAssembly.h
+--- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/clang/lib/Driver/ToolChains/WebAssembly.h
++++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.h
 @@ -10,9 +10,13 @@
  #define LLVM_CLANG_LIB_DRIVER_TOOLCHAINS_WEBASSEMBLY_H
  
@@ -16,7 +16,7 @@ Index: llvm-toolchain-snapshot_15~++20220724113059+7feab85df8e8/clang/lib/Driver
  namespace clang {
  namespace driver {
  namespace tools {
-@@ -68,7 +72,7 @@ private:
+@@ -67,7 +71,7 @@ private:
                             llvm::opt::ArgStringList &CmdArgs) const override;
    SanitizerMask getSupportedSanitizers() const override;
  
