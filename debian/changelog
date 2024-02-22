@@ -3,6 +3,8 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp2) UNRELEASED; 
   [ Sylvestre Ledru ]
   * hwasan_symbolize is now built also on i386
   * Update of the libomp symbols
+  * Also install usr/lib/llvm-19/lib/libLLVM.so.1
+    and usr/lib/llvm-19/lib/libLLVM.so.19.0
 
   [ John Paul Adrian Glaubitz ]
   * Install *clang_rt* on sparc and sparc64
