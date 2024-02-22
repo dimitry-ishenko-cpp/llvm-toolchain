@@ -5,6 +5,7 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp2) UNRELEASED; 
   * Update of the libomp symbols
   * Also install usr/lib/llvm-19/lib/libLLVM.so.1
     and usr/lib/llvm-19/lib/libLLVM.so.19.0
+  * Install clang-installapi as part of clang-tools
 
   [ John Paul Adrian Glaubitz ]
   * Install *clang_rt* on sparc and sparc64
