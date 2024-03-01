@@ -6,6 +6,8 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp2) UNRELEASED; 
   * Also install usr/lib/llvm-19/lib/libLLVM.so.1
     and usr/lib/llvm-19/lib/libLLVM.so.19.0
   * Install clang-installapi as part of clang-tools
+  * Disable the install of libomp in sub arch
+    Following 1977404d20ab29ff78a58d8c0f1f4c5e7aef6b16
 
   [ John Paul Adrian Glaubitz ]
   * Install *clang_rt* on sparc and sparc64
