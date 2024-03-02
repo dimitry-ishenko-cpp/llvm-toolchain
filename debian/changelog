@@ -28,6 +28,7 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental
 
 llvm-toolchain-18 (1:18.1.0~rc4-1) unstable; urgency=medium
 
+<<<<<<<
   [ John Paul Adrian Glaubitz ]
   * Install *clang_rt* on sparc and sparc64
   * Run chrpath for libclang on sparc and sparc64
@@ -38,11 +39,26 @@ llvm-toolchain-18 (1:18.1.0~rc4-1) unstable; urgency=medium
     see https://discourse.llvm.org/t/libc-c-23-module-installation-support/77061/1
   * Add a new package libllvmlibc-18-dev to ship LLVM libc (experimental for now)
     (amd64, arm64 and armhf)
+=======
+  [ John Paul Adrian Glaubitz ]
+  * Install *clang_rt* on sparc and sparc64
+  * Run chrpath for libclang on sparc and sparc64
+
+  [ Sylvestre Ledru ]
+  * New snapshot release
+  * add -DLIBCXX_INSTALL_MODULES=ON to install libc++ C++-20 modules
+    see https://discourse.llvm.org/t/libc-c-23-module-installation-support/77061/1
+  * Add a new package libllvmlibc-18-dev to ship LLVM libc (experimental for now)
+    (amd64, arm64 and armhf)
+  * Also install usr/lib/llvm-19/lib/libLLVM.so.1
+    and usr/lib/llvm-19/lib/libLLVM.so.18.0
+>>>>>>>
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 28 Feb 2024 11:08:41 +0100
 
 llvm-toolchain-18 (1:18.1.0~rc2-4) unstable; urgency=medium
 
+<<<<<<<
   * Fix 32bit builds, exclude i386, don't build clang-rt there
   * Revert gold linker on mips64el
   * Disable stack protector on mips64el
@@ -73,6 +89,11 @@ llvm-toolchain-18 (1:18.1.0~rc2-4) unstable; urgency=medium
   * Fix 32bit builds, exclude i386, don't build clang-rt there
   * Revert gold linker on mips64el
   * Disable stack protector on mips64el
+=======
+  * Fix 32bit builds, exclude i386, don't build clang-rt there
+  * Revert gold linker on mips64el
+  * Disable stack protector on mips64el
+>>>>>>>
 
  -- Gianfranco Costamagna <locutusofborg@debian.org>  Thu, 22 Feb 2024 17:58:05 +0100
 
