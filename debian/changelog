@@ -1,10 +1,4 @@
-llvm-toolchain-snapshot (1:19~++20240302063716+a30ba2ca21b0-1~exp1) UNRELEASED; urgency=medium
-
-  * experimental New snapshot release
-
- -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 02 Mar 2024 18:37:29 +0100
-
-llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental; urgency=medium
+llvm-toolchain-snapshot (1:19~++20240302063716+a30ba2ca21b0-1~exp1) experimental; urgency=medium
 
   [ Sylvestre Ledru ]
   * hwasan_symbolize is now built also on i386
@@ -19,7 +13,7 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental
   * Install *clang_rt* on sparc and sparc64
   * Run chrpath for libclang on sparc and sparc64
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 02 Mar 2024 18:36:35 +0100
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 02 Mar 2024 18:44:00 +0100
 
 llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental; urgency=medium
 
