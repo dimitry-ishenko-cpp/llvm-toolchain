@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp2) UNRELEASED; urgency=medium
+llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental; urgency=medium
 
   [ Sylvestre Ledru ]
   * hwasan_symbolize is now built also on i386
