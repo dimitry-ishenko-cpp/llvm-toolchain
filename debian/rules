@@ -19,6 +19,7 @@ LLVM_VERSION_MINOR := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:[0-9
 LLVM_VERSION_SNAPSHOT := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:(.*),\1,p")
 ifeq ($(LLVM_VERSION),$(LLVM_VERSION_FULL))
 	LLVM_VERSION_FULL := $(LLVM_VERSION).0.0
+	LLVM_VERSION_MINOR := 0
 endif
 LLVM_VERSION_NEXT := $(shell echo $(LLVM_VERSION_FULL) | awk -F. '{ OFS="."; $$NF+=1; print}')
 
