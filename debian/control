@@ -959,7 +959,7 @@ Description: Flang library - Development package
 
 # ------------- LLVM libc -------------
 
-Package: libllvmlibc-18-dev
+Package: libllvmlibc-19-dev
 Section: libdevel
 Architecture: amd64 arm64 armhf
 Description: LLVM C Library - dev package
