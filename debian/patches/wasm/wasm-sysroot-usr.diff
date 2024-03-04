@@ -1,10 +1,10 @@
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.cpp
+Index: llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54/clang/lib/Driver/ToolChains/WebAssembly.cpp
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/clang/lib/Driver/ToolChains/WebAssembly.cpp
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.cpp
+--- llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54.orig/clang/lib/Driver/ToolChains/WebAssembly.cpp
++++ llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54/clang/lib/Driver/ToolChains/WebAssembly.cpp
 @@ -200,7 +200,7 @@ WebAssembly::WebAssembly(const Driver &D
  
-   getProgramPaths().push_back(getDriver().getInstalledDir());
+   getProgramPaths().push_back(getDriver().Dir);
  
 -  auto SysRoot = getDriver().SysRoot;
 +  std::string SysRoot = computeSysRoot();
@@ -107,10 +107,10 @@ Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver
 +    addSystemInclude(DriverArgs, CC1Args, LibPath + "/c++/" + Version + "/backward");
 +  }
  }
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.h
+Index: llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54/clang/lib/Driver/ToolChains/WebAssembly.h
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/clang/lib/Driver/ToolChains/WebAssembly.h
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/clang/lib/Driver/ToolChains/WebAssembly.h
+--- llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54.orig/clang/lib/Driver/ToolChains/WebAssembly.h
++++ llvm-toolchain-snapshot_19~++20240304085905+c7fdd8c11e54/clang/lib/Driver/ToolChains/WebAssembly.h
 @@ -88,6 +88,8 @@ private:
                               llvm::opt::ArgStringList &CC1Args) const;
    void addLibStdCXXIncludePaths(const llvm::opt::ArgList &DriverArgs,
