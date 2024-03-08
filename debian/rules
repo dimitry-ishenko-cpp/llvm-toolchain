@@ -31,12 +31,11 @@ ifeq ($(DEB_HOST_ARCH),i386)
   RUNTIMES = compiler-rt;libcxx;libcxxabi
   export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto
 else
+  RUNTIMES = compiler-rt;libcxx;libcxxabi
   ifeq ($(DEB_HOST_ARCH_BITS),32)
-    RUNTIMES = libcxx;libcxxabi
     export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto abi=+time64,+lfs
     skip_packages = -Nlibclang-rt-$(LLVM_VERSION)-dev
   else
-    RUNTIMES = compiler-rt;libcxx;libcxxabi
     ifeq ($(DEB_HOST_ARCH),mips64el)
         export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto hardening=-stackprotector,-stackprotectorstrong
     else
