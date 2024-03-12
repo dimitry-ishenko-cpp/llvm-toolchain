@@ -3,6 +3,7 @@ llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp2) UNRELEASED; 
   * Make libclang-common-19-dev architecture dependent.
   * Add python3-pexpect in the build dep for lldb.
   * Fix sanitizer build on 32bit time_t64 architectures.
+  * Refresh the 23-strlcpy_strlcat_warning_removed patch.
 
  -- Matthias Klose <doko@debian.org>  Tue, 12 Mar 2024 12:54:07 +0100
 
