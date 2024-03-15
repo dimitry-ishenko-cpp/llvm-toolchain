@@ -3,10 +3,10 @@
  tools/llvm-shlib/CMakeLists.txt     |    1 +
  2 files changed, 2 insertions(+), 1 deletion(-)
 
-Index: llvm-toolchain-snapshot_19~++20240226095317+113052b2b022/clang/tools/libclang/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8/clang/tools/libclang/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240226095317+113052b2b022.orig/clang/tools/libclang/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240226095317+113052b2b022/clang/tools/libclang/CMakeLists.txt
+--- llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8.orig/clang/tools/libclang/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8/clang/tools/libclang/CMakeLists.txt
 @@ -135,7 +135,7 @@ if (UNIX AND ${CMAKE_SYSTEM_NAME} MATCHE
      remove_definitions("-D_XOPEN_SOURCE=700")
  endif()
@@ -16,13 +16,13 @@ Index: llvm-toolchain-snapshot_19~++20240226095317+113052b2b022/clang/tools/libc
    OUTPUT_NAME ${output_name}
    ${SOURCES}
  
-Index: llvm-toolchain-18_18.1.0-rc4/llvm/tools/llvm-shlib/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8/llvm/tools/llvm-shlib/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-18_18.1.0-rc4.orig/llvm/tools/llvm-shlib/CMakeLists.txt
-+++ llvm-toolchain-18_18.1.0-rc4/llvm/tools/llvm-shlib/CMakeLists.txt
-@@ -38,6 +38,8 @@ if(LLVM_BUILD_LLVM_DYLIB)
-   get_target_property(LLVM_DYLIB_SOVERSION LLVM SOVERSION)
-   llvm_install_library_symlink(LLVM-${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX} LLVM SHARED COMPONENT LLVM SOVERSION ${LLVM_DYLIB_SOVERSION})
+--- llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8.orig/llvm/tools/llvm-shlib/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240315100115+60fa2b0670b8/llvm/tools/llvm-shlib/CMakeLists.txt
+@@ -37,6 +37,8 @@ if(LLVM_BUILD_LLVM_DYLIB)
+   # Add symlink for backwards compatibility with old library name
+   llvm_install_library_symlink(LLVM-${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX} $<TARGET_SONAME_FILE_NAME:LLVM> SHARED FULL_DEST COMPONENT LLVM)
  
 +  set_property(TARGET LLVM PROPERTY VERSION "1") # Append .1 to SONAME
 +
