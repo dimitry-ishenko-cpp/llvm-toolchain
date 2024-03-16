@@ -5,6 +5,7 @@ llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp2) UNRELEASED; 
   * Fix sanitizer build on 32bit time_t64 architectures.
   * Refresh the 23-strlcpy_strlcat_warning_removed patch.
   * Build-depend on llvm-spirv-18 instead of llvm-spirv-17.
+  * Add a stage1 profile to disable curl, grpc and spirv.
 
  -- Matthias Klose <doko@debian.org>  Tue, 12 Mar 2024 12:54:07 +0100
 
