@@ -23,4 +23,39 @@ if test "${MAJOR_VERSION}" != "$VER_FOUND" -a "${MAJOR_VERSION}.0.0" != "$VER_FO
 fi
 
 cp -R ../$ORIG_VERSION/debian .
-QUILT_PATCHES=debian/patches/ quilt push -a --fuzz=0
+
+export QUILT_PATCHES=debian/patches/
+
+attempt=0
+max_attempts=5
+
+while [ $attempt -lt $max_attempts ]; do
+    echo $attempt
+    attempt=$((attempt+1))
+    echo "Attempt $attempt of $max_attempts"
+
+    # Attempt to apply patches without allowing fuzz
+    output=$(quilt push -a --fuzz=0 || true 2>&1)
+
+    echo "$output"
+
+    # Check if the quilt push command failed due to a hunk failure
+    if echo "$output" | grep -q "hunk FAILED"; then
+        echo "Initial quilt push failed, trying without --fuzz=0..."
+        output=$(quilt push || true 2>&1)
+        echo "$output"
+        # Check if the output contains a line indicating fuzz was applied
+        if echo "$output" | grep -q "with fuzz"; then
+            echo "Fuzz detected, refreshing patch..."
+            quilt refresh
+            cp -R debian/patches/* ../$ORIG_VERSION/debian/patches/
+        fi
+    else
+        echo "Patches applied successfully."
+        break # Exit the loop if patches were applied successfully
+    fi
+done
+
+if [ $attempt -eq $max_attempts ]; then
+    echo "Reached maximum attempt limit without successfully applying all patches."
+fi
