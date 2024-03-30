@@ -6,3 +6,4 @@ usr/lib/llvm-@LLVM_VERSION@/lib/libMLIR.so
 usr/lib/llvm-@LLVM_VERSION@/lib/libMLIR*.a
 usr/lib/llvm-@LLVM_VERSION@/lib/libmlir*.so
 #usr/lib/llvm-@LLVM_VERSION@/lib/libmlir_*.a
+usr/lib/llvm-@LLVM_VERSION@/lib/libMLIRExecutionEngineShared.so
