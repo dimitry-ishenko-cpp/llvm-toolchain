@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp3) UNRELEASED; urgency=medium
+llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp4) UNRELEASED; urgency=medium
 
   [ Matthias Klose ]
   * Make libclang-common-19-dev architecture dependent.
@@ -10,8 +10,10 @@ llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp3) UNRELEASED; 
 
   [ Sylvestre Ledru ]
   * Also install libMLIRExecutionEngineShared.so
+  * Remove lang-to-external-fc to match upstream change in
+    4841d70a4b7d7cd8c492c16a9da339ec75bca135
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 30 Mar 2024 18:27:15 +0100
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sun, 21 Apr 2024 14:14:09 +0200
 
 llvm-toolchain-snapshot (1:19~++20240304085905+c7fdd8c11e54-1~exp1) experimental; urgency=medium
 
