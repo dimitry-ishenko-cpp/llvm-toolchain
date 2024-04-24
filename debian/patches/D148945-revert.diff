@@ -14,7 +14,7 @@ Index: llvm-toolchain-snapshot_19~++20240424094944+78ebaa2d798f/clang/lib/Driver
 +  // The deprecated -DLLVM_ENABLE_PROJECTS=libcxx configuration installs
 +  // libc++.so in D.Dir+"/../lib/". Detect this path.
 +  // TODO Remove once LLVM_ENABLE_PROJECTS=libcxx is unsupported.
-+  if (StringRef(D.Dir).startswith(SysRoot) &&
++  if (StringRef(D.Dir).starts_with(SysRoot) &&
 +      D.getVFS().exists(D.Dir + "/../lib/libc++.so"))
 +    addPathIfExists(D, D.Dir + "/../lib", Paths);
 +

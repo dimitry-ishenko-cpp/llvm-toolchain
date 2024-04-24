@@ -266,7 +266,7 @@ Index: llvm-toolchain-snapshot_10~+20191020075550+5b8546023f3/clang/lib/Driver/T
 +    // the cross. Note that GCC does include some of these directories in some
 +    // configurations but this seems somewhere between questionable and simply
 +    // a bug.
-+    if (StringRef(LibPath).startswith(SysRoot)) {
++    if (StringRef(LibPath).starts_with(SysRoot)) {
 +      addPathIfExists(D, LibPath + "/" + MultiarchTriple, Paths);
 +      addPathIfExists(D, LibPath + "/../" + OSLibDir, Paths);
 +    }
@@ -277,7 +277,7 @@ Index: llvm-toolchain-snapshot_10~+20191020075550+5b8546023f3/clang/lib/Driver/T
 +  // those searched.
 +  // FIXME: It's not clear whether we should use the driver's installed
 +  // directory ('Dir' below) or the ResourceDir.
-+  if (StringRef(D.Dir).startswith(SysRoot)) {
++  if (StringRef(D.Dir).starts_with(SysRoot)) {
 +    addPathIfExists(D, D.Dir + "/../lib/" + MultiarchTriple, Paths);
 +    addPathIfExists(D, D.Dir + "/../" + OSLibDir, Paths);
 +  }
@@ -315,7 +315,7 @@ Index: llvm-toolchain-snapshot_10~+20191020075550+5b8546023f3/clang/lib/Driver/T
 +
 +    // See comments above on the multilib variant for details of why this is
 +    // only included from within the sysroot.
-+    if (StringRef(LibPath).startswith(SysRoot))
++    if (StringRef(LibPath).starts_with(SysRoot))
 +      addPathIfExists(D, LibPath, Paths);
 +  }
 +
@@ -324,7 +324,7 @@ Index: llvm-toolchain-snapshot_10~+20191020075550+5b8546023f3/clang/lib/Driver/T
 +  // searched.
 +  // FIXME: It's not clear whether we should use the driver's installed
 +  // directory ('Dir' below) or the ResourceDir.
-+  if (StringRef(D.Dir).startswith(SysRoot))
++  if (StringRef(D.Dir).starts_with(SysRoot))
 +    addPathIfExists(D, D.Dir + "/../lib", Paths);
 +
 +  addPathIfExists(D, SysRoot + "/lib", Paths);
