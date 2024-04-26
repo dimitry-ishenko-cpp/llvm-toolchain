@@ -377,7 +377,8 @@ OPENMP_ENABLE=yes
 ifneq (,$(filter $(DEB_HOST_ARCH), m68k mipsel powerpc powerpcspe sparc64 s390x x32))
   OPENMP_ENABLE=no
 else
-  PROJECTS+=;openmp
+  PROJECTS += ;openmp
+  RUNTIMES += ;offload
   STAGE_ALL_CMAKE_EXTRA += -DLIBOMP_LIBFLAGS="-lm"
 ifeq ($(LIBUNWIND_ENABLE),yes)
   STAGE_ALL_CMAKE_EXTRA += -DOPENMP_USE_LLVM_UNWINDER=ON
