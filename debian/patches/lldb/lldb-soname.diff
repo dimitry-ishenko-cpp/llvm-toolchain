@@ -2,13 +2,13 @@
  lldb/source/API/CMakeLists.txt |   14 +++++++-------
  1 file changed, 7 insertions(+), 7 deletions(-)
 
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/API/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240430112652+10aab63c9cb4/lldb/source/API/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/lldb/source/API/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/API/CMakeLists.txt
-@@ -20,7 +20,12 @@ if(LLDB_ENABLE_LUA)
-   set(lldb_lua_wrapper ${lua_bindings_dir}/LLDBWrapLua.cpp)
- endif()
+--- llvm-toolchain-snapshot_19~++20240430112652+10aab63c9cb4.orig/lldb/source/API/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240430112652+10aab63c9cb4/lldb/source/API/CMakeLists.txt
+@@ -24,7 +24,12 @@ lldb_tablegen(../../include/lldb/API/SBL
+   SOURCE ${LLVM_MAIN_INCLUDE_DIR}/llvm/BinaryFormat/Dwarf.def
+   TARGET lldb-sbapi-dwarf-enums)
  
 -add_lldb_library(liblldb SHARED ${option_framework}
 +set(output_name lldb)
@@ -20,7 +20,7 @@ Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/API/
    SBAddress.cpp
    SBAttachInfo.cpp
    SBBlock.cpp
-@@ -169,7 +174,7 @@ endif()
+@@ -176,7 +181,7 @@ endif()
  
  set_target_properties(liblldb
    PROPERTIES
@@ -29,7 +29,7 @@ Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/API/
  )
  
  target_compile_definitions(liblldb PRIVATE LLDB_IN_LIBLLDB)
-@@ -235,12 +240,12 @@ elseif (LLDB_EXPORT_ALL_SYMBOLS)
+@@ -242,12 +247,12 @@ elseif (LLDB_EXPORT_ALL_SYMBOLS)
    set_target_properties(liblldb_exports PROPERTIES FOLDER "lldb misc")
  endif()
  
