@@ -3,6 +3,9 @@ llvm-toolchain-snapshot (1:19~++20240421021844+e095d978ba47-1~exp2) experimental
   * after upstream 330d8983d25d08580fc1642fea48b2473f47a9da
     adjust the RUNTIMES build to include offload (was openmp/libomptarget)
   * try to build with LLVM_LIBC_GPU_BUILD
+  * Move openmp from PROJECTS to RUNTIMES
+    Should fix:
+    https://github.com/llvm/llvm-project/issues/90707
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Apr 2024 14:55:20 +0200
 
