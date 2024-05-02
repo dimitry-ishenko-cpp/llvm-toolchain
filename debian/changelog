@@ -6,6 +6,7 @@ llvm-toolchain-snapshot (1:19~++20240421021844+e095d978ba47-1~exp2) experimental
   * Move openmp from PROJECTS to RUNTIMES
     Should fix:
     https://github.com/llvm/llvm-project/issues/90707
+  * Ship zos_wrappers/builtins.h in libclang-common-19-dev
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Apr 2024 14:55:20 +0200
 
