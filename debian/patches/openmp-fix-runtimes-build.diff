@@ -1,7 +1,6 @@
 include required runtimes as dependencies to openmp targets to make sure
 they are built first when included as part of a runtimes build since openmp
 can depend on them
-<<<<<<< Updated upstream
 Index: llvm-toolchain-snapshot_19~++20240509091947+dcf92a249233/llvm/runtimes/CMakeLists.txt
 ===================================================================
 --- llvm-toolchain-snapshot_19~++20240509091947+dcf92a249233.orig/llvm/runtimes/CMakeLists.txt
@@ -140,7 +139,7 @@ Index: llvm-toolchain-snapshot_19~++20240509091947+dcf92a249233/offload/plugins-
    target_include_directories(omptarget.rtl.host PRIVATE dynamic_ffi)
  endif()
  
-++add_runtimes_build_depends_if_needed("omptarget.rtl.${machine}")
++add_runtimes_build_depends_if_needed("omptarget.rtl.${machine}")
 +
  target_include_directories(omptarget.rtl.host PRIVATE
                             ${LIBOMPTARGET_INCLUDE_DIR})
