@@ -10,6 +10,7 @@ llvm-toolchain-snapshot (1:19~++20240421021844+e095d978ba47-1~exp2) experimental
   * Install libLibcTableGenUtil and rpc files in llvmlibc
   * Ship zos_wrappers/builtins.h in libclang-common-19-dev
   * Disable openmp on i386 - wasn't officially supported
+  * Disable the cmake check for LibcTableGenUtil. Closes: #92359
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Apr 2024 14:55:20 +0200
 
