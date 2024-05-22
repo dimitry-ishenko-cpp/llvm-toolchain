@@ -1,7 +1,7 @@
-Index: llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
+Index: llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
 ===================================================================
---- llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1.orig/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
-+++ llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
+--- llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf.orig/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
++++ llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf/libcxx/test/std/thread/thread.condition/thread.condition.condvar/wait_for.pass.cpp
 @@ -8,6 +8,7 @@
  //
  // UNSUPPORTED: no-threads
@@ -10,13 +10,13 @@ Index: llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1/libcxx/test/std/
  
  // <condition_variable>
  
-Index: llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
+Index: llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
 ===================================================================
---- llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1.orig/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
-+++ llvm-toolchain-snapshot_18~++20231102103655+18839aec4ed1/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
-@@ -10,6 +10,8 @@
+--- llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf.orig/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
++++ llvm-toolchain-snapshot_19~++20240522023027+71b1fbdff6cf/libcxx/test/std/thread/thread.mutex/thread.lock/thread.lock.shared/thread.lock.shared.locking/lock.pass.cpp
+@@ -9,6 +9,8 @@
+ // UNSUPPORTED: no-threads
  // UNSUPPORTED: c++03, c++11
- // ALLOW_RETRIES: 2
  
 +// XFAIL: *
 +
