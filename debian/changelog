@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:19~++20240517091955+e0a293d12f3f-1~exp1) experimental; urgency=medium
+llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 
   * experimental New snapshot release
   * after upstream 330d8983d25d08580fc1642fea48b2473f47a9da
@@ -15,7 +15,7 @@ llvm-toolchain-snapshot (1:19~++20240517091955+e0a293d12f3f-1~exp1) experimental
   * Ship usr/lib/llvm-@LLVM_VERSION@/lib/libCUF*.a in libflang
   * Ship reduce-chunk-list in llvm
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 17 May 2024 09:21:04 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 29 May 2024 09:36:25 +0200
 
 llvm-toolchain-snapshot (1:19~++20240421021844+e095d978ba47-1~exp1) experimental; urgency=medium
 
