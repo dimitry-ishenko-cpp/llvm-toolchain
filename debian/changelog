@@ -13,6 +13,7 @@ llvm-toolchain-snapshot (1:19~++20240517091955+e0a293d12f3f-1~exp1) experimental
   * Disable openmp on i386 - wasn't officially supported
   * Disable the cmake check for LibcTableGenUtil. Closes upstream issue #92359
   * Ship usr/lib/llvm-@LLVM_VERSION@/lib/libCUF*.a in libflang
+  * Ship reduce-chunk-list in llvm
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 17 May 2024 09:21:04 +0200
 

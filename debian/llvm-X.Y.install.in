@@ -81,6 +81,7 @@ usr/lib/llvm-@LLVM_VERSION@/bin/llvm-debuginfod
 usr/lib/llvm-@LLVM_VERSION@/bin/llvm-remarkutil
 usr/lib/llvm-@LLVM_VERSION@/bin/llvm-debuginfo-analyzer
 usr/lib/llvm-@LLVM_VERSION@/bin/llvm-readtapi
+usr/lib/llvm-@LLVM_VERSION@/bin/reduce-chunk-list
 
 usr/bin/llvm-PerfectShuffle-@LLVM_VERSION@
 usr/bin/llvm-addr2line-@LLVM_VERSION@
@@ -160,3 +161,4 @@ usr/bin/dsymutil-*
 usr/bin/llvm-debuginfod-find-*
 usr/bin/llvm-debuginfod-@LLVM_VERSION@
 usr/bin/llvm-debuginfo-analyzer-@LLVM_VERSION@
+usr/bin/reduce-chunk-list-@LLVM_VERSION@
