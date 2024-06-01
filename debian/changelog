@@ -2,6 +2,7 @@ llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp2) UNRELEASED; 
 
   [ John Paul Adrian Glaubitz ]
   * Disable LLVM testsuite on x32
+  * Install liborc_rt-x86_64.a on x32
 
  -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sat, 01 Jun 2024 23:16:14 +0200
 
