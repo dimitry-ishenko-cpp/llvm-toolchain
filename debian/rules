@@ -330,7 +330,13 @@ ifneq (,$(filter bolt-$(LLVM_VERSION), $(packages)))
 endif
 
 ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
-    RUNTIMES += ;libc
+	RUNTIMES += ;libc
+	LLVM_LIBC_FULL_DISTRO := bionic
+# Workaround on bionic
+# See https://github.com/llvm/llvm-project/issues/82467#issuecomment-2033193448
+	ifeq (,$(filter-out $(LLVM_LIBC_FULL_DISTRO), $(DISTRO)))
+		STAGE_ALL_CMAKE_EXTRA += -DLLVM_LIBC_FULL_BUILD=ON
+	endif
 endif
 
 # flang is only for 64bits
