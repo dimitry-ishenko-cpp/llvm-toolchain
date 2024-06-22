@@ -565,8 +565,8 @@ Description: LLVM-based linker, header files
 # ------------- lldb -------------
 
 Package: lldb-20
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64
-# ia64 hurd powerpc powerpcspe ppc64 alpha riscv64 s390x sparc64 mipsel mips64el have been removed
+Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+# ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, libllvm20 (= ${binary:Version}),
  python3-lldb-20
 Pre-Depends: ${misc:Pre-Depends}
@@ -577,8 +577,8 @@ Description: Next generation, high-performance debugger
 
 Package: liblldb-20
 Provides: ${t64:Provides}
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64
-# ia64 hurd powerpc powerpcspe ppc64 alpha riscv64 s390x sparc64 mipsel mips64el have been removed
+Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+# ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, libllvm20 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
 Section: libs
@@ -591,8 +591,8 @@ Description: Next generation, high-performance debugger, library
 
 Package: python3-lldb-20
 Section: python
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64
-# ia64 hurd powerpc powerpcspe ppc64 alpha riscv64 s390x sparc64 mipsel mips64el have been removed
+Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+# ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, liblldb-20 (= ${binary:Version})
 Conflicts: python3-lldb-x.y
 Replaces: python3-lldb-x.y
@@ -607,8 +607,8 @@ Description: Next generation, high-performance debugger, python3 lib
 
 Package: liblldb-20-dev
 Section: libdevel
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64
-# ia64 hurd powerpc powerpcspe ppc64 alpha riscv64 s390x sparc64 mipsel mips64el have been removed
+Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+# ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, lldb-20 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
 Description: Next generation, high-performance debugger, header files
