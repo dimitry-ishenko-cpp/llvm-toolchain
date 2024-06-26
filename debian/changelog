@@ -4,10 +4,15 @@ llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp2) UNRELEASED; 
   * Disable LLVM testsuite on x32
   * Install liborc_rt-x86_64.a on x32
   * Install hwasan_symbolize on x32
+
   [ Norbert Lange ]
   * build lldb with Intel PT support on x86, amd64
 
- -- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>  Sat, 01 Jun 2024 23:16:14 +0200
+  [ Sylvestre Ledru ]
+  * Adjust the clang-X-doc path after the change
+    d7dd778cde84110e38521a6b55dfeb4e1c649ec2
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 26 Jun 2024 21:18:27 +0200
 
 llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 
