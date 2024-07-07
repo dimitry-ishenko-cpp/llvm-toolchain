@@ -151,3 +151,4 @@ mips/D154390-pre-R6.diff
 disable-openmp-per-target.diff
 libsanitizer-timebits.diff
 offload-disable-static-assert.diff
+link-with-package-metadata.diff
