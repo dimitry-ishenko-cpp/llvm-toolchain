@@ -1,11 +1,11 @@
 include required runtimes as dependencies to openmp targets to make sure
 they are built first when included as part of a runtimes build since openmp
 can depend on them
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/llvm/runtimes/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/llvm/runtimes/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/llvm/runtimes/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/llvm/runtimes/CMakeLists.txt
-@@ -247,6 +247,7 @@ function(runtime_default_target)
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/llvm/runtimes/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/llvm/runtimes/CMakeLists.txt
+@@ -249,6 +249,7 @@ function(runtime_default_target)
                                        -DLLVM_ENABLE_PROJECTS_USED=${LLVM_ENABLE_PROJECTS_USED}
                                        -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=${LLVM_ENABLE_PER_TARGET_RUNTIME_DIR}
                                        -DLLVM_BUILD_TOOLS=${LLVM_BUILD_TOOLS}
@@ -13,7 +13,7 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/llvm/runtimes/CM
                                        -DCMAKE_C_COMPILER_WORKS=ON
                                        -DCMAKE_CXX_COMPILER_WORKS=ON
                                        -DCMAKE_ASM_COMPILER_WORKS=ON
-@@ -557,7 +558,7 @@ if(runtimes)
+@@ -625,7 +626,7 @@ if(build_runtimes)
      # build directory cannot find the C++ headers in certain configurations.
      # I need to build a mechanism for runtime projects to provide CMake code
      # that executes at LLVM configuration time to handle this case.
@@ -22,11 +22,11 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/llvm/runtimes/CM
      # We need to add the runtimes as a dependency because compiler-rt can be
      # built as part of runtimes and we need the profile runtime for PGO
      add_dependencies(clang-bootstrap-deps runtimes)
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/openmp/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/CMakeLists.txt
-@@ -119,6 +119,28 @@ else()
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/openmp/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/CMakeLists.txt
+@@ -122,6 +122,28 @@ else()
    get_clang_resource_dir(LIBOMP_HEADERS_INSTALL_PATH SUBDIR include)
  endif()
  
@@ -55,20 +55,20 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/CMakeList
  # Build host runtime library, after LIBOMPTARGET variables are set since they are needed
  # to enable time profiling support in the OpenMP runtime.
  add_subdirectory(runtime)
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/plugins-nextgen/cuda/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/plugins-nextgen/cuda/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/offload/plugins-nextgen/cuda/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/plugins-nextgen/cuda/CMakeLists.txt
-@@ -33,3 +33,5 @@ else()
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/offload/plugins-nextgen/cuda/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/plugins-nextgen/cuda/CMakeLists.txt
+@@ -26,3 +26,5 @@ else()
    message(STATUS "Not generating NVIDIA tests, no supported devices detected."
                     " Use 'LIBOMPTARGET_FORCE_NVIDIA_TESTS' to override.")
  endif()
 +
 +add_runtimes_build_depends_if_needed(omptarget.rtl.cuda)
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/src/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/src/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/offload/src/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/src/CMakeLists.txt
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/offload/src/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/src/CMakeLists.txt
 @@ -38,6 +38,9 @@ add_llvm_library(omptarget
    NO_INSTALL_RPATH
    BUILDTREE_ONLY
@@ -79,10 +79,10 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/src/CMak
  target_include_directories(omptarget PRIVATE
    ${LIBOMPTARGET_INCLUDE_DIR} ${LIBOMPTARGET_BINARY_INCLUDE_DIR}
  )
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/runtime/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/openmp/runtime/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/CMakeLists.txt
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/openmp/runtime/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/runtime/CMakeLists.txt
 @@ -326,6 +326,10 @@ if(LIBOMP_STATS)
    set(LIBOMP_USE_STDCPPLIB TRUE)
  endif()
@@ -94,10 +94,10 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/C
  # Shared library can be switched to a static library
  set(LIBOMP_ENABLE_SHARED TRUE CACHE BOOL
    "Shared library instead of static library?")
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/src/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/runtime/src/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/openmp/runtime/src/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/src/CMakeLists.txt
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/openmp/runtime/src/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/runtime/src/CMakeLists.txt
 @@ -151,6 +151,7 @@ set_source_files_properties(${LIBOMP_ASM
  if(NOT ${LIBOMP_USE_STDCPPLIB})
    set(LIBOMP_LINKER_LANGUAGE C)
@@ -106,7 +106,7 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/s
  else()
    set(LIBOMP_LINKER_LANGUAGE CXX)
  endif()
-@@ -216,6 +217,8 @@ else()
+@@ -220,6 +221,8 @@ else()
    )
  endif()
  
@@ -115,10 +115,10 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/runtime/s
  # Get the library's location within the build tree for the unit tester
  if(NOT WIN32)
    get_target_property(LIBOMP_LIBRARY_DIR omp LIBRARY_OUTPUT_DIRECTORY)
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/tools/archer/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/tools/archer/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/openmp/tools/archer/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/tools/archer/CMakeLists.txt
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/openmp/tools/archer/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/openmp/tools/archer/CMakeLists.txt
 @@ -15,6 +15,9 @@ if(LIBOMP_OMPT_SUPPORT AND LIBOMP_ARCHER
    target_link_libraries(archer ${CMAKE_DL_LIBS})
    add_library(archer_static STATIC ompt-tsan.cpp)
@@ -129,11 +129,11 @@ Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/openmp/tools/arc
    install(TARGETS archer archer_static
      LIBRARY DESTINATION ${OPENMP_INSTALL_LIBDIR}
      ARCHIVE DESTINATION ${OPENMP_INSTALL_LIBDIR})
-Index: llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/plugins-nextgen/host/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/plugins-nextgen/host/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd.orig/offload/plugins-nextgen/host/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240518075939+219476d20fcd/offload/plugins-nextgen/host/CMakeLists.txt
-@@ -31,6 +31,8 @@ else()
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/offload/plugins-nextgen/host/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/offload/plugins-nextgen/host/CMakeLists.txt
+@@ -27,6 +27,8 @@ else()
    target_include_directories(omptarget.rtl.host PRIVATE dynamic_ffi)
  endif()
  

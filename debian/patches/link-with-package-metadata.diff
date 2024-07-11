@@ -1,6 +1,8 @@
---- a/clang/lib/Driver/ToolChains/Linux.cpp
-+++ b/clang/lib/Driver/ToolChains/Linux.cpp
-@@ -283,6 +283,21 @@ Linux::Linux(const Driver &D, const llvm
+Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/clang/lib/Driver/ToolChains/Linux.cpp
+===================================================================
+--- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/clang/lib/Driver/ToolChains/Linux.cpp
++++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/clang/lib/Driver/ToolChains/Linux.cpp
+@@ -295,6 +295,21 @@ Linux::Linux(const Driver &D, const llvm
    ExtraOpts.push_back("--build-id");
  #endif
  
