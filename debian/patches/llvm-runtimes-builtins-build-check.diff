@@ -1,10 +1,10 @@
 add a check and only set up and build compiler-rt builtins if they have
 not been disabled
-Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/llvm/runtimes/CMakeLists.txt
+Index: llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b/llvm/runtimes/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/llvm/runtimes/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/llvm/runtimes/CMakeLists.txt
-@@ -137,7 +137,12 @@ endfunction()
+--- llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b.orig/llvm/runtimes/CMakeLists.txt
++++ llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b/llvm/runtimes/CMakeLists.txt
+@@ -142,10 +142,15 @@ endfunction()
  # is required because the other runtimes need the builtin libraries present
  # before the just-built compiler can pass the configuration tests.
  get_compiler_rt_path(compiler_rt_path)
@@ -15,6 +15,10 @@ Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/llvm/runtimes/CM
 +  set(RUNTIMES_BUILD_BUILTINS ${COMPILER_RT_BUILD_BUILTINS})
 +endif()
 +if(compiler_rt_path AND RUNTIMES_BUILD_BUILTINS)
-   if(NOT LLVM_BUILTIN_TARGETS)
-     builtin_default_target(${compiler_rt_path}
-       DEPENDS clang-resource-headers)
+   # If the user did not specify the targets infer them from the runtimes.
+   set(builtin_targets ${LLVM_BUILTIN_TARGETS})
+-  if(NOT builtin_targets)
++  if(NOT LLVM_BUILTIN_TARGETS)
+     if("compiler-rt" IN_LIST LLVM_ENABLE_RUNTIMES)
+       list(APPEND builtin_targets "default")
+     endif()
