@@ -16,7 +16,7 @@ llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp2) UNRELEASED; 
   * Pass --package-metadata on distros with supporting linkers (starting
     with Debian trixie and Ubuntu noble).
     The package metadata is constructed from the environment variables
-    ELF_PACKAGE_METADATA.
+    DEB_BUILD_OS_RELEASE_ID, DEB_SOURCE, DEB_VERSION and DEB_HOST_ARCH.
     Setting NO_PKG_METADATA=1 disables the generation of the package metadata.
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 26 Jun 2024 21:18:27 +0200
