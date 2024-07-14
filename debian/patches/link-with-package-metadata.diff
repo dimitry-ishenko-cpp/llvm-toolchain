@@ -1,8 +1,8 @@
-Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/clang/lib/Driver/ToolChains/Linux.cpp
+Index: llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b/clang/lib/Driver/ToolChains/Linux.cpp
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974.orig/clang/lib/Driver/ToolChains/Linux.cpp
-+++ llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/clang/lib/Driver/ToolChains/Linux.cpp
-@@ -295,6 +295,21 @@ Linux::Linux(const Driver &D, const llvm
+--- llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b.orig/clang/lib/Driver/ToolChains/Linux.cpp
++++ llvm-toolchain-snapshot_19~++20240714063407+a72eed7a238b/clang/lib/Driver/ToolChains/Linux.cpp
+@@ -295,6 +295,33 @@ Linux::Linux(const Driver &D, const llvm
    ExtraOpts.push_back("--build-id");
  #endif
  
@@ -24,12 +24,12 @@ Index: llvm-toolchain-snapshot_19~++20240711013116+0ff13f72c974/clang/lib/Driver
 +      // FIXME: emit error
 +    } else {
 +      ExtraOpts.push_back(std::string("--package-metadata={")
-+			  + "\"type\":\"deb\","
-+			  + "\"os\":\"" + deb_build_os_release_id + "\","
-+			  + "\"name\":\"" + deb_source + "\","
-+			  + "\"version\":\"" + deb_version + "\","
-+			  + "\"architecture\":\"" + deb_host_arch + "\""
-+			  + "}");
++              + "\"type\":\"deb\","
++              + "\"os\":\"" + deb_build_os_release_id + "\","
++              + "\"name\":\"" + deb_source + "\","
++              + "\"version\":\"" + deb_version + "\","
++              + "\"architecture\":\"" + deb_host_arch + "\""
++              + "}");
 +    }
 +  }
 +
