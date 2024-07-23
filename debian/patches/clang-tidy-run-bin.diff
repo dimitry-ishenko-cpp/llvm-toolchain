@@ -8,11 +8,11 @@ Index: llvm-toolchain-snapshot_19~++20240626095617+515e048e36d9/clang-tools-extr
      parser.add_argument(
 -        "-clang-tidy-binary", metavar="PATH", help="Path to clang-tidy binary."
 +        "-clang-tidy-binary", metavar="PATH", help="Path to clang-tidy binary.",
-+        default='clang-tidy-19'
++        default='clang-tidy-20'
      )
      parser.add_argument(
          "-clang-apply-replacements-binary",
-+        default='clang-apply-replacements-19',
++        default='clang-apply-replacements-20',
          metavar="PATH",
          help="Path to clang-apply-replacements binary.",
      )
