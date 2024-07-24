@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19~++20240723103123+d0c8e268c1ed-1~exp1) UNRELEASED; urgency=medium
+llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) experimental; urgency=medium
 
   [ John Paul Adrian Glaubitz ]
   * Disable LLVM testsuite on x32
@@ -9,8 +9,11 @@ llvm-toolchain-19 (1:19~++20240723103123+d0c8e268c1ed-1~exp1) UNRELEASED; urgenc
   * build lldb with Intel PT support on x86, amd64
 
   [ Sylvestre Ledru ]
+  * Prepare upload to 19
   * Adjust the clang-X-doc path after the change
     d7dd778cde84110e38521a6b55dfeb4e1c649ec2
+  * bring back clang-nvlink-wrapper
+    following upstream commit: 37d0568a6593adfe791c1327d99731050540e97a
 
   [ Matthias Klose ]
   * Pass --package-metadata on distros with supporting linkers (starting
@@ -19,10 +22,7 @@ llvm-toolchain-19 (1:19~++20240723103123+d0c8e268c1ed-1~exp1) UNRELEASED; urgenc
     ELF_PACKAGE_METADATA.
     Setting NO_PKG_METADATA=1 disables the generation of the package metadata.
 
-  [ Sylvestre Ledru ]
-  * experimental New snapshot release
-
- -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 23 Jul 2024 22:31:34 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 26 Jun 2024 21:18:27 +0200
 
 llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 
