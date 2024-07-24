@@ -11,6 +11,8 @@ llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) UNRELEASED; 
   [ Sylvestre Ledru ]
   * Adjust the clang-X-doc path after the change
     d7dd778cde84110e38521a6b55dfeb4e1c649ec2
+  * bring back clang-nvlink-wrapper
+    following upstream commit: 37d0568a6593adfe791c1327d99731050540e97a
 
   [ Matthias Klose ]
   * Pass --package-metadata on distros with supporting linkers (starting
