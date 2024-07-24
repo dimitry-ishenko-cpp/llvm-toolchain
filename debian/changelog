@@ -13,6 +13,8 @@ llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) UNRELEASED; 
     d7dd778cde84110e38521a6b55dfeb4e1c649ec2
   * bring back clang-nvlink-wrapper
     following upstream commit: 37d0568a6593adfe791c1327d99731050540e97a
+  * rename llvm-omp-device-info to llvm-offload-device-info
+    following 7102592af740ed9f8b388c12dd2182039a58167d
 
   [ Matthias Klose ]
   * Pass --package-metadata on distros with supporting linkers (starting
