@@ -23,6 +23,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp1) experimental
   * rename llvm-omp-device-info to llvm-offload-device-info
     following 7102592af740ed9f8b388c12dd2182039a58167d
   * ship llvm-ctxprof-util in llvm-X.Y-tools
+  * ship llvm-cgdata in llvm-X.Y-tools
   * snapshot is now 20
 
   [ Matthias Klose ]
