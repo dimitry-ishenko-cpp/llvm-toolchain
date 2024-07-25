@@ -1,4 +1,3 @@
-
 usr/lib/llvm-@LLVM_VERSION@/bin/count
 usr/lib/llvm-@LLVM_VERSION@/bin/FileCheck
 usr/lib/llvm-@LLVM_VERSION@/bin/not
