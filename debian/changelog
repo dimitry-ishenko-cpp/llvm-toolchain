@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) UNRELEASED; urgency=medium
+llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp1) experimental; urgency=medium
 
   [ John Paul Adrian Glaubitz ]
   * Disable LLVM testsuite on x32
@@ -16,6 +16,7 @@ llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) UNRELEASED; 
   * rename llvm-omp-device-info to llvm-offload-device-info
     following 7102592af740ed9f8b388c12dd2182039a58167d
   * ship llvm-ctxprof-util in llvm-X.Y-tools
+  * snapshot is now 20
 
   [ Matthias Klose ]
   * Pass --package-metadata on distros with supporting linkers (starting
@@ -24,7 +25,7 @@ llvm-toolchain-snapshot (1:20~++20240723104014+d0c8e268c1ed-1~exp1) UNRELEASED; 
     ELF_PACKAGE_METADATA.
     Setting NO_PKG_METADATA=1 disables the generation of the package metadata.
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 26 Jun 2024 21:18:27 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Jul 2024 08:50:50 +0200
 
 llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 
