@@ -23,7 +23,7 @@ llvm-toolchain-19 (1:19.1.0~++20240724103243+7af27be6633a-1~exp1) experimental; 
     ELF_PACKAGE_METADATA.
     Setting NO_PKG_METADATA=1 disables the generation of the package metadata.
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 26 Jun 2024 21:18:27 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sun, 28 Jul 2024 21:39:57 +0200
 
 llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 

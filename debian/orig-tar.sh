@@ -131,12 +131,13 @@ if test -z  "$TAG" -a -z "$FINAL_RELEASE"; then
         # In general, in Debian, we will keep X until X.0.1 is released (or rc in experimental)
         # However, on apt.llvm.org, we will update the version to have X.0.1
         # This code is doing that.
-        CURRENT_VERSION="$(grep -oP 'set\(\s*LLVM_VERSION_(MAJOR|MINOR|PATCH)\s\K[0-9]+' llvm/CMakeLists.txt | paste -sd '.')"
+        CURRENT_VERSION="$(grep -oP 'set\(\s*LLVM_VERSION_(MAJOR|MINOR|PATCH)\s\K[0-9]+' cmake/Modules/LLVMVersion.cmake | paste -sd '.')"
     fi
     # the + is here to make sure that this version is considered more recent than the svn
     # dpkg --compare-versions 10~svn374977-1~exp1 lt 10~+2019-svn374977-1~exp1
     # to verify that
     VERSION="${CURRENT_VERSION}~++$(date +'%Y%m%d%I%M%S')+$(git log -1 --pretty=format:'%h')"
+    echo "CURRENT = ${CURRENT_VERSION}"
 else
 
     if ! echo "$EXACT_VERSION"|grep -q "$MAJOR_VERSION"; then
@@ -160,7 +161,6 @@ rm -rf */www/ build/ build-llvm/
 cd ../
 BASE="llvm-toolchain-${MAJOR_VERSION}_${VERSION}"
 FILENAME="${BASE}.orig.tar.xz"
-
 cp -R llvm-toolchain-integration-test-suite llvm-project/integration-test-suite
 # Argument to compress faster (for the cost of time)
 export XZ_OPT="-4 -T$(nproc)"
