@@ -93,6 +93,7 @@ remove-apple-clang-manpage.diff
 
 # Hurd port
 hurd/hurd-pathmax.diff
+hurd/hurd-amd64.diff
 
 # kfreebsd
 # kfreebsd/clang_lib_Basic_Targets.diff
