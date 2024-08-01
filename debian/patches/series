@@ -139,6 +139,7 @@ wasm/wasm-compiler-rt-default.diff
 wasm/wasm-sysroot-usr.diff
 
 revert-update-doc.diff
+
 unwind-force-pthread-dl.diff
 force-sse2-compiler-rt.diff
 bolt-disable-emit-relocs.patch
@@ -146,7 +147,6 @@ link-grpc.diff
 libclang-major-version-only.diff
 D148945-revert.diff
 arm32-defaults.diff
-mips/D154390-pre-R6.diff
 disable-openmp-per-target.diff
 libsanitizer-timebits.diff
 offload-disable-static-assert.diff
