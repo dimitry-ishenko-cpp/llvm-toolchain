@@ -15,6 +15,12 @@ llvm-toolchain-19 (1:19.1.0~++rc2-1~exp1) experimental; urgency=medium
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 05 Aug 2024 15:25:06 +0200
 
+llvm-toolchain-19 (1:19.1.0~+rc2-1~exp1) UNRELEASED; urgency=medium
+
+  * New snapshot release
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 05 Aug 2024 15:25:06 +0200
+
 llvm-toolchain-19 (1:19.1.0~++20240724103243+7af27be6633a-1~exp1) experimental; urgency=medium
 
   [ John Paul Adrian Glaubitz ]
