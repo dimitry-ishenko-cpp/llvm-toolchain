@@ -1,0 +1,333 @@
+commit 4fffb0401be10dc155e8b51321735f14f88c2589
+Author: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date:   Wed Jan 17 23:38:40 2024 +0100
+
+    Hurd: Add x86_64 support (#78065)
+    
+    This adds Hurd toolchain support to Clang's driver in addition to
+    handling
+    translating the triple from GCC toolchain-compatible form (x86_64-gnu)
+    to
+    the actual triple registered in LLVM (x86_64-pc-hurd-gnu).
+
+commit 1b60ddd920e0caadfa85cc7013b559d6453d7e3e
+Author: Jie Fu <jiefu@tencent.com>
+Date:   Thu Jan 18 07:34:09 2024 +0800
+
+    [Hurd] Fix -Wswitch in Hurd::getDynamicLinker (NFC)
+    
+    llvm-project/clang/lib/Driver/ToolChains/Hurd.cpp:137:11:
+     error: 60 enumeration values not handled in switch: 'UnknownArch', 'arm', 'armeb'... [-Werror,-Wswitch]
+      switch (getArch()) {
+              ^~~~~~~~~
+    1 error generated.
+
+diff --git a/clang/lib/Basic/Targets.cpp b/clang/lib/Basic/Targets.cpp
+index ea002bb464fc..e3283510c6aa 100644
+--- a/clang/lib/Basic/Targets.cpp
++++ b/clang/lib/Basic/Targets.cpp
+@@ -644,6 +644,8 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
+       return std::make_unique<PS4OSTargetInfo<X86_64TargetInfo>>(Triple, Opts);
+     case llvm::Triple::PS5:
+       return std::make_unique<PS5OSTargetInfo<X86_64TargetInfo>>(Triple, Opts);
++    case llvm::Triple::Hurd:
++      return std::make_unique<HurdTargetInfo<X86_64TargetInfo>>(Triple, Opts);
+     default:
+       return std::make_unique<X86_64TargetInfo>(Triple, Opts);
+     }
+diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
+index 771240dac7a8..330b103efdd6 100644
+--- a/clang/lib/Driver/ToolChains/Gnu.cpp
++++ b/clang/lib/Driver/ToolChains/Gnu.cpp
+@@ -2485,7 +2485,7 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+   static const char *const X86Triples[] = {
+       "i586-linux-gnu",      "i686-linux-gnu",        "i686-pc-linux-gnu",
+       "i386-redhat-linux6E", "i686-redhat-linux",     "i386-redhat-linux",
+-      "i586-suse-linux",     "i686-montavista-linux", "i686-gnu",
++      "i586-suse-linux",     "i686-montavista-linux",
+   };
+ 
+   static const char *const LoongArch64LibDirs[] = {"/lib64", "/lib"};
+@@ -2652,6 +2652,23 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+     return;
+   }
+ 
++  if (TargetTriple.isOSHurd()) {
++    switch (TargetTriple.getArch()) {
++    case llvm::Triple::x86_64:
++      LibDirs.append(begin(X86_64LibDirs), end(X86_64LibDirs));
++      TripleAliases.push_back("x86_64-gnu");
++      break;
++    case llvm::Triple::x86:
++      LibDirs.append(begin(X86LibDirs), end(X86LibDirs));
++      TripleAliases.push_back("i686-gnu");
++      break;
++    default:
++      break;
++    }
++
++    return;
++  }
++
+   switch (TargetTriple.getArch()) {
+   case llvm::Triple::aarch64:
+     LibDirs.append(begin(AArch64LibDirs), end(AArch64LibDirs));
+diff --git a/clang/lib/Driver/ToolChains/Hurd.cpp b/clang/lib/Driver/ToolChains/Hurd.cpp
+index 7a4c2bb7ede1..5074eda5f415 100644
+--- a/clang/lib/Driver/ToolChains/Hurd.cpp
++++ b/clang/lib/Driver/ToolChains/Hurd.cpp
+@@ -30,13 +30,21 @@ using tools::addPathIfExists;
+ std::string Hurd::getMultiarchTriple(const Driver &D,
+                                      const llvm::Triple &TargetTriple,
+                                      StringRef SysRoot) const {
+-  if (TargetTriple.getArch() == llvm::Triple::x86) {
++  switch (TargetTriple.getArch()) {
++  default:
++    break;
++
++  case llvm::Triple::x86:
+     // We use the existence of '/lib/<triple>' as a directory to detect some
+     // common hurd triples that don't quite match the Clang triple for both
+     // 32-bit and 64-bit targets. Multiarch fixes its install triples to these
+     // regardless of what the actual target triple is.
+     if (D.getVFS().exists(SysRoot + "/lib/i386-gnu"))
+       return "i386-gnu";
++    break;
++
++  case llvm::Triple::x86_64:
++    return "x86_64-gnu";
+   }
+ 
+   // For most architectures, just use whatever we have rather than trying to be
+@@ -126,8 +134,14 @@ Tool *Hurd::buildAssembler() const {
+ }
+ 
+ std::string Hurd::getDynamicLinker(const ArgList &Args) const {
+-  if (getArch() == llvm::Triple::x86)
++  switch (getArch()) {
++  case llvm::Triple::x86:
+     return "/lib/ld.so";
++  case llvm::Triple::x86_64:
++    return "/lib/ld-x86-64.so.1";
++  default:
++    break;
++  }
+ 
+   llvm_unreachable("unsupported architecture");
+ }
+diff --git a/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbegin.o b/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbegin.o
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/bin/as b/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/bin/as
+new file mode 100755
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/bin/ld b/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/bin/ld
+new file mode 100755
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/lib/.keep b/clang/test/Driver/Inputs/basic_cross_hurd_tree/usr/x86_64-gnu/lib/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/lib/x86_64-gnu/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/lib/x86_64-gnu/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/lib64/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/lib64/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/include/x86_64-gnu/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/usr/include/x86_64-gnu/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/include/x86_64-gnu/c++/10/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/usr/include/x86_64-gnu/c++/10/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbegin.o b/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbegin.o
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbeginS.o b/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbeginS.o
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbeginT.o b/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbeginT.o
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/x86_64-gnu/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib/x86_64-gnu/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib64/.keep b/clang/test/Driver/Inputs/basic_hurd_tree/usr/lib64/.keep
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/clang/test/Driver/hurd.cpp b/clang/test/Driver/hurd.cpp
+index 1c4ba16af063..03a74049144c 100644
+--- a/clang/test/Driver/hurd.cpp
++++ b/clang/test/Driver/hurd.cpp
+@@ -2,22 +2,22 @@
+ 
+ // RUN: %clang -### %s --target=i686-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
+ // RUN:   --stdlib=platform 2>&1 | FileCheck --check-prefix=CHECK %s
+-// CHECK: "-cc1"
+-// CHECK: "-isysroot" "[[SYSROOT:[^"]+]]"
++// CHECK:      "-cc1"
++// CHECK-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
+ // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/c++/10"
+ /// Debian specific - the path component after 'include' is i386-gnu even
+ /// though the installation is i686-gnu.
+ // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/i386-gnu/c++/10"
+ // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/c++/10/backward"
+ // CHECK-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/local/include"
+-// CHECK:      "-internal-externc-isystem"
++// CHECK-SAME: "-internal-externc-isystem"
+ // CHECK-SAME: {{^}} "[[SYSROOT]]/usr/include/i386-gnu"
+ // CHECK-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/include"
+ // CHECK-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/usr/include"
+ // CHECK:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
+-// CHECK:      "-dynamic-linker" "/lib/ld.so"
+-// CHECK:      "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbegin.o"
+-// CHECK:      "-L
++// CHECK-SAME: "-dynamic-linker" "/lib/ld.so"
++// CHECK-SAME: "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbegin.o"
++// CHECK-SAME: "-L
+ // CHECK-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/i686-gnu/10"
+ // CHECK-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../lib32"
+ // CHECK-SAME: {{^}} "-L[[SYSROOT]]/lib/i386-gnu"
+@@ -29,23 +29,23 @@
+ 
+ // RUN: %clang -### %s --target=i686-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
+ // RUN:   --stdlib=platform -static 2>&1 | FileCheck --check-prefix=CHECK-STATIC %s
+-// CHECK-STATIC: "-cc1"
+-// CHECK-STATIC: "-static-define"
+-// CHECK-STATIC: "-isysroot" "[[SYSROOT:[^"]+]]"
++// CHECK-STATIC:      "-cc1"
++// CHECK-STATIC-SAME: "-static-define"
++// CHECK-STATIC-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
+ // CHECK-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/c++/10"
+ /// Debian specific - the path component after 'include' is i386-gnu even
+ /// though the installation is i686-gnu.
+ // CHECK-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/i386-gnu/c++/10"
+ // CHECK-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../include/c++/10/backward"
+ // CHECK-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/local/include"
+-// CHECK-STATIC:      "-internal-externc-isystem"
++// CHECK-STATIC-SAME: "-internal-externc-isystem"
+ // CHECK-STATIC-SAME: {{^}} "[[SYSROOT]]/usr/include/i386-gnu"
+ // CHECK-STATIC-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/include"
+ // CHECK-STATIC-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/usr/include"
+ // CHECK-STATIC:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
+-// CHECK-STATIC:      "-static"
+-// CHECK-STATIC:      "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbeginT.o"
+-// CHECK-STATIC:      "-L
++// CHECK-STATIC-SAME: "-static"
++// CHECK-STATIC-SAME: "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbeginT.o"
++// CHECK-STATIC-SAME: "-L
+ // CHECK-STATIC-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/i686-gnu/10"
+ // CHECK-STATIC-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../lib32"
+ // CHECK-STATIC-SAME: {{^}} "-L[[SYSROOT]]/lib/i386-gnu"
+@@ -57,9 +57,9 @@
+ 
+ // RUN: %clang -### %s --target=i686-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
+ // RUN:   -shared 2>&1 | FileCheck --check-prefix=CHECK-SHARED %s
+-// CHECK-SHARED: "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
+-// CHECK-SHARED: "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbeginS.o"
+-// CHECK-SHARED: "-L
++// CHECK-SHARED:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
++// CHECK-SHARED-SAME: "{{.*}}/usr/lib/gcc/i686-gnu/10/crtbeginS.o"
++// CHECK-SHARED-SAME: "-L
+ // CHECK-SHARED-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/i686-gnu/10"
+ // CHECK-SHARED-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/i686-gnu/10/../../../../lib32"
+ // CHECK-SHARED-SAME: {{^}} "-L[[SYSROOT]]/lib/i386-gnu"
+@@ -78,3 +78,82 @@
+ // CHECK-CROSS: "{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/i686-gnu/10/../../../../i686-gnu/bin/ld" {{.*}} "-m" "elf_i386"
+ // CHECK-CROSS: "{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/i686-gnu/10/crtbegin.o"
+ // CHECK-CROSS: "-L{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/i686-gnu/10/../../../../i686-gnu/lib"
++
++// RUN: %clang -### %s --target=x86_64-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
++// RUN:   --stdlib=platform 2>&1 | FileCheck --check-prefix=CHECK-64 %s
++// CHECK-64:      "-cc1"
++// CHECK-64-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
++// CHECK-64-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/c++/10"
++/// Debian specific - the path component after 'include' is x86_64-gnu even
++/// though the installation is x86_64-gnu.
++// CHECK-64-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/x86_64-gnu/c++/10"
++// CHECK-64-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/c++/10/backward"
++// CHECK-64-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/local/include"
++// CHECK-64-SAME: "-internal-externc-isystem"
++// CHECK-64-SAME: {{^}} "[[SYSROOT]]/usr/include/x86_64-gnu"
++// CHECK-64-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/include"
++// CHECK-64-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/usr/include"
++// CHECK-64:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
++// CHECK-64-SAME: "-dynamic-linker" "/lib/ld-x86-64.so.1"
++// CHECK-64-SAME: "{{.*}}/usr/lib/gcc/x86_64-gnu/10/crtbegin.o"
++// CHECK-64-SAME: "-L
++// CHECK-64-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../lib64"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/lib/x86_64-gnu"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/lib/../lib64"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/x86_64-gnu"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/../lib64"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/lib"
++// CHECK-64-SAME: {{^}} "-L[[SYSROOT]]/usr/lib"
++
++// RUN: %clang -### %s --target=x86_64-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
++// RUN:   --stdlib=platform -static 2>&1 | FileCheck --check-prefix=CHECK-64-STATIC %s
++// CHECK-64-STATIC:      "-cc1"
++// CHECK-64-STATIC-SAME: "-static-define"
++// CHECK-64-STATIC-SAME: "-isysroot" "[[SYSROOT:[^"]+]]"
++// CHECK-64-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/c++/10"
++/// Debian specific - the path component after 'include' is x86_64-gnu even
++/// though the installation is x86_64-gnu.
++// CHECK-64-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/x86_64-gnu/c++/10"
++// CHECK-64-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../include/c++/10/backward"
++// CHECK-64-STATIC-SAME: {{^}} "-internal-isystem" "[[SYSROOT]]/usr/local/include"
++// CHECK-64-STATIC-SAME: "-internal-externc-isystem"
++// CHECK-64-STATIC-SAME: {{^}} "[[SYSROOT]]/usr/include/x86_64-gnu"
++// CHECK-64-STATIC-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/include"
++// CHECK-64-STATIC-SAME: {{^}} "-internal-externc-isystem" "[[SYSROOT]]/usr/include"
++// CHECK-64-STATIC:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
++// CHECK-64-STATIC-SAME: "-static"
++// CHECK-64-STATIC-SAME: "{{.*}}/usr/lib/gcc/x86_64-gnu/10/crtbeginT.o"
++// CHECK-64-STATIC-SAME: "-L
++// CHECK-64-STATIC-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../lib64"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/lib/x86_64-gnu"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/lib/../lib64"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/x86_64-gnu"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/../lib64"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/lib"
++// CHECK-64-STATIC-SAME: {{^}} "-L[[SYSROOT]]/usr/lib"
++
++// RUN: %clang -### %s --target=x86_64-pc-hurd-gnu --sysroot=%S/Inputs/basic_hurd_tree \
++// RUN:   -shared 2>&1 | FileCheck --check-prefix=CHECK-64-SHARED %s
++// CHECK-64-SHARED:      "{{.*}}ld" "--sysroot=[[SYSROOT:[^"]+]]"
++// CHECK-64-SHARED-SAME: "{{.*}}/usr/lib/gcc/x86_64-gnu/10/crtbeginS.o"
++// CHECK-64-SHARED-SAME: "-L
++// CHECK-64-SHARED-SAME: {{^}}[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/gcc/x86_64-gnu/10/../../../../lib64"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/lib/x86_64-gnu"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/lib/../lib64"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/x86_64-gnu"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/usr/lib/../lib64"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/lib"
++// CHECK-64-SHARED-SAME: {{^}} "-L[[SYSROOT]]/usr/lib"
++
++// RUN: %clang -### -o %t %s 2>&1 -no-integrated-as -fuse-ld=ld \
++// RUN:     --gcc-toolchain=%S/Inputs/basic_cross_hurd_tree/usr \
++// RUN:     --target=x86_64-pc-gnu \
++// RUN:   | FileCheck --check-prefix=CHECK-64-CROSS %s
++// CHECK-64-CROSS: "-cc1" "-triple" "x86_64-pc-hurd-gnu"
++// CHECK-64-CROSS: "{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/../../../../x86_64-gnu/bin/as" "--64"
++// CHECK-64-CROSS: "{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/../../../../x86_64-gnu/bin/ld" {{.*}} "-m" "elf_x86_64"
++// CHECK-64-CROSS: "{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/crtbegin.o"
++// CHECK-64-CROSS: "-L{{.*}}/Inputs/basic_cross_hurd_tree/usr/lib/gcc/x86_64-gnu/10/../../../../x86_64-gnu/lib"
+diff --git a/llvm/unittests/TargetParser/TripleTest.cpp b/llvm/unittests/TargetParser/TripleTest.cpp
+index 1b0e6c456c04..6f9a35739bff 100644
+--- a/llvm/unittests/TargetParser/TripleTest.cpp
++++ b/llvm/unittests/TargetParser/TripleTest.cpp
+@@ -111,6 +111,12 @@ TEST(TripleTest, ParsedIDs) {
+   EXPECT_EQ(Triple::Linux, T.getOS());
+   EXPECT_EQ(Triple::MuslX32, T.getEnvironment());
+ 
++  T = Triple("x86_64-pc-hurd-gnu");
++  EXPECT_EQ(Triple::x86_64, T.getArch());
++  EXPECT_EQ(Triple::PC, T.getVendor());
++  EXPECT_EQ(Triple::Hurd, T.getOS());
++  EXPECT_EQ(Triple::GNU, T.getEnvironment());
++
+   T = Triple("arm-unknown-linux-android16");
+   EXPECT_EQ(Triple::arm, T.getArch());
+   EXPECT_EQ(Triple::UnknownVendor, T.getVendor());
