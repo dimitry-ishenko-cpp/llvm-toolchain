@@ -7,15 +7,12 @@ llvm-toolchain-19 (1:19.1.0~++rc2-1~exp2) UNRELEASED; urgency=medium
   [ Emanuele Rocca ]
   * Enable bolt on arm64, now supported upstream.
 
- -- Matthias Klose <doko@debian.org>  Tue, 06 Aug 2024 16:13:21 +0200
+  [ Sylvestre Ledru ]
+  * remove llvm-cgdata - see 9e90c40564e21dc5f1a12e08cfdf29305aaf9f50
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 19 Aug 2024 17:26:06 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc2-1~exp1) experimental; urgency=medium
-
-  * New testing release
-
- -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 05 Aug 2024 15:25:06 +0200
-
-llvm-toolchain-19 (1:19.1.0~+rc2-1~exp1) experimental; urgency=medium
 
   * New testing release
 
