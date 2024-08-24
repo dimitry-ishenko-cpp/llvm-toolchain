@@ -2,6 +2,8 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp2) experimental
 
   * Ship usr/lib/llvm-20/lib/clang/20/include/llvm_offload_wrappers in
     libclang-common-20-dev
+  * Ship /usr/lib/llvm-20/lib/libFlangOpenMPTransforms.a in
+    libflang-20-dev
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 13 Aug 2024 19:19:23 +0200
 
