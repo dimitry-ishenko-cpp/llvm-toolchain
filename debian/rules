@@ -71,9 +71,12 @@ endif
 # this always includes the binary-indep packages.
 packages := $(shell dh_listpackages)
 
+# no 32bit support
+FLANG_ARCHS := amd64 arm64 mips64el ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
+
 # flang has some memory hogs, of up to 6.2gb per process. Limit the parallel jobs
 # based on the available memory
-ifneq (,$(filter flang-$(LLVM_VERSION), $(packages)))
+ifneq (,$(filter $(DEB_HOST_ARCH), $(FLANG_ARCHS)))
   MEM_PER_CPU=6000
 else
   MEM_PER_CPU=2100
@@ -85,7 +88,11 @@ NJOBS := $(shell mt=`awk '/^(MemAvail|SwapFree)/ { mt += $$2 } END {print mt}' /
 TIME_COMMAND = /bin/time -v
 TIME_COMMAND = $(CURDIR)/debian/usage-wrapper.py -j $(NJOBS) --base-memory -m 4.0 -o usage-$(notdir $@)-$(DEB_HOST_ARCH).svg
 ifneq (,$(findstring usage-wrapper, $(TIME_COMMAND)))
-  USAGE_BUILD_DEP = $(EMPTY) python3:any, python3-psutil, python3-matplotlib,
+  ifeq ($(DERIVATIVE),Ubuntu)
+    USAGE_BUILD_DEP = $(EMPTY) python3:any, python3-psutil, python3-matplotlib [!i386],
+  else
+    USAGE_BUILD_DEP = $(EMPTY) python3:any, python3-psutil, python3-matplotlib,
+  endif
 endif
 
 DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
@@ -355,8 +362,7 @@ ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
 	endif
 endif
 
-# flang is only for 64bits
-ifneq (,$(filter flang-$(LLVM_VERSION), $(packages)))
+ifneq (,$(filter $(DEB_HOST_ARCH), $(FLANG_ARCHS)))
     PROJECTS += ;flang
 endif
 
@@ -667,6 +673,7 @@ stamps/preconfigure:
 			-e "s|@MULTILIB_ARCHS@|$(MULTILIB_ARCHS)|g" \
 			-e "s|@OCAML_ARCHS@|$(OCAML_ARCHS)|g" \
 			-e "s|@OMP_ARCHS@|$(OMP_ARCHS)|g" \
+			-e "s|@FLANG_ARCHS@|$(FLANG_ARCHS)|g" \
 			-e "s|@BRANCH_NAME@|$(BRANCH_NAME)|g" \
 			-e "s|@OCAML_STDLIB_DIR@|$(OCAML_STDLIB_DIR)|g" \
 			-e "s|@LLVM_EPOCH@|$(LLVM_EPOCH)|g" \
