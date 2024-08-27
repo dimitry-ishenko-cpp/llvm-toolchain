@@ -458,7 +458,7 @@ Description: Modular compiler and toolchain technologies, tools
 
 Package: libllvm-20-ocaml-dev
 Section: ocaml
-Architecture: amd64 arm64 armhf ppc64el s390x riscv64
+Architecture: amd64 arm64 armhf ppc64el riscv64 s390x
 Suggests: llvm-20-doc
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${ocaml:Depends}, llvm-20-dev (= ${binary:Version})
 Replaces: libllvm-x.y-ocaml-dev
