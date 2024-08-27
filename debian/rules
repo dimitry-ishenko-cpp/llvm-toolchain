@@ -71,13 +71,19 @@ packages := $(shell dh_listpackages)
 # flang has some memory hogs, of up to 6.2gb per process. Limit the parallel jobs
 # based on the available memory
 ifneq (,$(filter flang-$(LLVM_VERSION), $(packages)))
-  MEM_PER_CPU=4500
+  MEM_PER_CPU=6000
 else
   MEM_PER_CPU=2100
 endif
 NJOBS := $(shell mt=`awk '/^(MemAvail|SwapFree)/ { mt += $$2 } END {print mt}' /proc/meminfo`; \
 		awk -vn=$(NCPUS) -vmt=$$mt -vm=$(MEM_PER_CPU) \
 		  'END { mt/=1024; n2 = int(mt/m); print n==1 ? 1 : n2<n+1 ? n2 : n+1}' < /dev/null)
+
+TIME_COMMAND = /bin/time -v
+TIME_COMMAND = $(CURDIR)/debian/usage-wrapper.py -j $(NJOBS) --base-memory -m 4.0 -o usage-$(notdir $@)-$(DEB_HOST_ARCH).svg
+ifneq (,$(findstring usage-wrapper, $(TIME_COMMAND)))
+  USAGE_BUILD_DEP = $(EMPTY) python3:any, python3-psutil, python3-matplotlib,
+endif
 
 DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
 
@@ -646,6 +652,7 @@ stamps/preconfigure:
 		f2=$$(echo $$f | sed 's/\.in$$//;s/X\.Y/$(LLVM_VERSION)/'); \
 		echo "$$f => $$f2"; \
 		sed -e 's|@DEB_HOST_MULTIARCH@|$(DEB_HOST_MULTIARCH)|g' \
+			-e "s|@USAGE_BUILD_DEP@|$(USAGE_BUILD_DEP)|g" \
 			-e "s|@BRANCH_NAME@|$(BRANCH_NAME)|g" \
 			-e "s|@OCAML_STDLIB_DIR@|$(OCAML_STDLIB_DIR)|g" \
 			-e "s|@LLVM_EPOCH@|$(LLVM_EPOCH)|g" \
@@ -873,7 +880,7 @@ stamps/debian-full-build:
 	echo "Using cmake: $(CMAKE_BIN)"
 # linker hack so stage2 can link against stage1 libs at runtime
 	LD_LIBRARY_PATH=$(STAGE_1_LIB_DIR):$$LD_LIBRARY_PATH \
-	VERBOSE=1 $(PRE_PROCESS) $(CMAKE_BIN) --build $(TARGET_BUILD) -j $(NJOBS) --target stage2 || cat build-llvm/tools/clang/stage2-bins/CMakeFiles/CMakeOutput.log
+	VERBOSE=1 $(TIME_COMMAND) $(PRE_PROCESS) $(CMAKE_BIN) --build $(TARGET_BUILD) -j $(NJOBS) --target stage2 || cat build-llvm/tools/clang/stage2-bins/CMakeFiles/CMakeOutput.log
 
 # Check the stage 2 build worked
 	if ! readelf --string-dump .comment  $(TARGET_BUILD_STAGE2)/bin/clang 2>&1|grep -q "clang version"; then \
@@ -927,7 +934,7 @@ stamps/debian-libclc-build:
 	-DLLVM_CMAKE_DIR=$(STAGE_2_BIN_DIR)/../ \
 	$(LIBCLC_LLVM_SPIRV) \
 	-DLIBCLC_TARGETS_TO_BUILD="$(LIBCLC_TARGETS_TO_BUILD)"; \
-	LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(STAGE_2_LIB_DIR) ninja -j $(NJOBS) $(VERBOSE)
+	LD_LIBRARY_PATH=$$LD_LIBRARY_PATH:$(STAGE_2_LIB_DIR) $(TIME_COMMAND) ninja -j $(NJOBS) $(VERBOSE)
 ifndef LLVM_SPIRV
 	echo "libclc built without SPIRV (.spv) outputs because llvm-spirv wasn't found"
 endif
@@ -967,7 +974,7 @@ build-wasm/compiler-rt-%:
 		-DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
 		-DCOMPILER_RT_DEFAULT_TARGET_TRIPLE=$(cpu)-unknown-unknown \
 		-DCOMPILER_RT_OS_DIR=wasi
-	ninja -C "$@" -j $(NJOBS) $(VERBOSE)
+	$(TIME_COMMAND) ninja -C "$@" -j $(NJOBS) $(VERBOSE)
 
 ifeq ($(LIBCXX_WASM_ENABLE), no)
 build-wasm/libcxx-%-wasi: build-wasm/compiler-rt-%
@@ -1050,7 +1057,7 @@ build-wasm/libcxx-%-wasi: build-wasm/compiler-rt-%
 		-DLIBCXXABI_HAS_EXTERNAL_THREAD_API:BOOL=OFF \
 		-DLIBCXXABI_BUILD_EXTERNAL_THREAD_LIBRARY:BOOL=OFF \
 		-DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=OFF
-	ninja -C "$@" -j $(NJOBS) $(VERBOSE)
+	$(TIME_COMMAND) ninja -C "$@" -j $(NJOBS) $(VERBOSE)
 endif
 
 # Build compiler-rt for wasm32 and wasm64. Build libcxx only for wasm32, as
@@ -1452,6 +1459,12 @@ endif
 # So, we remove this directory from the package
 	rm -fr $(CURDIR)/debian/libclang-rt-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/clang/$(LLVM_VERSION)/lib/wasi/
 
+	for svg in usage-*.svg; do \
+	  [ -f $$svg ] || continue; \
+	  xz -9v $$svg; \
+	  cp -p $$svg.xz debian/llvm-$(LLVM_VERSION)/usr/share/doc/llvm-$(LLVM_VERSION)/.; \
+	done
+
 stamps/repack_a_llvm_ir:
 ifeq (${LTO_ENABLE},yes)
 # with LTO, .a contains llvm ir instead of native code. So, recompile them
@@ -1603,5 +1616,6 @@ override_dh_auto_clean:
 	: # remove extra stamps
 	rm -f override_dh_auto_install
 	rm -rf stamps
+	rm -f usage-*.svg*
 
 .PHONY: override_dh_strip preconfigure
