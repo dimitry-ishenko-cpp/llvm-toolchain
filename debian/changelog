@@ -4,6 +4,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Add some memory tracking, getting some information on memory hogs.
   * Don't require g++-multilib on s390x for newer Ubuntu releases.
   * Factor-out ocaml architectures.
+  * Don't try to install xray and profile headers on armel and armhf.
 
  -- Matthias Klose <doko@ubuntu.com>  Tue, 27 Aug 2024 11:48:42 +0200
 
