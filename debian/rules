@@ -53,6 +53,9 @@ endif
 
 VENDOR=$(shell lsb_release -is)
 DISTRO=$(shell lsb_release -sc)
+DERIVATIVE := $(shell if dpkg-vendor --derives-from Ubuntu; then echo Ubuntu; \
+		elif dpkg-vendor --derives-from Debian; then echo Debian; \
+		else echo Unknown; fi)
 
 SONAME_EXT      := 1
 SONAME_OPENMP	:= 5
@@ -88,6 +91,13 @@ endif
 DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
 
 include /usr/share/dpkg/architecture.mk
+
+MULTILIB_ARCHS := amd64 i386 kfreebsd-amd64 mips64 mips64el mipsel powerpc ppc64 s390 s390x sparc sparc64 x32
+ifeq ($(DERIVATIVE),Ubuntu)
+  ifeq (,$(filter $(DISTRO), bionic focal jammy noble))
+    MULTILIB_ARCHS := $(filter-out s390 s390x, $(MULTILIB_ARCHS))
+  endif
+endif
 
 CONFIGURE_EXTRA =
 
@@ -166,7 +176,7 @@ endif
 Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=OFF
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' libz3-dev) gt 4.7.0; echo $$?),0)
 # no ocaml support in main for Ubuntu
-ifneq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
+ifeq ($(DERIVATIVE),Debian)
 	Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=ON
 endif
 endif
@@ -174,7 +184,7 @@ STAGE_2_CMAKE_EXTRA += $(Z3_FLAG)
 
 # Change the default CPU for s390x
 ZARCH=z196
-ifeq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
+ifeq ($(DERIVATIVE),Ubuntu)
 ZARCH=z13
 endif
 STAGE_2_CMAKE_EXTRA += -DCLANG_SYSTEMZ_DEFAULT_ARCH=$(ZARCH)
@@ -404,7 +414,7 @@ RUN_TEST=yes
 ifneq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	RUN_TEST=no
 endif
-ifeq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
+ifeq ($(DERIVATIVE),Ubuntu)
 ifeq (riscv64,$(DEB_HOST_ARCH))
 	RUN_TEST=no
 endif
@@ -653,6 +663,7 @@ stamps/preconfigure:
 		echo "$$f => $$f2"; \
 		sed -e 's|@DEB_HOST_MULTIARCH@|$(DEB_HOST_MULTIARCH)|g' \
 			-e "s|@USAGE_BUILD_DEP@|$(USAGE_BUILD_DEP)|g" \
+			-e "s|@MULTILIB_ARCHS@|$(MULTILIB_ARCHS)|g" \
 			-e "s|@BRANCH_NAME@|$(BRANCH_NAME)|g" \
 			-e "s|@OCAML_STDLIB_DIR@|$(OCAML_STDLIB_DIR)|g" \
 			-e "s|@LLVM_EPOCH@|$(LLVM_EPOCH)|g" \
