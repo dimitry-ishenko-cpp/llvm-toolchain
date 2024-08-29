@@ -158,3 +158,4 @@ D154931-revert-loong64.patch
 link-with-package-metadata.diff
 llvm-toolchain-17-sve-types-aux-target.diff
 env-lld-package-metadata.diff
+arm64-clang-gcc-14.patch
