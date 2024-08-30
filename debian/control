@@ -146,7 +146,7 @@ Description: C interface to the Clang library
  based on the LLVM compiler. Its goal is to offer a replacement to the
  GNU Compiler Collection (GCC).
  .
- Clang implements all of the ISO C++ 2098, 11, 14 and 17 standards and also
+ Clang implements all of the ISO C++ 1998, 11, 14 and 17 standards and also
  provides most of the support of C++20.
  .
  This package contains the Clang library.
@@ -347,8 +347,8 @@ Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
-Breaks: llvm@LLVM_VERSION@-dev (<< 1:20~++20240830999999+99)
-Replaces: llvm@LLVM_VERSION@-dev (<< 1:20~++20240830999999+99)
+Breaks: llvm20-dev (<< 1:20~++20240830999999+99)
+Replaces: llvm20-dev (<< 1:20~++20240830999999+99)
 Description: Modular compiler and toolchain technologies, runtime library
  LLVM is a collection of libraries and tools that make it easy to build
  compilers, optimizers, just-in-time code generators, and many other
