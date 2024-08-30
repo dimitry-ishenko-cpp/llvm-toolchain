@@ -7,6 +7,7 @@
 .github
 .mailmap
 
+# upstream toplevel files
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 LICENSE.TXT
@@ -14,6 +15,7 @@ README.md
 SECURITY.md
 pyproject.toml
 
+# upstream directories
 bolt
 clang
 clang-tools-extra
@@ -40,10 +42,13 @@ runtimes
 third-party
 utils
 
+# build files
+build-llvm
 build-wasm
 stamps
 usage-*.svg*
 
+# generated debian files
 debian/*.debhelper.log
 debian/*.dirs
 debian/*.docs
@@ -54,12 +59,22 @@ debian/*.lintian-overrides
 debian/*.manpages
 debian/*.substvars
 debian/.debhelper
+
 debian/man
 debian/tmp
 debian/usr
 
+debian/libclang1-20.symbols
+debian/libllvm-20-ocaml-dev.META
+debian/libomp5-20.symbols
+debian/lldb-20.postinst
+debian/llvm-20-runtime.binfmt
+debian/llvm-20-runtime.binfmt.conf
+debian/llvm-20-runtime.postinst
+debian/llvm-20-runtime.prerm
 debian/pollycc
 
+# package directories
 debian/bolt-20
 debian/clang-20-doc
 debian/clang-20-examples
