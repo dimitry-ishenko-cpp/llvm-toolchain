@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0~++rc3-1~exp2) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc3-1) unstable; urgency=medium
 
   * Add a .gitignore file with all toplevel upstream files and directories.
   * Add some memory tracking, getting some information on memory hogs.
@@ -19,7 +19,7 @@ llvm-toolchain-19 (1:19.1.0~++rc3-1~exp2) UNRELEASED; urgency=medium
   * debian/rules. Call again dh_ocaml. Closes: #1078234.
   * debian/rules: Don't create a stamp for the override_dh_auto_install target.
 
- -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:10:21 +0200
+ -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:32:59 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc3-1~exp1) experimental; urgency=medium
 
