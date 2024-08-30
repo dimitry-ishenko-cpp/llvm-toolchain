@@ -56,6 +56,8 @@ debian/*.examples
 debian/*.install
 debian/*.links
 debian/*.lintian-overrides
+debian/*.oinfo.debhelper
+debian/*.olist.debhelper
 debian/*.manpages
 debian/*.substvars
 debian/.debhelper
