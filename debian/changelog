@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0~++rc3-1~exp2) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc3-1~exp2ubuntu6) oracular; urgency=medium
 
   * Add a .gitignore file with all toplevel upstream files and directories.
   * Add some memory tracking, getting some information on memory hogs.
@@ -15,6 +15,7 @@ llvm-toolchain-19 (1:19.1.0~++rc3-1~exp2) UNRELEASED; urgency=medium
   * Fix installation of the shared libllvm and libclang-cpp libraries
     under their soname. Closes: #1072200.
   * Drop some of the unnecessary libllvm symlinks.
+  * debian/orig-tar.sh: Don't include .git/.github metadata.
 
  -- Matthias Klose <doko@ubuntu.com>  Fri, 30 Aug 2024 10:38:09 +0200
 
