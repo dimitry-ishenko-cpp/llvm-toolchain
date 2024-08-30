@@ -15,6 +15,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Fix installation of the shared libllvm and libclang-cpp libraries
     under their soname. Addresses: #1072200.
   * Drop some of the unnecessary libllvm symlinks.
+  * debian/orig-tar.sh: Don't include .git/.github metadata.
 
  -- Matthias Klose <doko@ubuntu.com>  Fri, 30 Aug 2024 10:46:16 +0200
 
