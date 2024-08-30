@@ -18,8 +18,9 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * debian/orig-tar.sh: Don't include .git/.github metadata.
   * debian/patches/100986.diff: Pull upstream patch to build with recent glibc.
   * debian/rules: Don't create a stamp for the override_dh_auto_install target.
+  * debian/rules. Call again dh_ocaml. Closes: #1078235.
 
- -- Matthias Klose <doko@ubuntu.com>  Fri, 30 Aug 2024 10:46:16 +0200
+ -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:14:51 +0200
 
 llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp2) experimental; urgency=medium
 
