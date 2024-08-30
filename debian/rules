@@ -1457,6 +1457,18 @@ else
 endif
 
 override_dh_install:
+	: # fix libLLVM.so.1 install, install it under the SONAME
+	-ls -l debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM*.so*
+	test -f debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so.1
+
+	if [ -f debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so.1 ] && [ ! -h debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so.1 ]; then \
+	  soname=$$(objdump -p debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so.1 | awk '/ *SONAME / {print $$2}'); \
+	  rm -f debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/$$soname; \
+	  mv debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so.1 debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/$$soname; \
+	  ln -sf $$soname debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM-$(LLVM_VERSION).so; \
+	  ln -sf $$soname debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM.so; \
+	fi
+
 ifeq (${POLLY_ENABLE},yes)
 # only for arch:any builds
 ifneq (,$(filter libpolly-$(LLVM_VERSION)-dev, $(packages)))
