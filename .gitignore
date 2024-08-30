@@ -93,8 +93,8 @@ debian/libc++abi-20-dev
 debian/libc++abi1-20
 debian/libclang-20-dev
 debian/libclang-common-20-dev
-debian/libclang-cpp19-dev
-debian/libclang-cpp19
+debian/libclang-cpp20-dev
+debian/libclang-cpp20
 debian/libclang-rt-20-dev-wasm32
 debian/libclang-rt-20-dev-wasm64
 debian/libclang-rt-20-dev
@@ -108,7 +108,7 @@ debian/liblld-20
 debian/liblldb-20-dev
 debian/liblldb-20
 debian/libllvm-20-ocaml-dev
-debian/libllvm19
+debian/libllvm20
 debian/libllvmlibc-20-dev
 debian/libmlir-20-dev
 debian/libmlir-20
