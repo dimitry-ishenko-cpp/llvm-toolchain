@@ -23,7 +23,7 @@ Build-Depends: debhelper (>= 10.0), cmake, ninja-build,
     ocaml-findlib [@OCAML_ARCHS@],
     libctypes-ocaml-dev [@OCAML_ARCHS@],
     dh-exec, dh-ocaml [@OCAML_ARCHS@],
-    libpfm4-dev [linux-any], python3-setuptools, libz3-dev,
+    libpfm4-dev [linux-any], python3-setuptools, libz3-dev [!sh4],
 # "| hello" is for older buster/bionic distros without spirv support
 # We need to keep the constraints coherent between the two alternatives, otherwise
 # hello would get installed unexpectedly and prevent e.g. wasi-libc from getting pulled

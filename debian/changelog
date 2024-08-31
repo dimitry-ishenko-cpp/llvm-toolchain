@@ -21,6 +21,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Disable openmp on mips64el (ld: cannot find -lomptarget.rtl.host).
   * Disable memory tracking on the Hurd and some ports architectures.
   * Also explicitly link with -latomic on mips64el.
+  * Build without z3 on sh4 (ftbfs).
 
  -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:14:51 +0200
 
