@@ -1493,11 +1493,13 @@ endif
 # So, we remove this directory from the package
 	rm -fr $(CURDIR)/debian/libclang-rt-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/clang/$(LLVM_VERSION)/lib/wasi/
 
-	for svg in usage-*.svg; do \
-	  [ -f $$svg ] || continue; \
-	  xz -9v $$svg; \
-	  cp -p $$svg.xz debian/llvm-$(LLVM_VERSION)/usr/share/doc/llvm-$(LLVM_VERSION)/.; \
-	done
+	if [ -d debian/llvm-$(LLVM_VERSION)/usr/share/doc/llvm-$(LLVM_VERSION) ]; then \
+	  for svg in usage-*.svg; do \
+	    [ -f $$svg ] || continue; \
+	    xz -9v $$svg; \
+	    cp -p $$svg.xz debian/llvm-$(LLVM_VERSION)/usr/share/doc/llvm-$(LLVM_VERSION)/.; \
+	  done; \
+	fi
 
 stamps/repack_a_llvm_ir:
 ifeq (${LTO_ENABLE},yes)
