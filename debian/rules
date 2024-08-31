@@ -404,7 +404,7 @@ else
 endif
 
 # Enable openmp (or not)
-OMP_ARCHS = amd64 arm64 armhf loong64 mips64el ppc64 ppc64el
+OMP_ARCHS = amd64 arm64 armhf loong64 ppc64 ppc64el
 OPENMP_ENABLE=yes
 ifeq (,$(filter $(DEB_HOST_ARCH), $(OMP_ARCHS)))
   OPENMP_ENABLE=no
