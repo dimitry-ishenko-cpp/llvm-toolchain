@@ -60,7 +60,6 @@ openmp/openmp-check-execstack.diff
 
 # libcxx
 libcxx/libcxxabi-test-don-t-fail-extended-long-double.patch
-libcxx/libcxx-test-fix-lockfree-test-for-i386.patch
 libcxx/libcxxabi-arm-ehabi-fix.patch
 libcxx/libcxx-silent-test-libcxx.diff
 libcxx/libcxx-silent-failure-ppc64el.diff
@@ -151,5 +150,3 @@ disable-openmp-per-target.diff
 libsanitizer-timebits.diff
 offload-disable-static-assert.diff
 link-with-package-metadata.diff
-
-100986.diff
