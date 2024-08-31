@@ -625,7 +625,7 @@ Description: Next generation, high-performance debugger, header files
 
 Package: libomp-19-dev
 Section: libdevel
-Architecture: amd64 arm64 armhf loong64 mips64el ppc64 ppc64el
+Architecture: amd64 arm64 armhf loong64 ppc64 ppc64el
 Depends: libomp5-19 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Suggests: libomp-19-doc
 Breaks: libiomp-dev (<< 3.7-1)
@@ -639,7 +639,7 @@ Description: LLVM OpenMP runtime - dev package
 
 Package: libomp5-19
 Multi-Arch: same
-Architecture: amd64 arm64 armhf loong64 mips64el ppc64 ppc64el
+Architecture: amd64 arm64 armhf loong64 ppc64 ppc64el
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Provides: ${t64:Provides}, libomp-x.y
 Conflicts: libomp-x.y
