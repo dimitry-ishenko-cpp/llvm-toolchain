@@ -191,10 +191,9 @@ endif
 
 Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=OFF
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' libz3-dev) gt 4.7.0; echo $$?),0)
-# no ocaml support in main for Ubuntu
-ifeq ($(DERIVATIVE),Debian)
-	Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=ON
-endif
+  ifeq (,$(filter $(DEB_HOST_ARCH),sh4))
+    Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=ON
+  endif
 endif
 STAGE_2_CMAKE_EXTRA += $(Z3_FLAG)
 
