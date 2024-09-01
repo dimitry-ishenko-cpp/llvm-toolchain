@@ -309,7 +309,11 @@ def generate_graph(time_range):
     mem_subplot.set_yticks(range(0, limit + 1, math.ceil(limit / 8)))
     mem_subplot.grid(True)
 
-    colors = list(matplotlib.colormaps['tab20c'].colors * 100)
+    # Try to use the newer colormaps attribute; if not available, fallback
+    try:
+        colors = list(matplotlib.colormaps['tab20c'].colors * 100)
+    except AttributeError:
+        colors = list(plt.cm.get_cmap('tab20c').colors * 100)
     for name, color in special_processes.items():
         if name in process_name_map:
             colors[process_name_map[name]] = color
