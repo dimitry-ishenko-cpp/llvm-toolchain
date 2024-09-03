@@ -348,7 +348,7 @@ ifeq ($(LLVM_SPIRV_INSTALLED),yes)
 	LIBCLC_LLVM_SPIRV = -DLLVM_SPIRV=$(LLVM_SPIRV)
 endif
 
-BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 kfreebsd-amd64 kfreebsd-i386
+BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 hurd-amd64 kfreebsd-amd64 kfreebsd-i386
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' binutils) ge 2.23.1-1~exp3 ; echo $$?),0)
 ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
 	STAGE_ALL_CMAKE_EXTRA += -DLLVM_USE_LINKER=gold
@@ -396,7 +396,7 @@ endif
 
 # Enable libunwind (or not)
 LIBUNWIND_ENABLE=yes
-ifneq (,$(filter $(DEB_HOST_ARCH), s390x armel m68k mipsel mips64el hurd-i386 powerpc sparc sparc64 x32))
+ifneq (,$(filter $(DEB_HOST_ARCH), s390x armel m68k mipsel mips64el hurd-i386 hurd-amd64 powerpc sparc sparc64 x32))
   LIBUNWIND_ENABLE=no
 # do not use compiler-rt builtins for libcxx (libcxxabi) when libunwind is
 # disabled since the gnu implementation in libgcc_s will then be required
@@ -409,7 +409,7 @@ else
 endif
 
 # Enable openmp (or not)
-OMP_ARCHS = amd64 arm64 armhf ppc64 ppc64el
+OMP_ARCHS = amd64 arm64 armhf ppc64 ppc64el hurd-amd64
 OPENMP_ENABLE=yes
 ifeq (,$(filter $(DEB_HOST_ARCH), $(OMP_ARCHS)))
   OPENMP_ENABLE=no
@@ -474,7 +474,7 @@ else
 endif
 
 LLDB_ENABLE=yes
-LLDB_DISABLE_ARCHS := hurd-i386 ia64 powerpc powerpcspe ppc64 riscv64 sparc64 mips64el mipsel
+LLDB_DISABLE_ARCHS := hurd-amd64 hurd-i386 ia64 powerpc powerpcspe ppc64 riscv64 sparc64 mips64el mipsel
 # hurd has threading issues
 ifeq (,$(filter-out $(LLDB_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 # Disable LLDB for this arch.
