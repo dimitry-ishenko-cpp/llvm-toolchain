@@ -5,6 +5,7 @@ llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
   * Build without z3 on sh4 (ftbfs).
   * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
   * debian/tests/*: s/18/19/.
+  * debian/qualify-clang.sh: Don't check for libclang-cpp.so.$VERSION symlink.
 
  -- Matthias Klose <doko@debian.org>  Sat, 31 Aug 2024 20:22:25 +0200
 
