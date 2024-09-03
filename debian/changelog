@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0~++rc4-1) unstable; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
 
   [ Matthias Klose ]
   * Also explicitly link with -latomic on mips64el.
