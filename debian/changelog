@@ -1,4 +1,6 @@
-llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc4-1) unstable; urgency=medium
+
+  * New release candidate.
 
   [ Matthias Klose ]
   * Also explicitly link with -latomic on mips64el.
@@ -18,7 +20,7 @@ llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
     see https://github.com/llvm/llvm-project/issues/99819
   * New snapshot release
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 03 Sep 2024 16:51:13 +0200
+ -- Matthias Klose <doko@debian.org>  Tue, 03 Sep 2024 21:48:12 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc3-2) unstable; urgency=medium
 
