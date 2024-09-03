@@ -1,12 +1,17 @@
 llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
 
+  [ Matthias Klose ]
   * Also explicitly link with -latomic on mips64el.
   * Disable openmp on loong64 (ld: cannot find -lomptarget.rtl.host).
   * Build without z3 on sh4 (ftbfs).
   * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
   * debian/tests/*: s/18/19/.
 
- -- Matthias Klose <doko@debian.org>  Sat, 31 Aug 2024 20:22:25 +0200
+  [ Sylvestre Ledru ]
+  * Remove the cmake dependency on libLibcTableGenUtil.a
+    see https://github.com/llvm/llvm-project/issues/99819
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 03 Sep 2024 14:56:07 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc3-2) unstable; urgency=medium
 
