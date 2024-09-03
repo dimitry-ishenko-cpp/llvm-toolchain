@@ -26,6 +26,8 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
   * debian/qualify-clang.sh: Don't check for libclang-cpp.so.$VERSION symlink.
   * debian/tests/*: s/18/20/g.
+  * libllvm20: Restore the symlink /usr/lib/llvm-20/lib/libLLVM.so.1, apparently
+    CMake's LLVMExports.cmake requires it. But why?
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
