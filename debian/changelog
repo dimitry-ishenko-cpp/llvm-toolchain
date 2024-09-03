@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc4-1) unstable; urgency=medium
 
   [ Matthias Klose ]
   * Also explicitly link with -latomic on mips64el.
@@ -14,8 +14,9 @@ llvm-toolchain-19 (1:19.1.0~++rc3-3) UNRELEASED; urgency=medium
   [ Sylvestre Ledru ]
   * Remove the cmake dependency on libLibcTableGenUtil.a
     see https://github.com/llvm/llvm-project/issues/99819
+  * New snapshot release
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 03 Sep 2024 14:56:07 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 03 Sep 2024 16:51:13 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc3-2) unstable; urgency=medium
 
