@@ -7,6 +7,8 @@ llvm-toolchain-19 (1:19.1.0~++rc4-1) unstable; urgency=medium
   * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
   * debian/tests/*: s/18/19/.
   * debian/qualify-clang.sh: Don't check for libclang-cpp.so.$VERSION symlink.
+  * libllvm19: Restore the symlink /usr/lib/llvm-19/lib/libLLVM.so.1, apparently
+    CMake's LLVMExports.cmake requires it. But why?
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
