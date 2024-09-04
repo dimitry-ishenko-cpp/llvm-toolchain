@@ -23,7 +23,7 @@ Build-Depends: debhelper (>= 10.0), cmake, ninja-build,
     ocaml-findlib [@OCAML_ARCHS@],
     libctypes-ocaml-dev [@OCAML_ARCHS@],
     dh-exec, dh-ocaml [@OCAML_ARCHS@],
-    libpfm4-dev [linux-any], python3-setuptools, libz3-dev [!sh4],
+    libpfm4-dev [linux-any], python3-setuptools, @Z3_DEV_DEP@
 # "| hello" is for older buster/bionic distros without spirv support
 # We need to keep the constraints coherent between the two alternatives, otherwise
 # hello would get installed unexpectedly and prevent e.g. wasi-libc from getting pulled
@@ -421,7 +421,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, libffi-dev, ${misc:Depends},
  llvm-@LLVM_VERSION@ (= ${binary:Version}), libllvm@LLVM_VERSION@ (= ${binary:Version}), libncurses-dev,
  llvm-@LLVM_VERSION@-tools (= ${binary:Version}), libclang-cpp@LLVM_VERSION@ (= ${binary:Version}),
- libz3-dev, libxml2-dev
+ libxml2-dev, @Z3_DEV_DEP@
 Description: Modular compiler and toolchain technologies, libraries and headers
  LLVM is a collection of libraries and tools that make it easy to build
  compilers, optimizers, just-in-time code generators, and many other

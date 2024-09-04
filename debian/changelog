@@ -28,11 +28,13 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * debian/tests/*: s/18/20/g.
   * libllvm20: Restore the symlink /usr/lib/llvm-20/lib/libLLVM.so.1, apparently
     CMake's LLVMExports.cmake requires it. But why?
+  * Disable z3 again for Ubuntu, and make the libz3-dev (build) dependency
+    conditional.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
 
- -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:14:51 +0200
+ -- Matthias Klose <doko@debian.org>  Wed, 04 Sep 2024 12:27:21 +0200
 
 llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp2) experimental; urgency=medium
 
