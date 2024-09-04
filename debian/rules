@@ -190,12 +190,18 @@ LDFLAGS_EXTRA += -latomic
 endif
 
 Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=OFF
-ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' libz3-dev) gt 4.7.0; echo $$?),0)
-  ifeq (,$(filter $(DEB_HOST_ARCH),sh4))
-    Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=ON
+# no ocaml support in main for Ubuntu
+ifneq ($(DERIVATIVE),Ubuntu)
+  ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' libz3-dev) gt 4.7.0; echo $$?),0)
+    ifeq (,$(filter $(DEB_HOST_ARCH),sh4))
+      Z3_FLAG = -DLLVM_ENABLE_Z3_SOLVER=ON
+    endif
   endif
 endif
 STAGE_2_CMAKE_EXTRA += $(Z3_FLAG)
+ifneq (,$(findstring =ON, $(Z3_FLAG)))
+  Z3_DEV_DEP = libz3-dev [!sh4],
+endif
 
 # Change the default CPU for s390x
 ZARCH=z196
@@ -678,6 +684,7 @@ stamps/preconfigure:
 		echo "$$f => $$f2"; \
 		sed -e 's|@DEB_HOST_MULTIARCH@|$(DEB_HOST_MULTIARCH)|g' \
 			-e "s|@USAGE_BUILD_DEP@|$(USAGE_BUILD_DEP)|g" \
+			-e "s|@Z3_DEV_DEP@|$(Z3_DEV_DEP)|g" \
 			-e "s|@MULTILIB_ARCHS@|$(MULTILIB_ARCHS)|g" \
 			-e "s|@OCAML_ARCHS@|$(OCAML_ARCHS)|g" \
 			-e "s|@OMP_ARCHS@|$(OMP_ARCHS)|g" \
