@@ -262,6 +262,8 @@ ifneq (,$(filter $(DEB_HOST_ARCH),mips64el))
 # avoid an issue with search path on mips64el
 # https://bugs.llvm.org/show_bug.cgi?id=41204
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=mips64el-linux-gnuabi64
+  CFLAGS_EXTRA += -mxgot
+  CXXFLAGS_EXTRA += -mxgot
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),powerpc))
@@ -442,7 +444,7 @@ endif
 endif
 
 # llvm tests timeout, disable it on mipsel and x32
-ifneq (,$(filter $(DEB_HOST_ARCH), mipsel x32))
+ifneq (,$(filter $(DEB_HOST_ARCH), mipsel mips64el x32))
 	RUN_TEST=no
 endif
 
