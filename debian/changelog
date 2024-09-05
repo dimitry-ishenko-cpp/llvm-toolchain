@@ -1,3 +1,9 @@
+llvm-toolchain-19 (1:19.1.0~++rc4-3) UNRELEASED; urgency=medium
+
+  * Consolidate disabling CMake's package validation checks a bit.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 05 Sep 2024 10:59:19 +0200
+
 llvm-toolchain-19 (1:19.1.0~++rc4-2) unstable; urgency=medium
 
   * Disable z3 again for Ubuntu, and make the libz3-dev (build) dependency
