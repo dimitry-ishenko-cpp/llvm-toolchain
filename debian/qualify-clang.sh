@@ -918,12 +918,8 @@ fi
 rm part1.o part2.o
 fi
 
-if test ! -f /usr/lib/llvm-$VERSION/lib/libomp.so; then
-    echo "Install libomp-$VERSION-dev";
-    exit -1;
-fi
-
 # OpenMP
+if dpkg -l libomp-$VERSION-dev >/dev/null 2>&1; then
 cat <<EOF > foo.c
 //test.c
 #include "omp.h"
@@ -936,6 +932,9 @@ int main(void) {
 EOF
 clang-$VERSION foo.c -fopenmp -o o
 ./o > /dev/null
+else
+    echo "OpenMP check skipped, no libomp-$VERSION-dev available."
+fi
 
 if test ! -f /usr/lib/llvm-$VERSION/include/c++/v1/vector; then
     echo "Install libc++-$VERSION-dev";
