@@ -1342,6 +1342,12 @@ endif
 	  -e '/_cmake_import_check_targets \(Polly\|sancov\|llvm-omp-device-info\|LibcTableGenUtil\|omptarget\|omp\)/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
 
+# the obscure libLLVM.so.1 file ...
+	sed -i \
+	  -e '/_cmake_import_check_targets LLVM/ {s|^|#|}' \
+	  -e '/_cmake_import_check_files_for_.*\/libLLVM\.so\.1.*/ {s|^|#|}' \
+	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
+
 # Also disable mlir-* checks in the cmake
 	sed -i \
 	  -e '/_cmake_import_check_targets \(mlir-\|MLIR\)/ {s|^|#|}' \

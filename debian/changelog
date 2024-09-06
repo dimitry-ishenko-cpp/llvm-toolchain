@@ -2,6 +2,7 @@ llvm-toolchain-19 (1:19.1.0~++rc4-3) UNRELEASED; urgency=medium
 
   * Consolidate disabling CMake's package validation checks a bit.
   * debian/qualify-clang.sh: Skip OpenMP test, if libomp-dev is not available.
+  * Disable CMake's package validation check for libLLVM.so.1.
 
  -- Matthias Klose <doko@debian.org>  Thu, 05 Sep 2024 10:59:19 +0200
 
