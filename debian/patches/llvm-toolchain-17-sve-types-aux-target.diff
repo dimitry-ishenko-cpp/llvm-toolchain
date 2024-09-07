@@ -12,11 +12,9 @@ Co-authored-by: Sander De Smalen <sander.desmalen@arm.com>
  clang/test/PCH/aarch64-sve-types.c | 2 ++
  3 files changed, 7 insertions(+), 2 deletions(-)
 
-Index: llvm-toolchain-17-17.0.6/clang/lib/AST/ASTContext.cpp
-===================================================================
---- llvm-toolchain-17-17.0.6.orig/clang/lib/AST/ASTContext.cpp
-+++ llvm-toolchain-17-17.0.6/clang/lib/AST/ASTContext.cpp
-@@ -1353,7 +1353,8 @@ void ASTContext::InitBuiltinTypes(const
+--- a/clang/lib/AST/ASTContext.cpp
++++ b/clang/lib/AST/ASTContext.cpp
+@@ -1353,7 +1353,8 @@
  #include "clang/Basic/OpenCLExtensionTypes.def"
    }
  
@@ -26,11 +24,9 @@ Index: llvm-toolchain-17-17.0.6/clang/lib/AST/ASTContext.cpp
  #define SVE_TYPE(Name, Id, SingletonId) \
      InitBuiltinType(SingletonId, BuiltinType::Id);
  #include "clang/Basic/AArch64SVEACLETypes.def"
-Index: llvm-toolchain-17-17.0.6/clang/lib/Sema/Sema.cpp
-===================================================================
---- llvm-toolchain-17-17.0.6.orig/clang/lib/Sema/Sema.cpp
-+++ llvm-toolchain-17-17.0.6/clang/lib/Sema/Sema.cpp
-@@ -424,7 +424,9 @@ void Sema::Initialize() {
+--- a/clang/lib/Sema/Sema.cpp
++++ b/clang/lib/Sema/Sema.cpp
+@@ -424,7 +424,9 @@
  #include "clang/Basic/OpenCLExtensionTypes.def"
    }
  
@@ -41,10 +37,8 @@ Index: llvm-toolchain-17-17.0.6/clang/lib/Sema/Sema.cpp
  #define SVE_TYPE(Name, Id, SingletonId) \
      addImplicitTypedef(Name, Context.SingletonId);
  #include "clang/Basic/AArch64SVEACLETypes.def"
-Index: llvm-toolchain-17-17.0.6/clang/test/PCH/aarch64-sve-types.c
-===================================================================
---- llvm-toolchain-17-17.0.6.orig/clang/test/PCH/aarch64-sve-types.c
-+++ llvm-toolchain-17-17.0.6/clang/test/PCH/aarch64-sve-types.c
+--- a/clang/test/PCH/aarch64-sve-types.c
++++ b/clang/test/PCH/aarch64-sve-types.c
 @@ -1,6 +1,8 @@
  // RUN: %clang_cc1 -triple aarch64-linux-gnu -emit-pch -o %t %s
  // RUN: %clang_cc1 -triple aarch64-linux-gnu -include-pch %t \
