@@ -85,8 +85,8 @@ NJOBS := $(shell mt=`awk '/^(MemAvail|SwapFree)/ { mt += $$2 } END {print mt}' /
 		awk -vn=$(NCPUS) -vmt=$$mt -vm=$(MEM_PER_CPU) \
 		  'END { mt/=1024; n2 = int(mt/m); print n==1 ? 1 : n2<n+1 ? n2 : n+1}' < /dev/null)
 
-TIME_COMMAND = /bin/time -v
 TIME_COMMAND = $(CURDIR)/debian/usage-wrapper.py $(SUMMARY_ONLY) -j $(NJOBS) --base-memory -m 4.0 -o usage-$(notdir $@)-$(DEB_HOST_ARCH).svg
+TIME_COMMAND = /bin/time -v
 ifneq (,$(findstring usage-wrapper, $(TIME_COMMAND)))
   ifeq ($(DERIVATIVE),Ubuntu)
     USAGE_BUILD_DEP = $(EMPTY) python3:any, python3-psutil, python3-matplotlib [!i386],
