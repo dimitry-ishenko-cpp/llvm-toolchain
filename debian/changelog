@@ -9,7 +9,7 @@ llvm-toolchain-19 (1:19.1.0~++rc4-3) UNRELEASED; urgency=medium
   * Disable the usage-wrapper/memory tracking by default.
   * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
   * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
-  * Remove references to powerpcspe.
+  * Remove references to alpha, hppa, powerpcspe and sh4.
 
   [ Aurelien Jarno ]
   * Enable lldb on riscv64.
