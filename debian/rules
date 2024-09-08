@@ -681,7 +681,7 @@ stamps/preconfigure:
 	@echo "LLVM_SPIRV_INSTALLED=$(LLVM_SPIRV_INSTALLED)"
 	@echo "DOC_GENERATION=$(DOC_GENERATION)"
 
-	for f in debian/*.in; do \
+	for f in debian/*.in debian/tests/*.in; do \
 		f2=$$(echo $$f | sed 's/\.in$$//;s/X\.Y/$(LLVM_VERSION)/'); \
 		echo "$$f => $$f2"; \
 		sed -e 's|@DEB_HOST_MULTIARCH@|$(DEB_HOST_MULTIARCH)|g' \
@@ -698,6 +698,7 @@ stamps/preconfigure:
 			-e "s|@LLVM_VERSION_MINOR@|$(LLVM_VERSION_MINOR)|g" \
 			-e "s|@LLVM_VERSION_NEXT@|$(LLVM_VERSION_NEXT)|g" \
 			-e "s|@LLVM_VERSION@|$(LLVM_VERSION)|g" $$f > $$f2; \
+		[ -x $$f ] && chmod +x $$f2; \
 	done
 
 	# Make install file executable for dh-exec
