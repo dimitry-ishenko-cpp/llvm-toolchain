@@ -44,6 +44,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
 
   [ Aurelien Jarno ]
   * Enable lldb on riscv64.
+  * Enable lldb autopkgtest on riscv64.
 
  -- Matthias Klose <doko@debian.org>  Thu, 05 Sep 2024 12:04:57 +0200
 

@@ -19,7 +19,7 @@ Depends: gcc, build-essential, cmake, llvm-20-dev, clang-20, libclang-20-dev
 
 Test-Command: python3 -c "import lldb; print(lldb.__file__); print(lldb)"
 Depends: python3-lldb-20
-Architecture: amd64 arm64 armel armhf i386 ppc64el s390x
+Architecture: amd64 arm64 armel armhf i386 ppc64el riscv64 s390x
 
 Test-Command: python3 -c "import clang; print(clang.__file__); print(clang)"
 Depends: python3-clang-20
