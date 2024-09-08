@@ -481,13 +481,10 @@ else
         COVERITY_ENABLE=0
 endif
 
-LLDB_ENABLE=yes
-LLDB_DISABLE_ARCHS := hurd-amd64 hurd-i386 ia64 powerpc powerpcspe ppc64 sparc64 mips64el mipsel
+LLDB_ENABLE=no
 # hurd has threading issues
-ifeq (,$(filter-out $(LLDB_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
-# Disable LLDB for this arch.
-	LLDB_ENABLE=no
-else
+LLDB_ARCHS := amd64 arm64 armel armhf i386 loong64 m68k ppc64el riscv64 s390x x32
+ifneq (,$(filter $(DEB_HOST_ARCH),$(LLDB_ARCHS)))
 	STAGE_ALL_CMAKE_EXTRA += -DLLDB_ENABLE_LUA=OFF
 	PROJECTS+=;lldb
 endif
@@ -688,6 +685,7 @@ stamps/preconfigure:
 			-e "s|@USAGE_BUILD_DEP@|$(USAGE_BUILD_DEP)|g" \
 			-e "s|@Z3_DEV_DEP@|$(Z3_DEV_DEP)|g" \
 			-e "s|@MULTILIB_ARCHS@|$(MULTILIB_ARCHS)|g" \
+			-e "s|@LLDB_ARCHS@|$(LLDB_ARCHS)|g" \
 			-e "s|@OCAML_ARCHS@|$(OCAML_ARCHS)|g" \
 			-e "s|@OMP_ARCHS@|$(OMP_ARCHS)|g" \
 			-e "s|@FLANG_ARCHS@|$(FLANG_ARCHS)|g" \

@@ -7,6 +7,7 @@ llvm-toolchain-19 (1:19.1.0~++rc4-3) UNRELEASED; urgency=medium
   * Limit lldb autopkg test to the lldb architectures.
   * Generate debian/tests/* files.
   * Disable the usage-wrapper/memory tracking by default.
+  * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
 
   [ Aurelien Jarno ]
   * Enable lldb on riscv64.
