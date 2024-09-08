@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0~++rc4-3) unstable; urgency=medium
+llvm-toolchain-19 (1:19.1.0~++rc4-4) unstable; urgency=medium
 
   [ Matthias Klose ]
   * Consolidate disabling CMake's package validation checks a bit.
@@ -10,12 +10,13 @@ llvm-toolchain-19 (1:19.1.0~++rc4-3) unstable; urgency=medium
   * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
   * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
   * Remove references to alpha, hppa, powerpcspe and sh4.
+  * Fix usage-wrapper build dependency.
 
   [ Aurelien Jarno ]
   * Enable lldb on riscv64.
   * Enable lldb autopkgtest on riscv64.
 
- -- Matthias Klose <doko@debian.org>  Sun, 08 Sep 2024 17:13:38 +0200
+ -- Matthias Klose <doko@debian.org>  Sun, 08 Sep 2024 17:36:43 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc4-2) unstable; urgency=medium
 
