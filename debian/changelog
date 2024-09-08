@@ -38,6 +38,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Disable the usage-wrapper/memory tracking by default.
   * Limit lldb autopkg test to the lldb architectures.
   * Generate debian/tests/* files.
+  * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
