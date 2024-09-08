@@ -5,6 +5,7 @@ llvm-toolchain-19 (1:19.1.0~++rc4-3) UNRELEASED; urgency=medium
   * Disable CMake's package validation check for libLLVM.so.1.
   * Limit lldb autopkg test to the lldb architectures.
   * Generate debian/tests/* files.
+  * Disable the usage-wrapper/memory tracking by default.
 
  -- Matthias Klose <doko@debian.org>  Thu, 05 Sep 2024 10:59:19 +0200
 
