@@ -19,7 +19,7 @@ Depends: gcc, build-essential, cmake, llvm-@LLVM_VERSION@-dev, clang-@LLVM_VERSI
 
 Test-Command: python3 -c "import lldb; print(lldb.__file__); print(lldb)"
 Depends: python3-lldb-@LLVM_VERSION@
-Architecture: amd64 arm64 armel armhf i386 ppc64el s390x
+Architecture: amd64 arm64 armel armhf i386 ppc64el riscv64 s390x
 
 Test-Command: python3 -c "import clang; print(clang.__file__); print(clang)"
 Depends: python3-clang-@LLVM_VERSION@
