@@ -16,7 +16,7 @@ Build-Depends: debhelper (>= 10.0), cmake, ninja-build,
     libipt-dev [amd64 i386],
     lcov, procps, help2man,
     zlib1g-dev, libzstd-dev,
-    g++-multilib [amd64 i386 kfreebsd-amd64 mips64 mips64el mipsel powerpc ppc64 s390 s390x sparc sparc64 x32],
+    g++-multilib [amd64 i386 mips64 mips64el mipsel powerpc ppc64 s390x sparc sparc64 x32],
     libjs-mathjax, python3-myst-parser | python3-recommonmark, python3-pexpect,
     doxygen,
     ocaml-base [amd64 arm64 ppc64el riscv64 s390x] | ocaml-nox [amd64 arm64 ppc64el riscv64 s390x],
@@ -525,7 +525,7 @@ Description: Modular compiler and toolchain technologies, examples
 # ------------- lld -------------
 
 Package: lld-20
-Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
+Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
 # ia64 hurd powerpc have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, libllvm20 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
@@ -535,7 +535,7 @@ Description: LLVM-based linker
  Project.
 
 Package: liblld-20
-Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
+Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
 # ia64 hurd powerpc have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, libllvm20 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
@@ -549,7 +549,7 @@ Description: LLVM-based linker, library
 
 Package: liblld-20-dev
 Section: libdevel
-Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
+Architecture: amd64 arm64 armel armhf i386 mipsel mips64el ppc64el s390x sparc alpha hppa m68k powerpcspe ppc64 sh4 sparc64 x32 riscv64 loong64
 # ia64 hurd powerpc have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, lld-20 (= ${binary:Version}),
  liblld-20 (= ${binary:Version}), libzstd-dev, zlib1g-dev
@@ -589,7 +589,7 @@ Description: Next generation, high-performance debugger, library
 
 Package: python3-lldb-20
 Section: python
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+Architecture: amd64 arm64 armel armhf i386 ppc64el s390x sparc hppa m68k sh4 x32 loong64 riscv64
 # ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}, liblldb-20 (= ${binary:Version})
 Conflicts: python3-lldb-x.y
@@ -605,7 +605,7 @@ Description: Next generation, high-performance debugger, python3 lib
 
 Package: liblldb-20-dev
 Section: libdevel
-Architecture: amd64 arm64 armel armhf i386 ppc64el kfreebsd-amd64 kfreebsd-i386 s390 s390x sparc hppa m68k sh4 x32 loong64 riscv64
+Architecture: amd64 arm64 armel armhf i386 ppc64el s390x sparc hppa m68k sh4 x32 loong64 riscv64
 # ia64 hurd powerpc powerpcspe ppc64 alpha s390x sparc64 mipsel mips64el have been removed
 Depends: ${shlibs:Depends}, ${misc:Depends}, lldb-20 (= ${binary:Version})
 Pre-Depends: ${misc:Pre-Depends}
@@ -935,7 +935,7 @@ Description: Post-link optimizer
 Package: flang-20
 # no 32bit support
 # https://github.com/llvm/llvm-project/issues/59845
-Architecture: amd64 arm64 ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
+Architecture: amd64 arm64 ppc64el ppc64 sparc64 riscv64 loong64
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs}, libflang-20-dev (= ${binary:Version}),
 Provides: fortran-compiler, gfortran-mod-15
 Description: Fortran compiler
@@ -946,7 +946,7 @@ Description: Fortran compiler
  of examples, some functionalities are still missing.
 
 Package: libflang-20-dev
-Architecture: amd64 arm64 ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
+Architecture: amd64 arm64 ppc64el ppc64 sparc64 riscv64 loong64
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs},
 Description: Flang library - Development package

@@ -39,6 +39,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Limit lldb autopkg test to the lldb architectures.
   * Generate debian/tests/* files.
   * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
+  * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
