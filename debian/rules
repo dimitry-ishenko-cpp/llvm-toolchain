@@ -72,7 +72,7 @@ endif
 packages := $(shell dh_listpackages)
 
 # no 32bit support
-FLANG_ARCHS := amd64 arm64 ppc64el kfreebsd-amd64 ppc64 sparc64 riscv64 loong64
+FLANG_ARCHS := amd64 arm64 ppc64el ppc64 sparc64 riscv64 loong64
 
 # flang has some memory hogs, of up to 6.2gb per process. Limit the parallel jobs
 # based on the available memory
@@ -108,10 +108,10 @@ DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
 
 include /usr/share/dpkg/architecture.mk
 
-MULTILIB_ARCHS := amd64 i386 kfreebsd-amd64 mips64 mips64el mipsel powerpc ppc64 s390 s390x sparc sparc64 x32
+MULTILIB_ARCHS := amd64 i386 mips64 mips64el mipsel powerpc ppc64 s390x sparc sparc64 x32
 ifeq ($(DERIVATIVE),Ubuntu)
   ifeq (,$(filter $(DISTRO), bionic focal jammy noble))
-    MULTILIB_ARCHS := $(filter-out s390 s390x, $(MULTILIB_ARCHS))
+    MULTILIB_ARCHS := $(filter-out s390x, $(MULTILIB_ARCHS))
   endif
 endif
 
@@ -182,7 +182,7 @@ ifneq (,$(filter $(DEB_HOST_ARCH),sparc sparc64))
 STAGE_1_CMAKE_EXTRA += -DLLVM_PARALLEL_LINK_JOBS=4
 endif
 
-ifneq (,$(filter $(DEB_HOST_ARCH),i386 hurd-i386 kfreebsd-i386 armel mipsel mips64el powerpc powerpcspe riscv64))
+ifneq (,$(filter $(DEB_HOST_ARCH),i386 hurd-i386 armel mipsel mips64el powerpc powerpcspe riscv64))
 # For some reason, in the stage2 build, when clang is used to compile
 # itself. The atomic detection is failing on armel and riscv64. Forcing the inclusion
 # everywhere and in all stages
@@ -356,7 +356,7 @@ ifeq ($(LLVM_SPIRV_INSTALLED),yes)
 	LIBCLC_LLVM_SPIRV = -DLLVM_SPIRV=$(LLVM_SPIRV)
 endif
 
-BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 hurd-amd64 kfreebsd-amd64 kfreebsd-i386
+BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 hurd-amd64
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' binutils) ge 2.23.1-1~exp3 ; echo $$?),0)
 ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
 	STAGE_ALL_CMAKE_EXTRA += -DLLVM_USE_LINKER=gold
