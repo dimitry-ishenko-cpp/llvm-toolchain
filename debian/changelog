@@ -11,6 +11,9 @@ llvm-toolchain-19 (1:19.1.0-5) UNRELEASED; urgency=medium
   [ Matthias Klose ]
   * Update watch file and add .git* files to exclude in the tarball.
 
+  [ Samuel Thibault ]
+  * patches/hurd/hurd-f_type.diff: Fix hurd build against glibc ≥ 2.39.
+
  -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:08:02 +0200
 
 llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
