@@ -1,4 +1,4 @@
-llvm-toolchain-17 (1:17.0.6-17) UNRELEASED; urgency=medium
+llvm-toolchain-17 (1:17.0.6-17) unstable; urgency=medium
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support
@@ -7,7 +7,7 @@ llvm-toolchain-17 (1:17.0.6-17) UNRELEASED; urgency=medium
   * Fix FTBFS with GCC 14 on arm64. Do not build with gcc-13 on arm64 anymore,
     reverting the changes introduced in 1:17.0.6-14. (Closes: #1077068)
 
- -- Samuel Thibault <sthibault@debian.org>  Tue, 30 Jul 2024 11:43:23 +0200
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 09 Sep 2024 11:46:52 +0200
 
 llvm-toolchain-17 (1:17.0.6-16) unstable; urgency=medium
 
