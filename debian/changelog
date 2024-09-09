@@ -18,7 +18,6 @@ llvm-toolchain-18 (1:18.1.8-9) unstable; urgency=medium
   * Mention in changelog also the SVE fixes from llvm-17
   * Drop mips D154390 patch, already upstream
 
-
   [ Sylvestre Ledru ]
   * Really fix breaks/replaces (Closes: #1077587)
 
