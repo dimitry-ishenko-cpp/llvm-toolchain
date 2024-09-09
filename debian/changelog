@@ -1,3 +1,9 @@
+llvm-toolchain-17 (1:17.0.6-18) unstable; urgency=medium
+
+  * Drop ocaml on armhf, ocamlopt disappeared making build ftbfs
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 09 Sep 2024 14:56:19 +0200
+
 llvm-toolchain-17 (1:17.0.6-17) unstable; urgency=medium
 
   [ Samuel Thibault ]
