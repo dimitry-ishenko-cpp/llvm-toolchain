@@ -12,19 +12,19 @@ which could then break something else.
 
 This probably should have upstream bug but I couldn't find any existing report.
 
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
+Index: llvm-toolchain-snapshot_20~++20240909012553+b8b8fbe19dea/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
-@@ -32,6 +32,7 @@
- #include "lldb/Utility/StreamString.h"
+--- llvm-toolchain-snapshot_20~++20240909012553+b8b8fbe19dea.orig/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
++++ llvm-toolchain-snapshot_20~++20240909012553+b8b8fbe19dea/lldb/source/Plugins/Process/gdb-remote/GDBRemoteCommunication.cpp
+@@ -33,6 +33,7 @@
  #include "llvm/ADT/SmallString.h"
+ #include "llvm/Config/llvm-config.h" // for LLVM_ENABLE_ZLIB
  #include "llvm/Support/ScopedPrinter.h"
 +#include "llvm/Config/llvm-config.h"
  
  #include "ProcessGDBRemoteLog.h"
  
-@@ -40,7 +41,7 @@
+@@ -41,7 +42,7 @@
  #elif defined(_WIN32)
  #define DEBUGSERVER_BASENAME "lldb-server.exe"
  #else
