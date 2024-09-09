@@ -19,10 +19,10 @@ Build-Depends: debhelper (>= 10.0), cmake, ninja-build,
     g++-multilib [amd64 i386 kfreebsd-amd64 mips64 mips64el mipsel powerpc ppc64 sparc sparc64 x32],
     libjs-mathjax, python3-myst-parser | python3-recommonmark,
     doxygen,
-    ocaml-base [amd64 arm64 armhf ppc64el riscv64 s390x] | ocaml-nox [amd64 arm64 armhf ppc64el riscv64 s390x],
-    ocaml-findlib [amd64 arm64 armhf ppc64el riscv64 s390x],
-    libctypes-ocaml-dev [amd64 arm64 armhf ppc64el riscv64 s390x],
-    dh-exec, dh-ocaml [amd64 arm64 armhf ppc64el riscv64 s390x],
+    ocaml-base [amd64 arm64 ppc64el riscv64 s390x] | ocaml-nox [amd64 arm64 ppc64el riscv64 s390x],
+    ocaml-findlib [amd64 arm64 ppc64el riscv64 s390x],
+    libctypes-ocaml-dev [amd64 arm64 ppc64el riscv64 s390x],
+    dh-exec, dh-ocaml [amd64 arm64 ppc64el riscv64 s390x],
     libpfm4-dev [linux-any], python3-setuptools, libz3-dev,
 # "| hello" is for older buster/bionic distros without spirv support
 # We need to keep the constraints coherent between the two alternatives, otherwise
@@ -462,7 +462,7 @@ Description: Modular compiler and toolchain technologies, tools
 
 Package: libllvm-18-ocaml-dev
 Section: ocaml
-Architecture: amd64 arm64 armhf ppc64el s390x riscv64
+Architecture: amd64 arm64 ppc64el s390x riscv64
 Suggests: llvm-18-doc
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${ocaml:Depends}, llvm-18-dev (= ${binary:Version})
 Replaces: libllvm-x.y-ocaml-dev
