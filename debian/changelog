@@ -42,6 +42,7 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
   * Remove references to alpha, hppa, powerpcspe and sh4.
   * Fix usage-wrapper build dependency.
+  * Move the libLLVM.so.1 symlink into llvm-20-dev.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.

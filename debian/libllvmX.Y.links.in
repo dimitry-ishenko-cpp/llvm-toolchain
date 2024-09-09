@@ -2,17 +2,3 @@
 
 # symlink to the soname in the llvm libdir
 usr/lib/@DEB_HOST_MULTIARCH@/libLLVM.so.@LLVM_VERSION@.@LLVM_VERSION_MINOR@ usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM.so.@LLVM_VERSION@.@LLVM_VERSION_MINOR@
-
-# FIXME: CMake requires this file, but for what? Fix LLVMExports.cmake instead?
-#
-# CMake Error at /usr/lib/llvm-19/lib/cmake/llvm/LLVMExports.cmake:1908 (message):
-#  The imported target "LLVM" references the file
-#
-#     "/usr/lib/llvm-19/lib/libLLVM.so.1"
-#
-#  but this file does not exist.
-usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM.so.@LLVM_VERSION@.@LLVM_VERSION_MINOR@ usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM.so.1
-
-# FIXME: why is this one needed? This already is in the llvm-dev package in the llvm libdir
-# create symlink to the symlink installed by upstream
-#usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM.so.@LLVM_VERSION@.@LLVM_VERSION_MINOR@ usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM-@LLVM_VERSION@.so
