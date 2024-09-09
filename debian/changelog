@@ -1,3 +1,9 @@
+llvm-toolchain-19 (1:19.1.0~++rc4-5) UNRELEASED; urgency=medium
+
+  * Move the libLLVM.so.1 symlink into llvm-19-dev. Closes: #1081192.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 09 Sep 2024 10:37:51 +0200
+
 llvm-toolchain-19 (1:19.1.0~++rc4-4) unstable; urgency=medium
 
   [ Matthias Klose ]

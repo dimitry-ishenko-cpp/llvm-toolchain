@@ -347,8 +347,8 @@ Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
-Breaks: llvm19-dev (<< 1:19.1.0~++rc3-1~exp2)
-Replaces: llvm19-dev (<< 1:19.1.0~++rc3-1~exp2)
+Breaks: llvm-19-dev (<< 1:19.1.0~++rc3-1~exp2)
+Replaces: llvm-19-dev (<< 1:19.1.0~++rc3-1~exp2)
 Description: Modular compiler and toolchain technologies, runtime library
  LLVM is a collection of libraries and tools that make it easy to build
  compilers, optimizers, just-in-time code generators, and many other
@@ -422,6 +422,8 @@ Depends: ${shlibs:Depends}, libffi-dev, ${misc:Depends},
  llvm-19 (= ${binary:Version}), libllvm19 (= ${binary:Version}), libncurses-dev,
  llvm-19-tools (= ${binary:Version}), libclang-cpp19 (= ${binary:Version}),
  libxml2-dev, libz3-dev [!sh4],
+Breaks: libllvm19 (<< 1:19.1.0~++rc4-5)
+Replaces: libllvm19 (<< 1:19.1.0~++rc4-5)
 Description: Modular compiler and toolchain technologies, libraries and headers
  LLVM is a collection of libraries and tools that make it easy to build
  compilers, optimizers, just-in-time code generators, and many other
