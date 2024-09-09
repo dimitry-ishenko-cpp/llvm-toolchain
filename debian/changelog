@@ -1,3 +1,13 @@
+llvm-toolchain-18 (1:18.1.8-11) UNRELEASED; urgency=medium
+
+  * Drop ocaml on armhf, ocamlopt disappeared making build ftbfs
+  * Drop extra space in changelog
+  * Sync spirv architectures with sid builds
+  * Fix x32 build failure due to orc library not being installed
+  * Add back LLVM_EXPERIMENTAL_TARGETS_TO_BUILD to PASSTHROUGH variables, to help m68k
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Mon, 09 Sep 2024 08:42:27 +0200
+
 llvm-toolchain-18 (1:18.1.8-10) unstable; urgency=medium
 
   [ Matthias Klose ]
