@@ -1,3 +1,9 @@
+llvm-toolchain-19 (1:19.1.0~++rc4-6) UNRELEASED; urgency=medium
+
+  * debian/qualify-clang.sh: Skip llvmlibc test, if libomp-dev is not available.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 10 Sep 2024 07:59:17 +0200
+
 llvm-toolchain-19 (1:19.1.0~++rc4-5) unstable; urgency=medium
 
   * Move the libLLVM.so.1 symlink into llvm-19-dev. Closes: #1081192.
