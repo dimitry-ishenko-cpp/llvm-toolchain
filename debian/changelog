@@ -1,7 +1,12 @@
 llvm-toolchain-19 (1:19.1.0~++rc4-6) UNRELEASED; urgency=medium
 
+  [ Matthias Klose ]
   * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
     available.
+
+  [ YunQiang Su ]
+  * also pass -mxgot in LDFLAGS.
+  * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
 
  -- Matthias Klose <doko@debian.org>  Tue, 10 Sep 2024 07:59:17 +0200
 

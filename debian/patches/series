@@ -136,3 +136,4 @@ libsanitizer-timebits.diff
 offload-disable-static-assert.diff
 link-with-package-metadata.diff
 env-lld-package-metadata.diff
+mips-mlir-xgot.diff
