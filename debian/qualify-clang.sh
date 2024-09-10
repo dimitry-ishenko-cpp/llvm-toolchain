@@ -1139,8 +1139,9 @@ else
 fi
 
 # libc
-echo "Testing llvmlibc-$VERSION-dev ..."
-echo '
+if dpkg -l libllvmlibc-$VERSION-dev >/dev/null 2>&1; then
+    echo "Testing llvmlibc-$VERSION-dev ..."
+    echo '
 #include <math.h>
 int main(void)
 {
@@ -1149,14 +1150,17 @@ int main(void)
       return 1;
     return 0;
 }' > main.c
-clang-$VERSION -static -nostdlib -nolibc -L/usr/lib/llvm-$VERSION/lib/ -lllvmlibc main.c -o foo
-if ! ldd foo 2>&1|grep -qv libc.; then
-    echo "linked against regular libc"
-    exit -1
-fi
+    clang-$VERSION -static -nostdlib -nolibc -L/usr/lib/llvm-$VERSION/lib/ -lllvmlibc main.c -o foo
+    if ! ldd foo 2>&1|grep -qv libc.; then
+	echo "linked against regular libc"
+	exit -1
+    fi
 
-# segfault for now
-./foo || true
+    # segfault for now
+    ./foo || true
+else
+    echo "libllvmlibc check skipped, no libllvmlibc-$VERSION-dev available."
+endif
 
 # libclc
 echo "Testing libclc-$VERSION-dev ..."

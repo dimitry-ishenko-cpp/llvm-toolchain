@@ -43,6 +43,8 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * Remove references to alpha, hppa, powerpcspe and sh4.
   * Fix usage-wrapper build dependency.
   * Move the libLLVM.so.1 symlink into llvm-20-dev.
+  * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
+    available.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
