@@ -3,12 +3,13 @@ llvm-toolchain-19 (1:19.1.0~++rc4-6) UNRELEASED; urgency=medium
   [ Matthias Klose ]
   * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
     available.
+  * Build-depend on llvm-spirv-19.
 
   [ YunQiang Su ]
   * also pass -mxgot in LDFLAGS.
   * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
 
- -- Matthias Klose <doko@debian.org>  Tue, 10 Sep 2024 07:59:17 +0200
+ -- Matthias Klose <doko@debian.org>  Mon, 16 Sep 2024 11:16:39 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc4-5) unstable; urgency=medium
 
