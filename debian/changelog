@@ -1,4 +1,6 @@
-llvm-toolchain-19 (1:19.1.0~++rc4-6) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0-1) unstable; urgency=medium
+
+  * New upstream release 19.1.0.
 
   [ Matthias Klose ]
   * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
@@ -9,7 +11,7 @@ llvm-toolchain-19 (1:19.1.0~++rc4-6) UNRELEASED; urgency=medium
   * also pass -mxgot in LDFLAGS.
   * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
 
- -- Matthias Klose <doko@debian.org>  Mon, 16 Sep 2024 11:16:39 +0200
+ -- Matthias Klose <doko@debian.org>  Tue, 17 Sep 2024 18:04:21 +0200
 
 llvm-toolchain-19 (1:19.1.0~++rc4-5) unstable; urgency=medium
 
