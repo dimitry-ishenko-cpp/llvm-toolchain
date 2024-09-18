@@ -1,3 +1,9 @@
+llvm-toolchain-19 (1:19.1.0-3) unstable; urgency=medium
+
+  * Fix typo in dh_makeshlibs calls.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 17:26:29 +0200
+
 llvm-toolchain-19 (1:19.1.0-2) unstable; urgency=medium
 
   * Call dh_makeshlibs with the version of the first upstream
