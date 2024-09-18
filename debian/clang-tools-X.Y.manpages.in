@@ -1,6 +1,5 @@
 clang/tools/scan-build/man/scan-build-@LLVM_VERSION@.1
 debian/man/clang-check-@LLVM_VERSION@.1
-debian/man/clang-rename-@LLVM_VERSION@.1
 debian/man/clang-query-@LLVM_VERSION@.1
 debian/man/clang-apply-replacements-@LLVM_VERSION@.1
 debian/man/sancov-@LLVM_VERSION@.1

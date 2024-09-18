@@ -57,7 +57,11 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp3) UNRELEASED; 
   * also pass -mxgot in LDFLAGS.
   * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
 
- -- Matthias Klose <doko@debian.org>  Thu, 05 Sep 2024 12:04:57 +0200
+  [ Sylvestre Ledru ]
+  * Remove clang-rename
+    https://github.com/llvm/llvm-project/commit/40c45b6b43180221acb49f387e7d3158adf49e3e
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 18 Sep 2024 17:52:45 +0200
 
 llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp2) experimental; urgency=medium
 
