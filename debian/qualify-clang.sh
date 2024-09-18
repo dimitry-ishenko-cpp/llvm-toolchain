@@ -1160,7 +1160,7 @@ int main(void)
     ./foo || true
 else
     echo "libllvmlibc check skipped, no libllvmlibc-$VERSION-dev available."
-endif
+fi
 
 # libclc
 echo "Testing libclc-$VERSION-dev ..."
