@@ -721,6 +721,7 @@ stamps/preconfigure:
 	# Yeah, this is ugly but I don't know how to do better
 	if test "$(LLVM_VERSION)" = "19"; then \
 		sed -i -e "s|(<< 1:19.1.0~++rc3-1~exp2)|(<< 1:19.1.0~++20240910033111)|g" debian/control; \
+		sed -i -e "s|(<< 1:19.1.0~++rc4-5)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
 	fi
 
 	# llvm-spirv was found, so we can enable *.spv files. Debian
