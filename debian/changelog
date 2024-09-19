@@ -72,6 +72,72 @@ llvm-toolchain-snapshot (1:20~++20240920033700+c320df4a2c9d-1~exp1) experimental
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 08:30:38 +0200
 
+llvm-toolchain-snapshot (1:20~++20240919085205+77af9d10237f-1~exp1) experimental; urgency=medium
+
+  [ Matthias Klose ]
+  * Add a .gitignore file with all toplevel upstream files and directories.
+  * Add some memory tracking, getting some information on memory hogs.
+  * Don't require g++-multilib on s390x for newer Ubuntu releases.
+  * Factor-out ocaml architectures.
+  * Don't try to install xray and profile headers on armel and armhf.
+  * Disable ocaml on armhf, requires ocamlopt.
+  * Factor-out omp architectures.
+  * Disable openmp on riscv64 (ld: cannot find -lomptarget.rtl.host).
+  * Factor-out flang architectures.
+  * Disable flang on mips64el (currently not supported).
+  * Don't try to install hwasan_symbolize on x32.
+  * Don't try to install xray and profile headers on x32.
+  * Fix installation of the shared libllvm and libclang-cpp libraries
+    under their soname. Addresses: #1072200.
+  * Drop some of the unnecessary libllvm symlinks.
+  * debian/orig-tar.sh: Don't include .git/.github metadata.
+  * debian/rules: Don't create a stamp for the override_dh_auto_install target.
+  * debian/rules. Call again dh_ocaml. Closes: #1078235.
+  * Disable openmp on mips64el (ld: cannot find -lomptarget.rtl.host).
+  * Disable memory tracking on the Hurd and some ports architectures.
+  * Also explicitly link with -latomic on mips64el.
+  * Build without z3 on sh4 (ftbfs).
+  * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
+  * debian/qualify-clang.sh: Don't check for libclang-cpp.so.$VERSION symlink.
+  * debian/tests/*: s/18/20/g.
+  * libllvm20: Restore the symlink /usr/lib/llvm-20/lib/libLLVM.so.1, apparently
+    CMake's LLVMExports.cmake requires it. But why?
+  * Disable z3 again for Ubuntu, and make the libz3-dev (build) dependency
+    conditional.
+  * Use -mxgot on mips64el.
+  * Disable tests on mips64el, they do timeout.
+  * Consolidate disabling CMake's package validation checks a bit.
+  * debian/qualify-clang.sh: Skip OpenMP test, if libomp-dev is not available.
+  * Disable CMake's package validation check for libLLVM.so.1.
+  * Disable the usage-wrapper/memory tracking by default.
+  * Limit lldb autopkg test to the lldb architectures.
+  * Generate debian/tests/* files.
+  * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
+  * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
+  * Remove references to alpha, hppa, powerpcspe and sh4.
+  * Fix usage-wrapper build dependency.
+  * Move the libLLVM.so.1 symlink into llvm-20-dev.
+  * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
+    available.
+
+  [ Samuel Thibault ]
+  * Add hurd-amd64 support.
+
+  [ Aurelien Jarno ]
+  * Enable lldb on riscv64.
+  * Enable lldb autopkgtest on riscv64.
+
+  [ YunQiang Su ]
+  * also pass -mxgot in LDFLAGS.
+  * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
+
+  [ Sylvestre Ledru ]
+  * New snapshot release
+  * Remove clang-rename
+    https://github.com/llvm/llvm-project/commit/40c45b6b43180221acb49f387e7d3158adf49e3e
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 19 Sep 2024 08:53:00 +0200
+
 llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp2) experimental; urgency=medium
 
   * Ship usr/lib/llvm-20/lib/clang/20/include/llvm_offload_wrappers in
