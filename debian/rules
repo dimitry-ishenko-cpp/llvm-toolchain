@@ -720,8 +720,10 @@ stamps/preconfigure:
 	# we update the version to make it work with apt.llvm.org
 	# Yeah, this is ugly but I don't know how to do better
 	if test "$(LLVM_VERSION)" = "19"; then \
+		if echo $(LLVM_VERSION_SNAPSHOT)| grep -q "~++"; then \
 		sed -i -e "s|(<< 1:19.1.0~++rc3-1~exp2)|(<< 1:19.1.0~++20240910033111)|g" debian/control; \
 		sed -i -e "s|(<< 1:19.1.0~++rc4-5)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
+		fi; \
 	fi
 
 	# llvm-spirv was found, so we can enable *.spv files. Debian
@@ -1428,14 +1430,22 @@ endif
 
 
 override_dh_makeshlibs:
-	dh_makeshlibs -plibclang$(SONAME_EXT)-$(LLVM_VERSION) \
-		'-Vlibclang$(SONAME_EXT)-$(LLVM_VERSION) (>= 1:19.1.0)'
-	dh_makeshlibs -pliblldb-$(LLVM_VERSION) \
-		'-Vliblldb-$(LLVM_VERSION) (>= 1:19.1.0)'
-	dh_makeshlibs -plibllvm$(LLVM_VERSION) \
-		'-Vlibllvm$(LLVM_VERSION) (>= 1:19.1.0)'
-	dh_makeshlibs -plibomp$(SONAME_OPENMP)-$(LLVM_VERSION) \
-		'-Vlibomp$(SONAME_OPENMP)-$(LLVM_VERSION) (>= 1:19.1.0)'
+# for apt.llvm.org
+	if echo $(LLVM_VERSION_SNAPSHOT)| grep -q "~++"; then \
+		dh_makeshlibs -plibclang$(SONAME_EXT)-$(LLVM_VERSION); \
+		dh_makeshlibs -pliblldb-$(LLVM_VERSION); \
+		dh_makeshlibs -plibllvm$(LLVM_VERSION); \
+		dh_makeshlibs -plibomp$(SONAME_OPENMP)-$(LLVM_VERSION); \
+	else \
+		dh_makeshlibs -plibclang$(SONAME_EXT)-$(LLVM_VERSION) \
+			'-Vlibclang$(SONAME_EXT)-$(LLVM_VERSION) (>= 1:19.1.0)'; \
+		dh_makeshlibs -pliblldb-$(LLVM_VERSION) \
+			'-Vliblldb-$(LLVM_VERSION) (>= 1:19.1.0)'; \
+		dh_makeshlibs -plibllvm$(LLVM_VERSION) \
+			'-Vlibllvm$(LLVM_VERSION) (>= 1:19.1.0)'; \
+		dh_makeshlibs -plibomp$(SONAME_OPENMP)-$(LLVM_VERSION) \
+			'-Vlibomp$(SONAME_OPENMP)-$(LLVM_VERSION) (>= 1:19.1.0)'; \
+	fi
 	dh_makeshlibs --remaining-packages -V
 
 override_dh_shlibdeps:

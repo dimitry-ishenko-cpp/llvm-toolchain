@@ -1,3 +1,10 @@
+llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
+
+  * Adjust the workaround for apt.llvm.org version upgrades
+    https://github.com/llvm/llvm-project/issues/109276
+
+ --
+
 llvm-toolchain-19 (1:19.1.0-3) unstable; urgency=medium
 
   * Fix typo in dh_makeshlibs calls.
