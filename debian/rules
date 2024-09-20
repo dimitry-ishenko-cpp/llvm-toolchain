@@ -83,11 +83,6 @@ else
   MEM_PER_CPU=2100
 endif
 
-# Display memory and swap information
-info:
-	@echo "Displaying memory and swap information"
-	@cat /proc/meminfo | grep -E '^(Mem|Swap)'
-
 NJOBS := $(shell mt=`awk '/^(MemAvail|SwapFree)/ { mt += $$2 } END {print mt}' /proc/meminfo`; \
 		awk -vn=$(NCPUS) -vmt=$$mt -vm=$(MEM_PER_CPU) \
 		  'END { mt/=1024; n2 = int(mt/m); print n==1 || n2<=1 ? 1 : n2<=n ? n2 : n }' < /dev/null)
@@ -640,7 +635,7 @@ ENABLED_STAGE2_CMAKE_BUILD_TARGETS = check-all;check-llvm;check-clang;check-clan
 PROJECTS_LIST := $(shell echo "$(PROJECTS)"|sed -e "s| ||g")
 RUNTIMES_LIST := $(shell echo "$(RUNTIMES)"|sed -e "s| ||g")
 
-stamps/preconfigure: info
+stamps/preconfigure:
 	if ! grep -qs '/proc ' /proc/mounts; then \
 		echo "/proc needs to be mounted"; \
 		exit 1; \

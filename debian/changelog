@@ -66,6 +66,8 @@ llvm-toolchain-snapshot (1:20~++20240920082629+ea578804c81b-1~exp1) experimental
   * Ensure that at least 1 CPU is used for build
     Thanks to Santiago Vila for the patch
     (Closes: #1082360)
+  * Remove clang-pseudo
+    https://github.com/llvm/llvm-project/pull/109154
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 08:30:38 +0200
 

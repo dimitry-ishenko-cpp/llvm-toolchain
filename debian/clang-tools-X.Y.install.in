@@ -29,7 +29,6 @@ usr/lib/llvm-@LLVM_VERSION@/bin/pp-trace
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-move
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-repl
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-linker-wrapper
-usr/lib/llvm-@LLVM_VERSION@/bin/clang-pseudo
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-offload-packager
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-tblgen
 usr/lib/llvm-@LLVM_VERSION@/bin/clang-include-cleaner
@@ -97,7 +96,6 @@ usr/bin/clang-move-@LLVM_VERSION@
 usr/bin/pp-trace-@LLVM_VERSION@
 usr/bin/clang-repl-@LLVM_VERSION@
 usr/bin/clang-linker-wrapper-@LLVM_VERSION@
-usr/bin/clang-pseudo-@LLVM_VERSION@
 usr/bin/clang-offload-packager-@LLVM_VERSION@
 usr/bin/clang-tblgen-@LLVM_VERSION@
 usr/bin/clang-include-cleaner-@LLVM_VERSION@
