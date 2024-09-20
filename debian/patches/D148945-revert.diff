@@ -3,11 +3,11 @@ Restore that for now, we're not GenToo ...
 https://reviews.llvm.org/D148945
 https://reviews.llvm.org/D122444
 
-Index: llvm-toolchain-snapshot_20~++20240723104014+d0c8e268c1ed/clang/lib/Driver/ToolChains/Linux.cpp
+Index: llvm-toolchain-snapshot_20~++20240920082629+ea578804c81b/clang/lib/Driver/ToolChains/Linux.cpp
 ===================================================================
---- llvm-toolchain-snapshot_20~++20240723104014+d0c8e268c1ed.orig/clang/lib/Driver/ToolChains/Linux.cpp
-+++ llvm-toolchain-snapshot_20~++20240723104014+d0c8e268c1ed/clang/lib/Driver/ToolChains/Linux.cpp
-@@ -348,6 +348,13 @@ Linux::Linux(const Driver &D, const llvm
+--- llvm-toolchain-snapshot_20~++20240920082629+ea578804c81b.orig/clang/lib/Driver/ToolChains/Linux.cpp
++++ llvm-toolchain-snapshot_20~++20240920082629+ea578804c81b/clang/lib/Driver/ToolChains/Linux.cpp
+@@ -351,6 +351,13 @@ Linux::Linux(const Driver &D, const llvm
  
    Generic_GCC::AddMultiarchPaths(D, SysRoot, OSLibDir, Paths);
  
