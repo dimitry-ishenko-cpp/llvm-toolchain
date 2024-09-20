@@ -63,6 +63,9 @@ llvm-toolchain-snapshot (1:20~++20240920082629+ea578804c81b-1~exp1) experimental
   * New snapshot release
   * Remove clang-rename
     https://github.com/llvm/llvm-project/commit/40c45b6b43180221acb49f387e7d3158adf49e3e
+  * Ensure that at least 1 CPU is used for build
+    Thanks to Santiago Vila for the patch
+    (Closes: #1082360)
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 08:30:38 +0200
 
