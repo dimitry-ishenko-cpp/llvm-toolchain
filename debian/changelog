@@ -1,7 +1,13 @@
 llvm-toolchain-18 (1:18.1.8-12) UNRELEASED; urgency=medium
 
+<<<<<<<
   * Ensure that at least 1 CPU is used for build
     (Closes: #1082359)
+=======
+  * Ensure that at least 1 CPU is used for build
+    Thanks to Santiago Vila for the patch
+    (Closes: #1082359)
+>>>>>>>
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 13:22:50 +0200
 
