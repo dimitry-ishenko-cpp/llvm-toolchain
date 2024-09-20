@@ -3,6 +3,9 @@ llvm-toolchain-19 (1:19.1.0-4) UNRELEASED; urgency=medium
   [ Sylvestre Ledru ]
   * Adjust the workaround for apt.llvm.org version upgrades
     https://github.com/llvm/llvm-project/issues/109276
+  * Ensure that at least 1 CPU is used for build
+    Thanks to Santiago Vila for the patch
+    (Closes: #1082360)
 
   [ Matthias Klose ]
   * Don't relax versioned shlibs dependencies for snapshot builds and
