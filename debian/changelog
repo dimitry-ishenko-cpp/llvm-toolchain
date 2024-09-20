@@ -4,6 +4,10 @@ llvm-toolchain-19 (1:19.1.0-4) UNRELEASED; urgency=medium
   * Adjust the workaround for apt.llvm.org version upgrades
     https://github.com/llvm/llvm-project/issues/109276
 
+  [ Matthias Klose ]
+  * Don't relax versioned shlibs dependencies for snapshot builds and
+    release versions.
+
  -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 17:26:29 +0200
 
 llvm-toolchain-19 (1:19.1.0-3) unstable; urgency=medium
