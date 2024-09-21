@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:20~++20240920033700+c320df4a2c9d-1~exp1) experimental; urgency=medium
+llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp1) experimental; urgency=medium
 
   [ Matthias Klose ]
   * Add a .gitignore file with all toplevel upstream files and directories.
@@ -70,7 +70,7 @@ llvm-toolchain-snapshot (1:20~++20240920033700+c320df4a2c9d-1~exp1) experimental
   * Remove clang-pseudo
     https://github.com/llvm/llvm-project/pull/109154
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 08:30:38 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 21 Sep 2024 19:12:01 +0200
 
 llvm-toolchain-snapshot (1:20~++20240919085205+77af9d10237f-1~exp1) experimental; urgency=medium
 

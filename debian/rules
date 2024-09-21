@@ -63,9 +63,9 @@ SONAME_OPENMP	:= 5
 # Manage the case when the version is 3.5~svn213052-1~exp1 or 3.4.2-1
 DEBIAN_REVISION := $(shell dpkg-parsechangelog |  sed -rne "s,^Version: 1:([0-9.]+)(~|-)(.*),\3,p")
 ifneq (,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
-  NCPUS := $(subst parallel=,,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
+	NCPUS := $(subst parallel=,,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
 else
-  NCPUS := $(shell nproc)
+	NCPUS := $(shell nproc)
 endif
 
 # this contains all packages to be built. Note that for at least the clean target,
