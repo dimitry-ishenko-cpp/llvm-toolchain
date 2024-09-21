@@ -724,6 +724,7 @@ stamps/preconfigure:
 		if echo $(LLVM_VERSION_SNAPSHOT)| grep -q "~++"; then \
 		sed -i -e "s|(<< 1:19.1.0~++rc3-1~exp2)|(<< 1:19.1.0~++20240910033111)|g" debian/control; \
 		sed -i -e "s|(<< 1:19.1.0~++rc4-5)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
+		sed -i -e "s|(<< 1:19.1.0-4)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
 		fi; \
 	fi
 
