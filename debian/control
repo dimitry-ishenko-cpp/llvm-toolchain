@@ -422,8 +422,8 @@ Depends: ${shlibs:Depends}, libffi-dev, ${misc:Depends},
  llvm-20 (= ${binary:Version}), libllvm20 (= ${binary:Version}), libncurses-dev,
  llvm-20-tools (= ${binary:Version}), libclang-cpp20 (= ${binary:Version}),
  libxml2-dev, libz3-dev [!sh4],
-Breaks: libllvm20 (<< 1:20~++20240830999999+99)
-Replaces: libllvm20 (<< 1:20~++20240830999999+99)
+Breaks: libllvm20 (<< 1:20~++20240920999999+99)
+Replaces: libllvm20 (<< 1:20~++20240920999999+99)
 Description: Modular compiler and toolchain technologies, libraries and headers
  LLVM is a collection of libraries and tools that make it easy to build
  compilers, optimizers, just-in-time code generators, and many other

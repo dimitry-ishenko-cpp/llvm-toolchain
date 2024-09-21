@@ -47,6 +47,7 @@ llvm-toolchain-snapshot (1:20~++20240920033700+c320df4a2c9d-1~exp1) experimental
     available.
   * Don't relax versioned shlibs dependencies for snapshot builds and
     release versions.
+  * libllvm20: No symlinks in the llvm-20 subdir. Addresses: #1081192, #1082495.
 
   [ Samuel Thibault ]
   * Add hurd-amd64 support.
