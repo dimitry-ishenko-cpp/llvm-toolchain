@@ -10,6 +10,7 @@ llvm-toolchain-19 (1:19.1.0-4) UNRELEASED; urgency=medium
   [ Matthias Klose ]
   * Don't relax versioned shlibs dependencies for snapshot builds and
     release versions.
+  * libllvm19: No symlinks in the llvm-19 subdir. Closes: #1081192, #1082495.
 
  -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 17:26:29 +0200
 
