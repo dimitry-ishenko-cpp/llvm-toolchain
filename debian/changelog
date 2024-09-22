@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0-4) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
 
   [ Sylvestre Ledru ]
   * Adjust the workaround for apt.llvm.org version upgrades
@@ -9,10 +9,10 @@ llvm-toolchain-19 (1:19.1.0-4) UNRELEASED; urgency=medium
 
   [ Matthias Klose ]
   * Don't relax versioned shlibs dependencies for snapshot builds and
-    release versions.
+    prerelease versions.
   * libllvm19: No symlinks in the llvm-19 subdir. Closes: #1081192, #1082495.
 
- -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 17:26:29 +0200
+ -- Matthias Klose <doko@debian.org>  Sun, 22 Sep 2024 16:36:31 +0200
 
 llvm-toolchain-19 (1:19.1.0-3) unstable; urgency=medium
 
