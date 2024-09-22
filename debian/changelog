@@ -46,7 +46,7 @@ llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp1) experimental
   * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
     available.
   * Don't relax versioned shlibs dependencies for snapshot builds and
-    release versions.
+    prerelease versions.
   * libllvm20: No symlinks in the llvm-20 subdir. Addresses: #1081192, #1082495.
 
   [ Samuel Thibault ]
