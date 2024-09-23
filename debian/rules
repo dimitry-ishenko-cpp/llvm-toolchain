@@ -463,11 +463,13 @@ else
 	PROJECTS+=;lldb
 endif
 
-LLDB_PT_DISABLE_DISTRO := bionic
+
 ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
-ifneq (,$(filter $(LLDB_PT_DISABLE_DISTRO),$(DISTRO)))
-	STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
-endif
+	INTEL_PT_DISABLE_DISTRO := bionic
+# Disable intel-pt on old distro, fails on bionic (too old)
+	ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
+		STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
+     endif
 endif
 
 LLDB_PYTHON_DISABLE_DISTRO := bionic buster

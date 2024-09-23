@@ -1,15 +1,11 @@
 llvm-toolchain-18 (1:18.1.8-12) UNRELEASED; urgency=medium
 
-<<<<<<<
-  * Ensure that at least 1 CPU is used for build
-    (Closes: #1082359)
-=======
   * Ensure that at least 1 CPU is used for build
     Thanks to Santiago Vila for the patch
     (Closes: #1082359)
->>>>>>>
+  * Don't enable intel-pt on Ubuntu Bionic
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 20 Sep 2024 13:22:50 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 23 Sep 2024 13:23:31 +0200
 
 llvm-toolchain-18 (1:18.1.8-11) unstable; urgency=medium
 
