@@ -1,0 +1,39 @@
+Index: llvm-toolchain-snapshot_20~++20240921071058+b177a9b6efb6/libc/newhdrgen/yaml_to_classes.py
+===================================================================
+--- llvm-toolchain-snapshot_20~++20240921071058+b177a9b6efb6.orig/libc/newhdrgen/yaml_to_classes.py
++++ llvm-toolchain-snapshot_20~++20240921071058+b177a9b6efb6/libc/newhdrgen/yaml_to_classes.py
+@@ -117,8 +117,15 @@ def load_yaml_file(yaml_file, header_cla
+     Returns:
+         HeaderFile: An instance of HeaderFile populated with the data.
+     """
++
+     with open(yaml_file, "r") as f:
+-        yaml_data = yaml.safe_load(f)
++        try:
++            # Try using the safe method first
++            yaml_data = yaml.safe_load(f)
++        except AttributeError:
++            # Fallback to yaml.load if safe_load is not available
++            from yaml import FullLoader
++            yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+     return yaml_to_classes(yaml_data, header_class, entry_points)
+ 
+ 
+@@ -172,8 +179,16 @@ def add_function_to_yaml(yaml_file, func
+     """
+     new_function = parse_function_details(function_details)
+ 
++
++
+     with open(yaml_file, "r") as f:
+-        yaml_data = yaml.safe_load(f)
++        try:
++            # Try using the safe method first
++            yaml_data = yaml.safe_load(f)
++        except AttributeError:
++            # Fallback to yaml.load if safe_load is not available
++            yaml_data = yaml.load(f, Loader=FullLoader)
++
+     if "functions" not in yaml_data:
+         yaml_data["functions"] = []
+ 
