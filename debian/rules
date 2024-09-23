@@ -502,8 +502,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
 # Disable intel-pt on old distro, fails on bionic (too old)
 	ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
 		STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
-	else
-		$(info Intel PT disabled for $(DISTRO))
     endif
 endif
 
