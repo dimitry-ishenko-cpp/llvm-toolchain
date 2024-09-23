@@ -379,8 +379,11 @@ ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
 		RUNTIMES += ;libc
 	else
 		LLVM_LIBC_ENABLE=no
-		$(info LLVM libc disabled for $(DISTRO))
 	endif
+endif
+
+ifneq ($(LLVM_LIBC_ENABLE),no)
+    $(info LLVM libc disabled for $(DISTRO))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH), $(FLANG_ARCHS)))
