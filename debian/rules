@@ -566,6 +566,10 @@ else
 endif
 endif
 
+ifneq ($(LTO_ENABLE),no)
+    $(info LTO disabled for $(DEB_HOST_ARCH))
+endif
+
 # https://bugs.launchpad.net/bugs/2016471
 ifeq (,$(filter-out $(LTO_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 LD_GOLD_SUPPORTS_NO_SYMBOLIC := $(shell ld.gold --help | grep -q -w '-Bno-symbolic' && echo "yes" || echo "no")
