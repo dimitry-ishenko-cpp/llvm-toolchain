@@ -496,11 +496,11 @@ endif
 ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
 	INTEL_PT_DISABLE_DISTRO := bionic
 # Disable intel-pt on old distro, fails on bionic (too old)
-    ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
-	STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
-
-	endif
-
+	ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
+		STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
+	else
+		$(info Intel PT disabled for $(DISTRO))
+    endif
 endif
 
 LLDB_PYTHON_DISABLE_DISTRO := bionic buster
@@ -510,6 +510,7 @@ ifeq (,$(filter-out $(LLDB_PYTHON_DISABLE_DISTRO), $(DISTRO)))
 # Don't enable lld python for old distros
   STAGE_ALL_CMAKE_EXTRA += -DLLDB_ENABLE_PYTHON=OFF
   LLDB_PYTHON_ENABLE=no
+  $(info LLBD Python disabled for $(DISTRO))
 endif
 
 LIBCXX_WASM_ENABLE=yes
@@ -519,6 +520,7 @@ LIBCXX_WASM_DISABLE_DISTRO := bionic buster focal bullseye jammy
 # https://sourceware.org/bugzilla/show_bug.cgi?id=27558
 ifeq (,$(filter-out $(LIBCXX_WASM_DISABLE_DISTRO), $(DISTRO)))
   LIBCXX_WASM_ENABLE=no
+  $(info libcxx wasm disabled for $(DISTRO))
 endif
 
 DOC_GENERATION=yes
@@ -526,6 +528,7 @@ DOC_GENERATION_DISTRO := buster bullseye bionic focal
 # LLVM upstream moved to myst_parser but it isn't available on old distro
 ifeq (,$(filter-out $(DOC_GENERATION_DISTRO), $(DISTRO)))
   DOC_GENERATION=no
+  $(info Doc generation disabled for $(DISTRO))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),powerpc))
@@ -552,6 +555,7 @@ ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
 LTO_DISABLE_ARCHS := i386 armhf s390x ppc64 x32
 ifeq (,$(filter-out $(LTO_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 	LTO_ENABLE=no
+	$(info LTO disabled for $(DEB_HOST_ARCH))
 else
 # Disable for now because of
 # https://github.com/llvm/llvm-project/issues/58317#issuecomment-1276190743
@@ -581,6 +585,7 @@ endif
 LIBFUZZER_ENABLE=yes
 ifeq (,$(filter $(DEB_HOST_ARCH_OS),linux))
 	LIBFUZZER_ENABLE=no
+	$(info Libfuzzer disabled for $(DEB_HOST_ARCH_OS))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH), mipsel))
