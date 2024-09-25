@@ -1367,27 +1367,27 @@ endif
 
 # Disable CMake's LLVMExports package validation checks for target files that we may remove.
 	sed -i \
-	  -e '/_cmake_import_check_targets \(Polly\|sancov\|llvm-omp-device-info\|LibcTableGenUtil\|omptarget\|omp\)/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_targets\|IMPORT_CHECK_TARGETS\) \(Polly\|sancov\|llvm-omp-device-info\|LibcTableGenUtil\|omptarget\|omp\)/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
 
 # the obscure libLLVM.so.1 file ...
 	sed -i \
-	  -e '/_cmake_import_check_targets LLVM/ {s|^|#|}' \
-	  -e '/_cmake_import_check_files_for_.*\/libLLVM\.so\.1.*/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_targets\|IMPORT_CHECK_TARGETS\) LLVM/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_targets\|IMPORT_CHECK_TARGETS\)_.*\/libLLVM\.so\.1.*/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
 
 # Also disable mlir-* checks in the cmake
 	sed -i \
-	  -e '/_cmake_import_check_targets \(mlir-\|MLIR\)/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_targets\|IMPORT_CHECK_TARGETS\) \(mlir-\|MLIR\)/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
 
 	sed -i \
-	  -e '/_cmake_import_check_files_for_.*\/bin\/.*/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_files_for\|IMPORT_CHECK_FILES_FOR\)_.*\/bin\/.*/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 
 	sed -i \
-	  -e '/_cmake_import_check_files_for_\(mlir\|Polly\|MLIR\|LibcTableGenUtil\|omp\|omptarget\)/ {s|^|#|}' \
+	  -e '/_\(cmake_import_check_files_for\|IMPORT_CHECK_FILES_FOR\)_\(mlir\|Polly\|MLIR\|LibcTableGenUtil\|omp\|omptarget\)/ {s|^|#|}' \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake \
 	  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 
