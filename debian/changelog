@@ -5,6 +5,8 @@ llvm-toolchain-18 (1:18.1.8-12) UNRELEASED; urgency=medium
     (Closes: #1082359)
   * Don't enable intel-pt on Ubuntu Bionic
   * Backport a miscompilation fix (Closes: #1082727)
+  * Fix the bootstrapping (Closes: #1082610)
+    Thanks to Andrey Feofilaktov for the patch
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 23 Sep 2024 13:23:31 +0200
 
