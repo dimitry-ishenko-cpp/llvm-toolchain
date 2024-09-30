@@ -51,7 +51,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ${dep:devlibs},
  libclang-common-18-dev (= ${binary:Version}),
  llvm-18-linker-tools (= ${binary:Version}),
  libclang1-18 (= ${binary:Version}), libc6-dev, binutils
-Provides: c-compiler, objc-compiler, c++-compiler
+Provides: c-compiler, objc-compiler, c++-compiler, objc++-compiler
 Recommends: llvm-18-dev, python3
 # libomp-18-dev
 Suggests: clang-18-doc, wasi-libc
