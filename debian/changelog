@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0-6) unstable; urgency=medium
+llvm-toolchain-19 (1:19.1.1-2) unstable; urgency=medium
 
   [ Samuel Thibault ]
   * patches/hurd/hurd-f_type.diff: Fix hurd build against glibc ≥ 2.39.
@@ -9,7 +9,7 @@ llvm-toolchain-19 (1:19.1.0-6) unstable; urgency=medium
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 02 Oct 2024 10:29:32 +0200
 
-llvm-toolchain-19 (1:19.1.0-5) unstable; urgency=medium
+llvm-toolchain-19 (1:19.1.1-1) unstable; urgency=medium
 
   [ Sylvestre Ledru ]
   * Don't enable intel-pt on Ubuntu Bionic
@@ -20,9 +20,10 @@ llvm-toolchain-19 (1:19.1.0-5) unstable; urgency=medium
   * clang provides objc++-compiler (Closes: #1082744)
 
   [ Matthias Klose ]
+  * New upstream release
   * Update watch file and add .git* files to exclude in the tarball.
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 02 Oct 2024 10:29:26 +0200
+ -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:11:01 +0200
 
 llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
 
