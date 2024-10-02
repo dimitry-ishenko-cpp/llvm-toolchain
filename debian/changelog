@@ -3,11 +3,12 @@ llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp2) UNRELEASED; 
   [ Matthias Klose ]
   * Build-depend on llvm-spirv-19 instead of llvm-spirv-18.
   * d/libclang-cppX.Y.links.in: Honor LLVM_VERSION_MINOR for the symlink.
+  * Update watch file and add .git* files to exclude in the tarball.
 
   [ Samuel Thibault ]
   * debian/libclang-common-X.Y-dev.install.in: Fix dh_install on hurd-any.
 
- -- Matthias Klose <doko@debian.org>  Sun, 22 Sep 2024 16:51:53 +0200
+ -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:49:56 +0200
 
 llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp1) experimental; urgency=medium
 

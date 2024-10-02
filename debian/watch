@@ -1,2 +1,0 @@
-version=4
-https://llvm.org/releases/download.html .*/llvm-([\d\.\-]+).src.tar.xz
