@@ -1667,12 +1667,10 @@ override_dh_builddeb:
 override_dh_gencontrol: stamps/sccache-stats
 	dh_gencontrol ${skip_packages} -- $(control_vars)
 
-
 override_dh_auto_clean:
 	rm -rf $(TARGET_BUILD) llvm/docs/_build/ clang/docs/_build tools/clang/docs/_html/
 # QA tools
 	rm -rf cov-int/ reports/
-	rm -f `ls debian/*.in|grep -v control.in|sed -e "s|.in$$||g"`
 	find utils -name '*.pyc' | xargs -r rm -f
 	# Use -I because a test has a space in its name
 	find lldb/test -iname '*.pyc' | xargs -I{} -r rm -f {}
@@ -1685,10 +1683,13 @@ override_dh_auto_clean:
 		mv lld/docs/ld.lld-$(LLVM_VERSION).1 lld/docs/ld.lld.1; \
 	fi
 	for f in debian/*.in; do \
-		if ! echo $$f|grep control; then \
-			f2=$$(echo $$f | sed 's/\.in$$//;s/X\.Y/$(LLVM_VERSION)/'); \
+	    f2=$$(echo $$f | sed 's/\.in$$//;s/X\.Y/$(LLVM_VERSION)/'); \
+	    case $$f2 in \
+		debian/control|debian/watch) \
+			echo "keep $$f2";; \
+		*) \
 			rm -f $$f2; \
-		fi; \
+	    esac; \
 	done
 	if test "$(SCAN_BUILD)" = "yes"; then \
 		patch -f -R -p1 < debian/patches/on-the-fly/use-scan-build-runtimes.diff||true; \
