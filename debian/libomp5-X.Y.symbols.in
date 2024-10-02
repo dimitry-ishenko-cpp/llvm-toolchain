@@ -1008,7 +1008,7 @@ libomp.so.5 libomp5-@LLVM_VERSION@ #MINVER#
  kmp_set_stacksize_@VERSION 0.20130412
  kmp_set_stacksize_s@VERSION 0.20130412
  kmp_set_stacksize_s_@VERSION 0.20130412
- (arch=!ppc64 !ppc64el)kmp_set_thread_affinity_mask_initial@VERSION 3.8.0
+ (arch=!ppc64 !ppc64el !hurd-any)kmp_set_thread_affinity_mask_initial@VERSION 3.8.0
  kmp_set_warnings_off@VERSION 0.20130412
  kmp_set_warnings_off_@VERSION 0.20130412
  kmp_set_warnings_on@VERSION 0.20130412

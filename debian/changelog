@@ -1,4 +1,4 @@
-llvm-toolchain-19 (1:19.1.0-5) UNRELEASED; urgency=medium
+llvm-toolchain-19 (1:19.1.0-5) unstable; urgency=medium
 
   [ Sylvestre Ledru ]
   * Don't enable intel-pt on Ubuntu Bionic
@@ -10,6 +10,13 @@ llvm-toolchain-19 (1:19.1.0-5) UNRELEASED; urgency=medium
 
   [ Matthias Klose ]
   * Update watch file and add .git* files to exclude in the tarball.
+
+  [ Samuel Thibault ]
+  * patches/hurd/hurd-f_type.diff: Fix hurd build against glibc ≥ 2.39.
+  * libomp-X.Y-dev.install.in: Don't try to ship ompd gdb plugin on
+    hurd-amd64 ; ship libomptarget.
+  * libomp5-X.Y.install.in: Ship libomptarget.
+  * libomp5-X.Y.symbols.in: Fix symbols on hurd-any.
 
  -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:08:02 +0200
 
