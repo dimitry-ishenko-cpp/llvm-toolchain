@@ -1,5 +1,6 @@
-llvm-toolchain-19 (1:19.1.0-5) unstable; urgency=medium
+llvm-toolchain-19 (1:19.1.0-5) UNRELEASED; urgency=medium
 
+  [ Sylvestre Ledru ]
   * Don't enable intel-pt on Ubuntu Bionic
   * Add disabled info in the build log
   * Disable LLVM libc on bionic
@@ -7,7 +8,10 @@ llvm-toolchain-19 (1:19.1.0-5) unstable; urgency=medium
     Thanks to Andrey Feofilaktov for the patch
   * clang provides objc++-compiler (Closes: #1082744)
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 23 Sep 2024 13:20:42 +0200
+  [ Matthias Klose ]
+  * Update watch file and add .git* files to exclude in the tarball.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:08:02 +0200
 
 llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
 

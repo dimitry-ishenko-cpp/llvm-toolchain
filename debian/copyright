@@ -1,6 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: LLVM/Clang
-Source: https://llvm.org/releases/download.html
+Source: https://github.com/llvm/llvm-project
+Files-Excluded: .github .gitattributes .git-blame-ignore-revs .gitignore
 
 Files: *
 Copyright: 2003-2017 University of Illinois at Urbana-Champaign.
