@@ -590,7 +590,7 @@ endif
 LIBFUZZER_ENABLE=yes
 ifeq (,$(filter $(DEB_HOST_ARCH_OS),linux))
 	LIBFUZZER_ENABLE=no
-	$(info Libfuzzer disabled for $(DEB_HOST_ARCH_OS))
+        $(info Libfuzzer disabled for $(DEB_HOST_ARCH_OS))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH), mipsel))
