@@ -1,4 +1,4 @@
-llvm-toolchain-18 (1:18.1.8-12) UNRELEASED; urgency=medium
+llvm-toolchain-18 (1:18.1.8-12) unstable; urgency=medium
 
   * Ensure that at least 1 CPU is used for build
     Thanks to Santiago Vila for the patch
@@ -8,6 +8,7 @@ llvm-toolchain-18 (1:18.1.8-12) UNRELEASED; urgency=medium
   * Fix the bootstrapping (Closes: #1082610)
     Thanks to Andrey Feofilaktov for the patch
   * clang provides objc++-compiler (Closes: #1082744)
+  * Update Standards version to 4.7.0
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 23 Sep 2024 13:23:31 +0200
 
