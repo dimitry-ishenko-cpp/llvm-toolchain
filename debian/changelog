@@ -1,5 +1,7 @@
 llvm-toolchain-19 (1:19.1.1-2) UNRELEASED; urgency=medium
 
+  * Update Standards version to 4.7.0
+
   [ Samuel Thibault ]
   * patches/hurd/hurd-f_type.diff: Fix hurd build against glibc ≥ 2.39.
   * libomp-X.Y-dev.install.in: Don't try to ship ompd gdb plugin on
