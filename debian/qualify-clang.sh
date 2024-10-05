@@ -486,7 +486,7 @@ check_symlink() {
     fi
 }
 
-#check_symlink "libclang-cpp.so.$VERSION" this one is not installed
+# check_symlink "libclang-cpp.so.$VERSION" why is that one needed?
 check_symlink "libclang-$VERSION.so"
 check_symlink "libclang.so"
 

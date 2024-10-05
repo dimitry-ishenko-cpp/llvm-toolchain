@@ -7,9 +7,9 @@
 [!armhf !mips64el] /usr/lib/llvm-@LLVM_VERSION@/lib/libarcher_static.a
 [!armhf !mips64el] /usr/lib/llvm-@LLVM_VERSION@/lib/libarcher.so
 
-[amd64 ppc64el arm64 loong64 mips64el ppc64 riscv64] /usr/lib/llvm-@LLVM_VERSION@/lib/libomptarget.devicertl.a
+[amd64 hurd-amd64 ppc64el arm64 loong64 mips64el ppc64 riscv64] /usr/lib/llvm-@LLVM_VERSION@/lib/libomptarget.devicertl.a
 
-[amd64 ppc64el arm64 loong64 mips64el ppc64 riscv64] /usr/lib/llvm-@LLVM_VERSION@/lib/libomptarget-*.bc
+[amd64 hurd-amd64 ppc64el arm64 loong64 mips64el ppc64 riscv64] /usr/lib/llvm-@LLVM_VERSION@/lib/libomptarget-*.bc
 
 usr/lib/llvm-@LLVM_VERSION@/lib/cmake/openmp/*.cmake
 
@@ -19,4 +19,4 @@ usr/lib/llvm-@LLVM_VERSION@/lib/cmake/openmp/*.cmake
 [amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/bin/llvm-offload-device-info-@LLVM_VERSION@
 [amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/bin/llvm-omp-kernel-replay-@LLVM_VERSION@
 
-[!armhf] usr/lib/llvm-@LLVM_VERSION@/share/gdb/python/ompd/
+[!armhf !hurd-amd64] usr/lib/llvm-@LLVM_VERSION@/share/gdb/python/ompd/

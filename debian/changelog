@@ -189,6 +189,220 @@ llvm-toolchain-snapshot (1:20~++20240726085032+92a06546ab50-1~exp1) experimental
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Jul 2024 08:50:50 +0200
 
+llvm-toolchain-19 (1:19.1.1-2) UNRELEASED; urgency=medium
+
+  * Update Standards version to 4.7.0
+
+  [ Samuel Thibault ]
+  * patches/hurd/hurd-f_type.diff: Fix hurd build against glibc ≥ 2.39.
+  * libomp-X.Y-dev.install.in: Don't try to ship ompd gdb plugin on
+    hurd-amd64 ; ship libomptarget.
+  * libomp5-X.Y.install.in: Ship libomptarget.
+  * libomp5-X.Y.symbols.in: Fix symbols on hurd-any.
+  * rules: Fix syntax on non-linux.
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 02 Oct 2024 10:29:32 +0200
+
+llvm-toolchain-19 (1:19.1.1-1) unstable; urgency=medium
+
+  [ Sylvestre Ledru ]
+  * Don't enable intel-pt on Ubuntu Bionic
+  * Add disabled info in the build log
+  * Disable LLVM libc on bionic
+  * Fix the bootstrapping (Closes: #1082610)
+    Thanks to Andrey Feofilaktov for the patch
+  * clang provides objc++-compiler (Closes: #1082744)
+
+  [ Matthias Klose ]
+  * New upstream release
+  * Update watch file and add .git* files to exclude in the tarball.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:11:01 +0200
+
+llvm-toolchain-19 (1:19.1.0-4) unstable; urgency=medium
+
+  [ Sylvestre Ledru ]
+  * Adjust the workaround for apt.llvm.org version upgrades
+    https://github.com/llvm/llvm-project/issues/109276
+  * Ensure that at least 1 CPU is used for build
+    Thanks to Santiago Vila for the patch
+    (Closes: #1082360)
+
+  [ Matthias Klose ]
+  * Don't relax versioned shlibs dependencies for snapshot builds and
+    prerelease versions.
+  * libllvm19: No symlinks in the llvm-19 subdir. Closes: #1081192, #1082495.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 22 Sep 2024 16:36:31 +0200
+
+llvm-toolchain-19 (1:19.1.0-3) unstable; urgency=medium
+
+  * Fix typo in dh_makeshlibs calls.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 17:26:29 +0200
+
+llvm-toolchain-19 (1:19.1.0-2) unstable; urgency=medium
+
+  * Call dh_makeshlibs with the version of the first upstream
+    release (1:19.1.0). Looking back at the 1.18 release cycle,
+    these libraries didn't see any instability in the ABIs.
+  * debian/qualify-clang.sh: Fix typo.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 18 Sep 2024 10:29:19 +0200
+
+llvm-toolchain-19 (1:19.1.0-1) unstable; urgency=medium
+
+  * New upstream release 19.1.0.
+
+  [ Matthias Klose ]
+  * debian/qualify-clang.sh: Skip llvmlibc test, if libllvmlibc-dev is not
+    available.
+  * Build-depend on llvm-spirv-19.
+
+  [ YunQiang Su ]
+  * also pass -mxgot in LDFLAGS.
+  * d/p/mips-mlir-xgot.diff: Pass -mxgot for mlir.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 17 Sep 2024 18:04:21 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc4-5) unstable; urgency=medium
+
+  * Move the libLLVM.so.1 symlink into llvm-19-dev. Closes: #1081192.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 09 Sep 2024 11:20:16 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc4-4) unstable; urgency=medium
+
+  [ Matthias Klose ]
+  * Consolidate disabling CMake's package validation checks a bit.
+  * debian/qualify-clang.sh: Skip OpenMP test, if libomp-dev is not available.
+  * Disable CMake's package validation check for libLLVM.so.1.
+  * Limit lldb autopkg test to the lldb architectures.
+  * Generate debian/tests/* files.
+  * Disable the usage-wrapper/memory tracking by default.
+  * Replace LLDB_DISABLE_ARCHS macro with LLDB_ARCHS macro.
+  * Remove unused kfreebsd patches, and remove references to kfreebsd and s390.
+  * Remove references to alpha, hppa, powerpcspe and sh4.
+  * Fix usage-wrapper build dependency.
+
+  [ Aurelien Jarno ]
+  * Enable lldb on riscv64.
+  * Enable lldb autopkgtest on riscv64.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 08 Sep 2024 17:36:43 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc4-2) unstable; urgency=medium
+
+  * Disable z3 again for Ubuntu, and make the libz3-dev (build) dependency
+    conditional.
+  * Use -mxgot on mips64el.
+  * Disable tests on mips64el, they do timeout.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 04 Sep 2024 15:16:40 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc4-1) unstable; urgency=medium
+
+  * New release candidate.
+
+  [ Matthias Klose ]
+  * Also explicitly link with -latomic on mips64el.
+  * Disable openmp on loong64 (ld: cannot find -lomptarget.rtl.host).
+  * Build without z3 on sh4 (ftbfs).
+  * Also configure with -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="M68k;Xtensa".
+  * debian/tests/*: s/18/19/.
+  * debian/qualify-clang.sh: Don't check for libclang-cpp.so.$VERSION symlink.
+  * libllvm19: Restore the symlink /usr/lib/llvm-19/lib/libLLVM.so.1, apparently
+    CMake's LLVMExports.cmake requires it. But why?
+
+  [ Samuel Thibault ]
+  * Add hurd-amd64 support.
+
+  [ Sylvestre Ledru ]
+  * Remove the cmake dependency on libLibcTableGenUtil.a
+    see https://github.com/llvm/llvm-project/issues/99819
+  * New snapshot release
+
+ -- Matthias Klose <doko@debian.org>  Tue, 03 Sep 2024 21:48:12 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc3-2) unstable; urgency=medium
+
+  * Fix binary-indep build.
+  * Disable openmp on mips64el (ld: cannot find -lomptarget.rtl.host).
+  * Disable memory tracking on the Hurd and some ports architectures.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 31 Aug 2024 08:10:14 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc3-1) unstable; urgency=medium
+
+  * Add a .gitignore file with all toplevel upstream files and directories.
+  * Add some memory tracking, getting some information on memory hogs.
+  * Don't require g++-multilib on s390x for newer Ubuntu releases.
+  * Factor-out ocaml architectures.
+  * Don't try to install xray and profile headers on armel and armhf.
+  * Disable ocaml on armhf, requires ocamlopt.
+  * Factor-out omp architectures.
+  * Disable openmp on riscv64 (ld: cannot find -lomptarget.rtl.host).
+  * Factor-out flang architectures.
+  * Disable flang on mips64el (currently not supported).
+  * Don't try to install hwasan_symbolize on x32.
+  * Don't try to install xray and profile headers on x32.
+  * Fix installation of the shared libllvm and libclang-cpp libraries
+    under their soname. Closes: #1072200.
+  * Drop some of the unnecessary libllvm symlinks.
+  * debian/orig-tar.sh: Don't include .git/.github metadata.
+  * debian/rules. Call again dh_ocaml. Closes: #1078234.
+  * debian/rules: Don't create a stamp for the override_dh_auto_install target.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 30 Aug 2024 19:32:59 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc3-1~exp1) experimental; urgency=medium
+
+  [ Matthias Klose ]
+  * ld.lld: When no package-metadata option is given, fall-back
+    to the envvar ELF_PACKAGE_METADATA.
+
+  [ Emanuele Rocca ]
+  * Enable bolt on arm64, now supported upstream.
+
+  [ Sylvestre Ledru ]
+  * remove llvm-cgdata - see 9e90c40564e21dc5f1a12e08cfdf29305aaf9f50
+  * New snapshot release
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 20 Aug 2024 19:52:02 +0200
+
+llvm-toolchain-19 (1:19.1.0~++rc2-1~exp1) experimental; urgency=medium
+
+  * New testing release
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Mon, 05 Aug 2024 15:25:06 +0200
+
+llvm-toolchain-19 (1:19.1.0~++20240724103243+7af27be6633a-1~exp1) experimental; urgency=medium
+
+  [ John Paul Adrian Glaubitz ]
+  * Disable LLVM testsuite on x32
+  * Install liborc_rt-x86_64.a on x32
+  * Install hwasan_symbolize on x32
+
+  [ Norbert Lange ]
+  * build lldb with Intel PT support on x86, amd64
+
+  [ Sylvestre Ledru ]
+  * Prepare upload to 19
+  * Adjust the clang-X-doc path after the change
+    d7dd778cde84110e38521a6b55dfeb4e1c649ec2
+  * bring back clang-nvlink-wrapper
+    following upstream commit: 37d0568a6593adfe791c1327d99731050540e97a
+  * ship llvm-cgdata
+
+  [ Matthias Klose ]
+  * Pass --package-metadata on distros with supporting linkers (starting
+    with Debian trixie and Ubuntu noble).
+    The package metadata is constructed from the environment variables
+    ELF_PACKAGE_METADATA.
+    Setting NO_PKG_METADATA=1 disables the generation of the package metadata.
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Sun, 28 Jul 2024 21:39:57 +0200
+
 llvm-toolchain-snapshot (1:19~++20240529093513+2cfea14a57ad-1~exp1) experimental; urgency=medium
 
   * experimental New snapshot release
@@ -250,7 +464,7 @@ llvm-toolchain-snapshot (1:19~++20240125092523+41fe98a6e7e5-1~exp1) experimental
   * refresh libomp5 symbol list
   * For the usage of -DLIBCXXABI_USE_LLVM_UNWINDER=OFF when we don't build unwind
     https://github.com/llvm/llvm-project/issues/77846
-  * remove the unconditionnaly defined -DLIBUNWIND_USE_COMPILER_RT=ON
+  * remove the unconditionally defined -DLIBUNWIND_USE_COMPILER_RT=ON
   * Also pass -DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=OFF to libcxx-wasm32-wasi builds
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 25 Jan 2024 14:51:10 +0100
@@ -345,7 +559,7 @@ llvm-toolchain-18 (1:18.1.0~rc2-1) unstable; urgency=medium
 
 llvm-toolchain-18 (1:18.1.0~rc1-3) unstable; urgency=medium
 
-  * Fix previus upload, time64 is effective only in one specific place of
+  * Fix previous upload, time64 is effective only in one specific place of
     rules file
   * Fix some test using still clang-17
   * Switch testing to 18 line
@@ -382,12 +596,12 @@ llvm-toolchain-18 (1:18.1.0-rc1-1~exp1) experimental; urgency=medium
 llvm-toolchain-18 (1:18.1.0~++20240126095841+0991d3c7b53d-1~exp1) experimental; urgency=medium
 
   * Branching of 18
-    note that it is normal that the versionning starts from 18.1
+    note that it is normal that the versioning starts from 18.1
     See https://discourse.llvm.org/t/rfc-name-the-first-release-from-a-branch-n-1-0-instead-of-n-0-0/75384
   * refresh libomp5 symbol list
   * For the usage of -DLIBCXXABI_USE_LLVM_UNWINDER=OFF when we don't build unwind
     https://github.com/llvm/llvm-project/issues/77846
-  * remove the unconditionnaly defined -DLIBUNWIND_USE_COMPILER_RT=ON
+  * remove the unconditionally defined -DLIBUNWIND_USE_COMPILER_RT=ON
   * Also pass -DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=OFF to libcxx-wasm32-wasi builds
 
  -- Sylvestre Ledru <sylvestre@debian.org>  Fri, 26 Jan 2024 09:44:56 +0100
@@ -778,7 +992,7 @@ llvm-toolchain-16 (1:16.0.6-16) unstable; urgency=medium
 
   [ Gianfranco Costamagna ]
   * Make libclang-common-16-dev arch:any (Closes: #1041455)
-    It was arch:all because all the code isn't arch dependant
+    It was arch:all because all the code isn't arch dependent
     However, it causes issues for cross build.
     So, back to any and libclang-common-@LLVM_VERSION@-dev (= ${binary:Version})
     instead of source
@@ -7035,7 +7249,7 @@ llvm-toolchain-3.4 (1:3.4~+rc3-1) unstable; urgency=low
 
 llvm-toolchain-3.4 (1:3.4~+rc2-3) unstable; urgency=low
 
-  * Fix the bad declaration on the lldb desactivation
+  * Fix the bad declaration on the lldb deactivation
   * Also disable lldb under powerpc
   * Hopefully, fix lldb under Kfreebsd-* (thanks to Ed Maste if it works)
 

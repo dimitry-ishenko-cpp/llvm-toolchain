@@ -374,13 +374,17 @@ ifneq (,$(filter bolt-$(LLVM_VERSION), $(packages)))
 endif
 
 ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
-	RUNTIMES += ;libc
-	LLVM_LIBC_FULL_DISTRO := bionic
-# Workaround on bionic
-# See https://github.com/llvm/llvm-project/issues/82467#issuecomment-2033193448
-	ifeq (,$(filter-out $(LLVM_LIBC_FULL_DISTRO), $(DISTRO)))
-		STAGE_ALL_CMAKE_EXTRA += -DLLVM_LIBC_FULL_BUILD=ON
+	LLVM_LIBC_ENABLE=yes
+	LLVM_LIBC_DISABLE_DISTRO := bionic
+	ifeq (,$(filter $(DISTRO), $(LLVM_LIBC_DISABLE_DISTRO)))
+		RUNTIMES += ;libc
+	else
+		LLVM_LIBC_ENABLE=no
 	endif
+endif
+
+ifneq ($(LLVM_LIBC_ENABLE),no)
+    $(info LLVM libc disabled for $(DISTRO))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH), $(FLANG_ARCHS)))
@@ -493,8 +497,13 @@ ifneq (,$(filter $(DEB_HOST_ARCH),$(LLDB_ARCHS)))
 	STAGE_ALL_CMAKE_EXTRA += -DLLDB_ENABLE_LUA=OFF
 	PROJECTS+=;lldb
 endif
+
 ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
-	STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
+	INTEL_PT_DISABLE_DISTRO := bionic
+# Disable intel-pt on old distro, fails on bionic (too old)
+	ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
+		STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
+    endif
 endif
 
 LLDB_PYTHON_DISABLE_DISTRO := bionic buster
@@ -504,6 +513,7 @@ ifeq (,$(filter-out $(LLDB_PYTHON_DISABLE_DISTRO), $(DISTRO)))
 # Don't enable lld python for old distros
   STAGE_ALL_CMAKE_EXTRA += -DLLDB_ENABLE_PYTHON=OFF
   LLDB_PYTHON_ENABLE=no
+  $(info LLBD Python disabled for $(DISTRO))
 endif
 
 LIBCXX_WASM_ENABLE=yes
@@ -513,6 +523,7 @@ LIBCXX_WASM_DISABLE_DISTRO := bionic buster focal bullseye jammy
 # https://sourceware.org/bugzilla/show_bug.cgi?id=27558
 ifeq (,$(filter-out $(LIBCXX_WASM_DISABLE_DISTRO), $(DISTRO)))
   LIBCXX_WASM_ENABLE=no
+  $(info libcxx wasm disabled for $(DISTRO))
 endif
 
 DOC_GENERATION=yes
@@ -520,6 +531,7 @@ DOC_GENERATION_DISTRO := buster bullseye bionic focal
 # LLVM upstream moved to myst_parser but it isn't available on old distro
 ifeq (,$(filter-out $(DOC_GENERATION_DISTRO), $(DISTRO)))
   DOC_GENERATION=no
+  $(info Doc generation disabled for $(DISTRO))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),powerpc))
@@ -554,6 +566,10 @@ else
 endif
 endif
 
+ifneq ($(LTO_ENABLE),no)
+    $(info LTO disabled for $(DEB_HOST_ARCH))
+endif
+
 # https://bugs.launchpad.net/bugs/2016471
 ifeq (,$(filter-out $(LTO_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 LD_GOLD_SUPPORTS_NO_SYMBOLIC := $(shell ld.gold --help | grep -q -w '-Bno-symbolic' && echo "yes" || echo "no")
@@ -575,6 +591,7 @@ endif
 LIBFUZZER_ENABLE=yes
 ifeq (,$(filter $(DEB_HOST_ARCH_OS),linux))
 	LIBFUZZER_ENABLE=no
+        $(info Libfuzzer disabled for $(DEB_HOST_ARCH_OS))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH), mipsel))
@@ -721,8 +738,12 @@ stamps/preconfigure:
 	# workaround the breaks/replaces/conflicts introduced with the libc++ move
 	# we update the version to make it work with apt.llvm.org
 	# Yeah, this is ugly but I don't know how to do better
-	if test "$(LLVM_VERSION)" = "17"; then \
-		sed -i -e "s|(<< 1:17.0.6-2)|(<< 1:17.0.6~++20231206041259)|g" debian/control; \
+	if test "$(LLVM_VERSION)" = "19"; then \
+		if echo $(LLVM_VERSION_SNAPSHOT)| grep -q "~++"; then \
+		sed -i -e "s|(<< 1:19.1.0~++rc3-1~exp2)|(<< 1:19.1.0~++20240910033111)|g" debian/control; \
+		sed -i -e "s|(<< 1:19.1.0~++rc4-5)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
+		sed -i -e "s|(<< 1:19.1.0-4)|(<< 1:19.1.0~++20240917071600)|g" debian/control; \
+		fi; \
 	fi
 
 	# llvm-spirv was found, so we can enable *.spv files. Debian
@@ -743,6 +764,10 @@ stamps/preconfigure:
 			echo "it might be that the 'hello' package is installed by another constraint"; \
 			exit 1; \
 		fi; \
+	fi
+
+	if test "$(LLVM_LIBC_ENABLE)" = "no"; then \
+		echo "" > debian/libllvmlibc-$(LLVM_VERSION)-dev.install; \
 	fi
 
 	# Conditionally enable install clangd grpc files

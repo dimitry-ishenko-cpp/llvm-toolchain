@@ -136,3 +136,4 @@ offload-disable-static-assert.diff
 link-with-package-metadata.diff
 mips-mlir-xgot.diff
 libc-fix-python-bionic.diff
+env-lld-package-metadata.diff
