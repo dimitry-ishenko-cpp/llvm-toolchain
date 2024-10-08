@@ -1,16 +1,18 @@
---- a/lld/ELF/Driver.cpp
-+++ b/lld/ELF/Driver.cpp
-@@ -1335,6 +1335,13 @@ static void readConfigs(opt::InputArgLis
-   config->orphanHandling = getOrphanHandling(args);
-   config->outputFile = args.getLastArgValue(OPT_o);
-   config->packageMetadata = args.getLastArgValue(OPT_package_metadata);
+Index: llvm-toolchain-snapshot_20~++20241008102056+4d218caa7716/lld/ELF/Driver.cpp
+===================================================================
+--- llvm-toolchain-snapshot_20~++20241008102056+4d218caa7716.orig/lld/ELF/Driver.cpp
++++ llvm-toolchain-snapshot_20~++20241008102056+4d218caa7716/lld/ELF/Driver.cpp
+@@ -1402,6 +1402,13 @@ static void readConfigs(Ctx &ctx, opt::I
+   ctx.arg.orphanHandling = getOrphanHandling(args);
+   ctx.arg.outputFile = args.getLastArgValue(OPT_o);
+   ctx.arg.packageMetadata = args.getLastArgValue(OPT_package_metadata);
 +  // No package-metadata option, fall-back to env ELF_PACKAGE_METADATA
-+  if (config->packageMetadata.empty()) {
++  if (ctx.arg.packageMetadata.empty()) {
 +    const char *env_package_metadata = getenv("ELF_PACKAGE_METADATA");
 +    if (env_package_metadata && strcmp(env_package_metadata, "") != 0) {
-+      config->packageMetadata = StringRef(env_package_metadata);
++      ctx.arg.packageMetadata = StringRef(env_package_metadata);
 +    }
 +  }
-   config->pie = args.hasFlag(OPT_pie, OPT_no_pie, false);
-   config->printIcfSections =
+   ctx.arg.pie = args.hasFlag(OPT_pie, OPT_no_pie, false);
+   ctx.arg.printIcfSections =
        args.hasFlag(OPT_print_icf_sections, OPT_no_print_icf_sections, false);
