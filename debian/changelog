@@ -10,6 +10,9 @@ llvm-toolchain-19 (1:19.1.1-2) UNRELEASED; urgency=medium
   * libomp5-X.Y.symbols.in: Fix symbols on hurd-any.
   * rules: Fix syntax on non-linux.
 
+  [ John Paul Adrian Glaubitz ]
+  * Don't try to install xray and profile headers on powerpc
+
  -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 02 Oct 2024 10:29:32 +0200
 
 llvm-toolchain-19 (1:19.1.1-1) unstable; urgency=medium
