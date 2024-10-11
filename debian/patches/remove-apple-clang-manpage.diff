@@ -1,7 +1,7 @@
-Index: llvm-toolchain-snapshot_19~++20240616011956+edabb5c12ed9/clang/docs/CommandGuide/clang.rst
+Index: llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/clang/docs/CommandGuide/clang.rst
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240616011956+edabb5c12ed9.orig/clang/docs/CommandGuide/clang.rst
-+++ llvm-toolchain-snapshot_19~++20240616011956+edabb5c12ed9/clang/docs/CommandGuide/clang.rst
+--- llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e.orig/clang/docs/CommandGuide/clang.rst
++++ llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/clang/docs/CommandGuide/clang.rst
 @@ -354,24 +354,10 @@ Clang fully supports cross compilation a
  Depending on how your version of Clang is configured, it may have support for a
  number of cross compilers, or may only support a native target.
@@ -27,7 +27,7 @@ Index: llvm-toolchain-snapshot_19~++20240616011956+edabb5c12ed9/clang/docs/Comma
  .. option:: --print-supported-cpus
  
    Print out a list of supported processors for the given target (specified
-@@ -721,11 +707,6 @@ ENVIRONMENT
+@@ -740,11 +726,6 @@ ENVIRONMENT
    These environment variables specify additional paths, as for :envvar:`CPATH`, which are
    only used when processing the appropriate language.
  

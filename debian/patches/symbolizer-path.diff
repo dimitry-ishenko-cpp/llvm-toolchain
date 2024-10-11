@@ -1,7 +1,7 @@
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
+Index: llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
+--- llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e.orig/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
++++ llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/compiler-rt/lib/sanitizer_common/sanitizer_symbolizer_posix_libcdep.cpp
 @@ -34,6 +34,11 @@
  #  include "sanitizer_symbolizer_libbacktrace.h"
  #  include "sanitizer_symbolizer_mac.h"
@@ -23,11 +23,11 @@ Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/compiler-rt/lib/
      VReport(2, "Using llvm-symbolizer found at: %s\n", found_path);
      return new(*allocator) LLVMSymbolizer(found_path, allocator);
    }
-Index: llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/compiler-rt/lib/sanitizer_common/CMakeLists.txt
+Index: llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/compiler-rt/lib/sanitizer_common/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_19~++20240220124703+f122268c0441.orig/compiler-rt/lib/sanitizer_common/CMakeLists.txt
-+++ llvm-toolchain-snapshot_19~++20240220124703+f122268c0441/compiler-rt/lib/sanitizer_common/CMakeLists.txt
-@@ -214,6 +214,7 @@ set(SANITIZER_IMPL_HEADERS
+--- llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e.orig/compiler-rt/lib/sanitizer_common/CMakeLists.txt
++++ llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/compiler-rt/lib/sanitizer_common/CMakeLists.txt
+@@ -211,6 +211,7 @@ set(SANITIZER_IMPL_HEADERS
    )
  
  include_directories(..)

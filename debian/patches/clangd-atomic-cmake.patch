@@ -1,7 +1,7 @@
-Index: llvm-toolchain-snapshot_17~++20230517015648+0b6264738f3d/clang-tools-extra/clangd/CMakeLists.txt
+Index: llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/clang-tools-extra/clangd/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-snapshot_17~++20230517015648+0b6264738f3d.orig/clang-tools-extra/clangd/CMakeLists.txt
-+++ llvm-toolchain-snapshot_17~++20230517015648+0b6264738f3d/clang-tools-extra/clangd/CMakeLists.txt
+--- llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e.orig/clang-tools-extra/clangd/CMakeLists.txt
++++ llvm-toolchain-19_19.1.2~++20241011093632+6c1fd539e43e/clang-tools-extra/clangd/CMakeLists.txt
 @@ -61,6 +61,11 @@ endif()
  include_directories(BEFORE "${CMAKE_CURRENT_BINARY_DIR}/../clang-tidy")
  include_directories(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/../include-cleaner/include")
@@ -14,7 +14,7 @@ Index: llvm-toolchain-snapshot_17~++20230517015648+0b6264738f3d/clang-tools-extr
  add_clang_library(clangDaemon
    AST.cpp
    ASTSignals.cpp
-@@ -178,6 +183,7 @@ clang_target_link_libraries(clangDaemon
+@@ -181,6 +186,7 @@ clang_target_link_libraries(clangDaemon
  target_link_libraries(clangDaemon
    PRIVATE
    ${LLVM_PTHREAD_LIB}
