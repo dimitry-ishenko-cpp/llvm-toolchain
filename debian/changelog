@@ -1,3 +1,9 @@
+llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp1) UNRELEASED; urgency=medium
+
+  * flang-new has been renamed to flang (a flang-new still exists)
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 10 Oct 2024 21:58:32 +0200
+
 llvm-toolchain-snapshot (1:20~++20241008102056+4d218caa7716-1~exp1) experimental; urgency=medium
 
   [ Matthias Klose ]

@@ -1102,7 +1102,7 @@ if dpkg -l|grep -q flang-$VERSION; then
   print *, "x + y = ", x + y
 end program math
 ' > foo.f90
-    flang-new-$VERSION foo.f90 -o foo && ./foo &> foo.log
+    flang-$VERSION foo.f90 -o foo && ./foo &> foo.log
     if ! grep -q "x + y =" foo.log 2>&1; then
         echo "flang: Could not find the expected output"
         exit -1
@@ -1118,15 +1118,15 @@ module hello_world
     end subroutine say_hello
 end module hello_world
 ' > lib.f90
-    flang-new-$VERSION -c lib.f90  -fpie
-    flang-new-$VERSION -shared  -fpie -o libflib.so lib.o
+    flang-$VERSION -c lib.f90  -fpie
+    flang-$VERSION -shared  -fpie -o libflib.so lib.o
 
     echo '
 program main
    use hello_world
    call say_hello()
 end program main' > foo.f90
-    flang-new-$VERSION foo.f90 -L. -lflib -o foo
+    flang-$VERSION foo.f90 -L. -lflib -o foo
     LD_LIBRARY_PATH=. ./foo &> foo.log
     if ! grep -q "Hello, World!" foo.log 2>&1; then
         echo "flang: lib didn't work"
