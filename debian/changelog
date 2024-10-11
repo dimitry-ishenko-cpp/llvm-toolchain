@@ -1,4 +1,4 @@
-llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp2) UNRELEASED; urgency=medium
+llvm-toolchain-snapshot (1:20~++20241008102056+4d218caa7716-1~exp1) experimental; urgency=medium
 
   [ Matthias Klose ]
   * Build-depend on llvm-spirv-19 instead of llvm-spirv-18.
@@ -8,10 +8,11 @@ llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp2) UNRELEASED; 
   [ Samuel Thibault ]
   * debian/libclang-common-X.Y-dev.install.in: Fix dh_install on hurd-any.
 
-  [ John Paul Adrian Glaubitz ]
-  * Don't try to install xray and profile headers on powerpc
+  [ Sylvestre Ledru ]
+  * New snapshot release
+  * sync from 19 => snapshot
 
- -- Matthias Klose <doko@debian.org>  Wed, 02 Oct 2024 06:49:56 +0200
+ -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 08 Oct 2024 10:21:13 +0200
 
 llvm-toolchain-snapshot (1:20~++20240921071058+b177a9b6efb6-1~exp1) experimental; urgency=medium
 
