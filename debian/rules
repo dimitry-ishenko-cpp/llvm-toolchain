@@ -111,7 +111,7 @@ DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
 
 include /usr/share/dpkg/architecture.mk
 
-MULTILIB_ARCHS := amd64 i386 mips64 mips64el mipsel powerpc ppc64 s390x sparc sparc64 x32
+MULTILIB_ARCHS := amd64 i386 mips64 mips64el mipsel powerpc ppc64 sparc sparc64 x32
 ifeq ($(DERIVATIVE),Ubuntu)
   ifeq (,$(filter $(DISTRO), bionic focal jammy noble))
     MULTILIB_ARCHS := $(filter-out s390x, $(MULTILIB_ARCHS))
