@@ -467,6 +467,7 @@ ifneq (,$(filter scan-build,$(DEB_BUILD_OPTIONS)))
 
 	PRE_PROCESS=scan-build-$(LLVM_VERSION) --show-description -analyzer-config stable-report-filename=true
 	PRE_PROCESS_CONF=scan-build-$(LLVM_VERSION)
+	TIME_COMMAND=
 # no need to run tests in this case
 	RUN_TEST=no
 	CONFIGURE_EXTRA += --enable-assertions
@@ -479,6 +480,7 @@ ifneq (,$(filter coverity,$(DEB_BUILD_OPTIONS)))
 # And we have some pbuilder hooks to configure and pack the result
 # Where the binaries are installed on the jenkins instance
         PRE_PROCESS=PATH=$$PATH:/opt/cov-analysis/bin/ cov-build --dir cov-int
+		TIME_COMMAND=
 # We don't want to check the temporary files produced by the configure
         PRE_PROCESS_CONF=
         COVERITY_ENABLE=1
@@ -631,6 +633,7 @@ ifneq (,$(filter coverity,$(DEB_BUILD_OPTIONS)))
 # And we have some pbuilder hooks to configure and pack the result
 # Where the binaries are installed on the jenkins instance
         PRE_PROCESS=PATH=$$PATH:/opt/cov-analysis/bin/ cov-build --dir cov-int
+		TIME_COMMAND=
 # We don't want to check the temporary files produced by the configure
         PRE_PROCESS_CONF=
         COVERITY_ENABLE=1
