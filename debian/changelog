@@ -2,6 +2,7 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp1) UNRELEASED; 
 
   [ Sylvestre Ledru ]
   * flang-new has been renamed to flang (a flang-new still exists)
+  * Use the | hello trick for g++-multilib for s390x / Ubuntu Oracular
 
   [ John Paul Adrian Glaubitz ]
   * Allow overriding the bootstrap compiler from the environment
