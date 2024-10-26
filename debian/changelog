@@ -2,8 +2,6 @@ llvm-toolchain-19 (1:19.1.2-2) UNRELEASED; urgency=medium
 
   [ Samuel Thibault ]
   * Disable time64_t ABI on hurd-i386 too.
-  * libclang-common-X.Y-dev.install.in: Don't try to install xray and profile
-    headers on hurd-any.
 
   [ Sylvestre Ledru ]
   * Use the | hello trick for g++-multilib for s390x / Ubuntu Oracular
