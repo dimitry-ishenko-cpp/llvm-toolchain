@@ -1,0 +1,43 @@
+From 32b55f375feaf6bcc2c870964a0bf087cf3c22bf Mon Sep 17 00:00:00 2001
+From: Sylvestre Ledru <sylvestre@debian.org>
+Date: Thu, 17 Oct 2024 21:32:20 +0200
+Subject: [PATCH] Add support of the next Ubuntu (Ubuntu 25.04 - Plucky Puffin)
+
+---
+ clang/include/clang/Driver/Distro.h | 3 ++-
+ clang/lib/Driver/Distro.cpp         | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/clang/include/clang/Driver/Distro.h b/clang/include/clang/Driver/Distro.h
+index 1404e168684821..b4d485dac8a269 100644
+--- a/clang/include/clang/Driver/Distro.h
++++ b/clang/include/clang/Driver/Distro.h
+@@ -80,6 +80,7 @@ class Distro {
+     UbuntuMantic,
+     UbuntuNoble,
+     UbuntuOracular,
++    UbuntuPlucky,
+     UnknownDistro
+   };
+ 
+@@ -131,7 +132,7 @@ class Distro {
+   }
+ 
+   bool IsUbuntu() const {
+-    return DistroVal >= UbuntuHardy && DistroVal <= UbuntuOracular;
++    return DistroVal >= UbuntuHardy && DistroVal <= UbuntuPlucky;
+   }
+ 
+   bool IsAlpineLinux() const { return DistroVal == AlpineLinux; }
+diff --git a/clang/lib/Driver/Distro.cpp b/clang/lib/Driver/Distro.cpp
+index 6f49e641104ccd..3d1bce027f664d 100644
+--- a/clang/lib/Driver/Distro.cpp
++++ b/clang/lib/Driver/Distro.cpp
+@@ -96,6 +96,7 @@ static Distro::DistroType DetectLsbRelease(llvm::vfs::FileSystem &VFS) {
+                     .Case("mantic", Distro::UbuntuMantic)
+                     .Case("noble", Distro::UbuntuNoble)
+                     .Case("oracular", Distro::UbuntuOracular)
++                    .Case("plucky", Distro::UbuntuPlucky)
+                     .Default(Distro::UnknownDistro);
+   return Version;
+ }
