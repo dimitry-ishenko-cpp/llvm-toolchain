@@ -34,7 +34,6 @@ else
   RUNTIMES = compiler-rt;libcxx;libcxxabi
   ifeq ($(DEB_HOST_ARCH_BITS),32)
     export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto abi=+time64,+lfs
-    skip_packages = -Nlibclang-rt-$(LLVM_VERSION)-dev
   else
     ifeq ($(DEB_HOST_ARCH),mips64el)
         export DEB_BUILD_MAINT_OPTIONS = reproducible=-fixfilepath,-fixdebugpath optimize=-lto hardening=-stackprotector,-stackprotectorstrong
@@ -723,7 +722,6 @@ stamps/preconfigure:
 	chmod +x \
 		debian/clang-tools-$(LLVM_VERSION).install \
 		debian/libclang-$(LLVM_VERSION)-dev.install \
-		debian/libclang-common-$(LLVM_VERSION)-dev.install \
 		debian/libclang-rt-$(LLVM_VERSION)-dev.install \
 		debian/libpolly-$(LLVM_VERSION)-dev.install \
 		debian/libomp-$(LLVM_VERSION)-dev.install \
