@@ -1,6 +1,8 @@
---- a/lld/ELF/Driver.cpp
-+++ b/lld/ELF/Driver.cpp
-@@ -1335,6 +1335,13 @@ static void readConfigs(opt::InputArgLis
+Index: llvm-toolchain-19_19.1.2~++20241028100023+d8752671e825/lld/ELF/Driver.cpp
+===================================================================
+--- llvm-toolchain-19_19.1.2~++20241028100023+d8752671e825.orig/lld/ELF/Driver.cpp
++++ llvm-toolchain-19_19.1.2~++20241028100023+d8752671e825/lld/ELF/Driver.cpp
+@@ -1380,6 +1380,13 @@ static void readConfigs(opt::InputArgLis
    config->orphanHandling = getOrphanHandling(args);
    config->outputFile = args.getLastArgValue(OPT_o);
    config->packageMetadata = args.getLastArgValue(OPT_package_metadata);
