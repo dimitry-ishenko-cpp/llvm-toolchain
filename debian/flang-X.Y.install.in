@@ -2,6 +2,7 @@ usr/lib/llvm-@LLVM_VERSION@/bin/bbc
 usr/lib/llvm-@LLVM_VERSION@/bin/f18-parse-demo
 usr/lib/llvm-@LLVM_VERSION@/bin/fir-opt
 usr/lib/llvm-@LLVM_VERSION@/bin/flang
+usr/lib/llvm-@LLVM_VERSION@/bin/flang-@LLVM_VERSION@
 usr/lib/llvm-@LLVM_VERSION@/bin/flang-new
 usr/lib/llvm-@LLVM_VERSION@/bin/tco
 usr/lib/llvm-@LLVM_VERSION@/bin/fir-lsp-server
