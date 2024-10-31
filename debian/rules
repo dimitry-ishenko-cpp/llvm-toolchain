@@ -1341,8 +1341,7 @@ endif
 		echo "Link $$f to `basename $$f`-$(LLVM_VERSION)"; \
 	done
 
-# Workaround - remove duplicated files from usptream?!
-	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/bin/flang-$(LLVM_VERSION)
+	rm -f $(DEB_INST)/usr/bin/flang-$(LLVM_VERSION)-$(LLVM_VERSION)
 # Rename some stuff with the version name
 	cp $(CURDIR)/clang/tools/scan-build/man/scan-build.1 $(CURDIR)/clang/tools/scan-build/man/scan-build-$(LLVM_VERSION).1
 
