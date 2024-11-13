@@ -13,7 +13,11 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; 
   * Set compiler-rt default target arch on powerpc
   * Restrict compiler-rt build to default target arch on powerpc
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Sat, 26 Oct 2024 22:30:56 +0200
+  [ Matthias Klose ]
+  * d/rules: Add a BD_ALT_HELLO macro. Set it to anything else than "yes" to avoid
+    generating alternative build dependencies on hello in the control file.
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 13 Nov 2024 11:43:14 +0100
 
 llvm-toolchain-snapshot (1:20~++20241008102056+4d218caa7716-1~exp1) experimental; urgency=medium
 

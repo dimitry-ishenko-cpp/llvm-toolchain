@@ -68,6 +68,15 @@ else
 	NCPUS := $(shell nproc)
 endif
 
+# set this macro to anything else than "yes" to avoid generating alternative
+# build dependencies on hello in the control file.
+BD_ALT_HELLO = yes
+ifeq ($(BD_ALT_HELLO),yes)
+  BD_ALT_HELLO_SUBST = 's/@hb@//;s/@he@//'
+else
+  BD_ALT_HELLO_SUBST = 's/@hb@.*@he@//'
+endif
+
 # this contains all packages to be built. Note that for at least the clean target,
 # this always includes the binary-indep packages.
 packages := $(shell dh_listpackages)
@@ -722,7 +731,9 @@ stamps/preconfigure:
 			-e "s|@LLVM_VERSION_FULL@|$(LLVM_VERSION_FULL)|g" \
 			-e "s|@LLVM_VERSION_MINOR@|$(LLVM_VERSION_MINOR)|g" \
 			-e "s|@LLVM_VERSION_NEXT@|$(LLVM_VERSION_NEXT)|g" \
-			-e "s|@LLVM_VERSION@|$(LLVM_VERSION)|g" $$f > $$f2; \
+			-e "s|@LLVM_VERSION@|$(LLVM_VERSION)|g" \
+			-e $(BD_ALT_HELLO_SUBST) \
+			$$f > $$f2; \
 		[ -x $$f ] && chmod +x $$f2; \
 	done
 
