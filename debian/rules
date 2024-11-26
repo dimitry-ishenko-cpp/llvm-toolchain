@@ -70,9 +70,9 @@ endif
 # build dependencies on hello in the control file.
 BD_ALT_HELLO = yes
 ifeq ($(BD_ALT_HELLO),yes)
-  BD_ALT_HELLO_SUBST = 's/@hb@//;s/@he@//'
+  BD_ALT_HELLO_SUBST = 's/@BEGIN_OPTIONAL_HELLO@//g;s/@END_OPTIONAL_HELLO@//g'
 else
-  BD_ALT_HELLO_SUBST = 's/@hb@.*@he@//'
+  BD_ALT_HELLO_SUBST = '/@BEGIN_OPTIONAL_HELLO@/,/@END_OPTIONAL_HELLO@/d'
 endif
 
 # this contains all packages to be built. Note that for at least the clean target,
