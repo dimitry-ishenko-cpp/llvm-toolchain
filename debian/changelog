@@ -1,6 +1,10 @@
 llvm-toolchain-19 (1:19.1.4-2) UNRELEASED; urgency=medium
 
+  [ Matthias Klose ]
   * Better correct than less cryptic. Fix BD_ALT_HELLO substitutions.
+
+  [ John Paul Adrian Glaubitz ]
+  * Install liborc_rt-powerpc64.a on powerpc
 
  -- Matthias Klose <doko@debian.org>  Wed, 27 Nov 2024 10:44:30 +0100
 
