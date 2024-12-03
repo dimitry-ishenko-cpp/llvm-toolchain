@@ -17,6 +17,9 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; 
   * d/rules: Add a BD_ALT_HELLO macro. Set it to anything else than "yes" to avoid
     generating alternative build dependencies on hello in the control file.
 
+  [ John Paul Adrian Glaubitz ]
+  * Install liborc_rt-powerpc64.a on powerpc
+
  -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 13 Nov 2024 11:43:14 +0100
 
 llvm-toolchain-snapshot (1:20~++20241008102056+4d218caa7716-1~exp1) experimental; urgency=medium
