@@ -1,3 +1,2 @@
 usr/lib/llvm-@LLVM_VERSION@/lib/libllvmlibc.a
-usr/lib/llvm-@LLVM_VERSION@/lib/libLibcTableGenUtil.a
 usr/lib/llvm-@LLVM_VERSION@/lib/libllvmlibc_rpc_server.a

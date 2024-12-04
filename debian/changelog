@@ -7,6 +7,8 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; 
     Follow eccdb2489483ca58d2cb35bc38967a8e33117575
   * Ship fir-lsp-server in flang-20
   * Ship clang-sycl-linker in clang-tools
+  * remove libLibcTableGenutil.a
+    Removed in https://github.com/llvm/llvm-project/pull/117220/files
 
   [ John Paul Adrian Glaubitz ]
   * Allow overriding the bootstrap compiler from the environment
