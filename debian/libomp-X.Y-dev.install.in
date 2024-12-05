@@ -13,10 +13,4 @@
 
 usr/lib/llvm-@LLVM_VERSION@/lib/cmake/openmp/*.cmake
 
-[amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/lib/llvm-@LLVM_VERSION@/bin/llvm-offload-device-info
-[amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/lib/llvm-@LLVM_VERSION@/bin/llvm-omp-kernel-replay
-
-[amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/bin/llvm-offload-device-info-@LLVM_VERSION@
-[amd64 arm64 loong64 mips64el ppc64el ppc64 riscv64] usr/bin/llvm-omp-kernel-replay-@LLVM_VERSION@
-
 [!armhf !hurd-amd64] usr/lib/llvm-@LLVM_VERSION@/share/gdb/python/ompd/

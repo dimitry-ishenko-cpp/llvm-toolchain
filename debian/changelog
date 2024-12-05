@@ -9,6 +9,7 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; 
   * Ship clang-sycl-linker in clang-tools
   * remove libLibcTableGenutil.a
     Removed in https://github.com/llvm/llvm-project/pull/117220/files
+  * Ship liboffload in a new package
 
   [ John Paul Adrian Glaubitz ]
   * Allow overriding the bootstrap compiler from the environment
@@ -22,7 +23,7 @@ llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; 
   [ John Paul Adrian Glaubitz ]
   * Install liborc_rt-powerpc64.a on powerpc
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Wed, 13 Nov 2024 11:43:14 +0100
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 05 Dec 2024 20:44:00 +0100
 
 llvm-toolchain-snapshot (1:20~++20241008102056+4d218caa7716-1~exp1) experimental; urgency=medium
 

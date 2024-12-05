@@ -920,6 +920,7 @@ fi
 
 # OpenMP
 if dpkg -l libomp-$VERSION-dev >/dev/null 2>&1; then
+    echo "testing libomp"
 cat <<EOF > foo.c
 //test.c
 #include "omp.h"
@@ -934,6 +935,36 @@ clang-$VERSION foo.c -fopenmp -o o
 ./o > /dev/null
 else
     echo "OpenMP check skipped, no libomp-$VERSION-dev available."
+fi
+
+# liboffload
+if dpkg -l liboffload-$VERSION-dev >/dev/null 2>&1; then
+    echo "testing liboffload"
+cat <<EOF > foo.cpp
+#include <complex>
+
+using complex = std::complex<double>;
+
+void zaxpy(complex *X, complex *Y, complex D, std::size_t N) {
+#pragma omp target teams distribute parallel for
+  for (std::size_t i = 0; i < N; ++i)
+    Y[i] = D * X[i] + Y[i];
+}
+
+int main() {
+  const std::size_t N = 1024;
+  complex X[N], Y[N], D;
+#pragma omp target data map(to:X[0 : N]) map(tofrom:Y[0 : N])
+  zaxpy(X, Y, D, N);
+}
+EOF
+clang++-$VERSION -fopenmp -fopenmp-targets=nvptx64 -O3 foo.cpp -c
+llvm-readelf-$VERSION -WS foo.o
+# TODO pipe
+clang++-$VERSION -fopenmp -fopenmp-targets=nvptx64 foo.o -o o
+./o > /dev/null
+else
+    echo "liboffload check skipped, no liboffload-$VERSION-dev available."
 fi
 
 if test ! -f /usr/lib/llvm-$VERSION/include/c++/v1/vector; then
