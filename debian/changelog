@@ -1,3 +1,30 @@
+llvm-toolchain-snapshot (1:20~++20241205084449+66a0a081338d-1~exp1) UNRELEASED; urgency=medium
+
+  * flang-new has been renamed to flang (a flang-new still exists)
+  [ Matthias Klose ]
+  * Build-depend on llvm-spirv-19 instead of llvm-spirv-18.
+  * d/libclang-cppX.Y.links.in: Honor LLVM_VERSION_MINOR for the symlink.
+  * Update watch file and add .git* files to exclude in the tarball.
+
+  [ Samuel Thibault ]
+  * debian/libclang-common-X.Y-dev.install.in: Fix dh_install on hurd-any.
+
+  [ John Paul Adrian Glaubitz ]
+  * Don't try to install xray and profile headers on powerpc
+
+  [ Sylvestre Ledru ]
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+  * experimental New snapshot release
+
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 05 Dec 2024 20:45:02 +0100
+
 llvm-toolchain-snapshot (1:20~++20241010095759+d832a1c744fd-1~exp2) UNRELEASED; urgency=medium
 
   [ Sylvestre Ledru ]
