@@ -673,9 +673,9 @@ Conflicts: liboffload-x.y-dev
 Replaces: liboffload-x.y-dev, libomp-20-dev (<< 1:20241205084449+66a0a081338d)
 Breaks: libomp-20-dev (<< 1:20241205084449+66a0a081338d)
 Description: Offload Library - Development Package
- The offload library facilitates efficient task distribution by offloading specific
- computational tasks from the CPU to alternative hardware accelerators such as
- GPUs or FPGAs.
+ The offload library facilitates efficient task distribution by offloading
+ specific computational tasks from the CPU to alternative hardware accelerators
+ such as GPUs or FPGAs.
  .
  This development package includes headers and other resources needed for building
  applications that utilize the offload runtime.
@@ -688,9 +688,9 @@ Provides: ${t64:Provides}, liboffload-x.y
 Conflicts: liboffload-x.y
 Replaces: liboffload-x.y
 Description: Offload Library
- The offload library facilitates efficient task distribution by offloading specific
- computational tasks from the CPU to alternative hardware accelerators such as
- GPUs or FPGAs.
+ The offload library facilitates efficient task distribution by offloading
+ specific computational tasks from the CPU to alternative hardware accelerators
+ such as GPUs or FPGAs.
 
 # ------------- libcxx -------------
 
