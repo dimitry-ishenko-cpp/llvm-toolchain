@@ -394,6 +394,7 @@ ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
         # Enable libc only for architectures listed in LIBC_ARCHS
         ifneq (,$(filter $(DEB_HOST_ARCH), $(LIBC_ARCHS)))
             RUNTIMES += ;libc
+            STAGE_ALL_CMAKE_EXTRA += -DLLVM_LIBC_GPU_BUILD=ON
         else
             LLVM_LIBC_ENABLE=no
         endif
@@ -916,7 +917,6 @@ endif
 	-DLIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY=OFF \
 	-DLIBCXX_INSTALL_LIBRARY=OFF \
 	-DLIBCXX_INSTALL_MODULES=ON \
-	-DLLVM_LIBC_GPU_BUILD=ON \
 	-DBOOTSTRAP_LIBCXX_INSTALL_MODULES=ON \
 	-DOPENMP_ENABLE_LIBOMP_PROFILING=OFF \
 	-DOPENMP_ENABLE_LIBOMPTARGET_PROFILING=OFF \
