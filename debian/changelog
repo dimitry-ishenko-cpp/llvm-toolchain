@@ -1,8 +1,9 @@
-llvm-toolchain-snapshot (1:20~++20241205084449+66a0a081338d-1~exp2) experimental; urgency=medium
+llvm-toolchain-snapshot (1:20~++20241212011120+0cbdad4bd239-1~exp1) experimental; urgency=medium
 
   * Only build libc on supported arch (for real)
+  * Ship bolt-binary-analysis in bolt
 
- -- Sylvestre Ledru <sylvestre@debian.org>  Tue, 10 Dec 2024 14:37:36 +0100
+ -- Sylvestre Ledru <sylvestre@debian.org>  Thu, 12 Dec 2024 13:22:30 +0100
 
 llvm-toolchain-snapshot (1:20~++20241205084449+66a0a081338d-1~exp1) experimental; urgency=medium
 
