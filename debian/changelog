@@ -1,3 +1,13 @@
+llvm-toolchain-18 (2:18.1.8-12+1) unstable; urgency=medium
+
+  * Fix hurd-pathmax.diff
+  * Remove test-disable-lldb-i386.diff
+  * Reset epoch to 2:
+  * Update debian from tag 'debian/1%18.1.8-12'
+  * Update source from tag 'cling-llvm18-20241215-01'
+
+ -- Dimitry Ishenko <dimitry.ishenko@gmail.com>  Sun, 15 Dec 2024 17:13:02 -0500
+
 llvm-toolchain-18 (1:18.1.8-12) unstable; urgency=medium
 
   * Ensure that at least 1 CPU is used for build
