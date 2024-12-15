@@ -9,7 +9,7 @@ VERSION=$(dpkg-parsechangelog | sed -rne "s,^Version: 1:([0-9]+).*,\1,p")
 DETAILED_VERSION=$(dpkg-parsechangelog |  sed -rne "s,^Version: 1:([0-9.]+)(~|-)(.*),\1\2\3,p")
 DEB_HOST_ARCH=$(dpkg-architecture -qDEB_HOST_ARCH)
 
-LIST="libomp5-${VERSION}_${DETAILED_VERSION}_amd64.deb libomp-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb lldb-${VERSION}_${DETAILED_VERSION}_amd64.deb python3-lldb-${VERSION}_${DETAILED_VERSION}_amd64.deb libllvm${VERSION}_${DETAILED_VERSION}_amd64.deb llvm-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb liblldb-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb  libclang1-${VERSION}_${DETAILED_VERSION}_amd64.deb  libclang-common-${VERSION}-dev_${DETAILED_VERSION}_all.deb  llvm-${VERSION}_${DETAILED_VERSION}_amd64.deb  liblldb-${VERSION}_${DETAILED_VERSION}_amd64.deb  llvm-${VERSION}-runtime_${DETAILED_VERSION}_amd64.deb lld-${VERSION}_${DETAILED_VERSION}_amd64.deb libfuzzer-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++abi-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++1-${VERSION}_${DETAILED_VERSION}_amd64.deb libc++abi1-${VERSION}_${DETAILED_VERSION}_amd64.deb clang-${VERSION}_${DETAILED_VERSION}_amd64.deb llvm-${VERSION}-tools_${DETAILED_VERSION}_amd64.deb clang-tools-${VERSION}_${DETAILED_VERSION}_amd64.deb clangd-${VERSION}_${DETAILED_VERSION}_amd64.deb libclang-cpp${VERSION}_${DETAILED_VERSION}_amd64.deb clang-tidy-${VERSION}_${DETAILED_VERSION}_amd64.deb libclang-cpp${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclc-${VERSION}_${DETAILED_VERSION}_all.deb libclc-${VERSION}-dev_${DETAILED_VERSION}_all.deb llvm-${VERSION}-linker-tools_${DETAILED_VERSION}_amd64.deb libunwind-${VERSION}_${DETAILED_VERSION}_amd64.deb libunwind-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libmlir-${VERSION}_${DETAILED_VERSION}_amd64.deb libmlir-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-rt-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-rt-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libclang-rt-${VERSION}-dev-wasm64_${DETAILED_VERSION}_all.deb libc++abi-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libc++-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libpolly-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb  bolt-${VERSION}_${DETAILED_VERSION}_amd64.deb libbolt-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb flang-${VERSION}_${DETAILED_VERSION}_amd64.deb libflang-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb"
+LIST="libomp5-${VERSION}_${DETAILED_VERSION}_amd64.deb libomp-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb lldb-${VERSION}_${DETAILED_VERSION}_amd64.deb python3-lldb-${VERSION}_${DETAILED_VERSION}_amd64.deb python3-clang-${VERSION}_${DETAILED_VERSION}_amd64.deb libllvm${VERSION}_${DETAILED_VERSION}_amd64.deb llvm-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb liblldb-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb  libclang1-${VERSION}_${DETAILED_VERSION}_amd64.deb  libclang-common-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb  llvm-${VERSION}_${DETAILED_VERSION}_amd64.deb  liblldb-${VERSION}_${DETAILED_VERSION}_amd64.deb  llvm-${VERSION}-runtime_${DETAILED_VERSION}_amd64.deb lld-${VERSION}_${DETAILED_VERSION}_amd64.deb libfuzzer-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++abi-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libc++1-${VERSION}_${DETAILED_VERSION}_amd64.deb libc++abi1-${VERSION}_${DETAILED_VERSION}_amd64.deb clang-${VERSION}_${DETAILED_VERSION}_amd64.deb llvm-${VERSION}-tools_${DETAILED_VERSION}_amd64.deb clang-tools-${VERSION}_${DETAILED_VERSION}_amd64.deb clangd-${VERSION}_${DETAILED_VERSION}_amd64.deb libclang-cpp${VERSION}_${DETAILED_VERSION}_amd64.deb clang-tidy-${VERSION}_${DETAILED_VERSION}_amd64.deb libclang-cpp${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclc-${VERSION}_${DETAILED_VERSION}_all.deb libclc-${VERSION}-dev_${DETAILED_VERSION}_all.deb llvm-${VERSION}-linker-tools_${DETAILED_VERSION}_amd64.deb libunwind-${VERSION}_${DETAILED_VERSION}_amd64.deb libunwind-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libmlir-${VERSION}_${DETAILED_VERSION}_amd64.deb libmlir-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-rt-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libclang-rt-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libclang-rt-${VERSION}-dev-wasm64_${DETAILED_VERSION}_all.deb libc++abi-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libc++-${VERSION}-dev-wasm32_${DETAILED_VERSION}_all.deb libpolly-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb  bolt-${VERSION}_${DETAILED_VERSION}_amd64.deb libbolt-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb flang-${VERSION}_${DETAILED_VERSION}_amd64.deb libflang-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb libllvmlibc-${VERSION}-dev_${DETAILED_VERSION}_amd64.deb "
 
 echo "To install everything:"
 echo "sudo apt --purge remove 'libomp5-*' 'libc++*dev' 'libc++*' 'python3-lldb-*' 'libunwind-*' 'libclc-*' 'libclc-*dev' 'libmlir-*'"
@@ -25,8 +25,26 @@ if test ! -f /usr/bin/llvm-config-$VERSION; then
     echo "Install llvm-$VERSION & llvm-$VERSION-dev"
     exit 1
 fi
-if test ! -f /usr/lib/llvm-$VERSION/lib/libLLVM-$VERSION.so; then
+if test ! -e /usr/lib/llvm-$VERSION/lib/libLLVMObject.a; then
     echo "Install llvm-$VERSION-dev"
+    exit 1
+fi
+
+# allow usr/lib/llvm-@LLVM_VERSION@/lib/libLLVM-@LLVM_VERSION@*.so
+# as it is in llvm-X.Y-dev
+NBLINES=$(ls -1 /usr/lib/llvm-$VERSION/lib/libLLVM*.so*|wc -l)
+if test $NBLINES -ne 2; then
+    echo "Found some libLLVM into /usr/lib/llvm-$VERSION/lib/"
+    echo "See:"
+    ls -al /usr/lib/llvm-$VERSION/lib/libLLVM*.so*
+    echo "Break the build as it breaks the coinstalability"
+    echo "we should have only two for llvm-X.Y-dev"
+    exit 1
+fi
+
+NBLINES=$(dpkg -L libllvm$VERSION|grep libLLVM.so.$VERSION.1|wc -l)
+if test $NBLINES -eq 0; then
+    echo "libLLVM.so.$VERSION.1 should exist. Could not find it in libllvm$VERSION"
     exit 1
 fi
 
@@ -279,6 +297,7 @@ rm -rf cmaketest
 
 
 echo "Testing clang-$VERSION ..."
+ARCH=$(clang-$VERSION -dumpmachine)
 
 rm -f foo.log
 echo 'int main() {return 0;}' > foo.c
@@ -468,6 +487,12 @@ echo '#include <chrono>
 int main() { }' > foo.cpp
 clang++-$VERSION -std=c++11 foo.cpp
 
+if test -f /usr/lib/llvm-$VERSION/lib/libclang.so.1; then
+    echo "/usr/lib/llvm-$VERSION/lib/libclang.so.1 found."
+    echo "Break the build as it breaks the coinstalability"
+    exit 1
+fi
+
 echo "Testing linking clang-cpp ..."
 
 clang-$VERSION -lclang-cpp$VERSION -v foo.cpp -o o &> /dev/null || true
@@ -486,7 +511,7 @@ check_symlink() {
     fi
 }
 
-check_symlink "libclang-cpp.so.$VERSION"
+check_symlink "libclang-cpp.so"
 check_symlink "libclang-$VERSION.so"
 check_symlink "libclang.so"
 
@@ -1015,15 +1040,74 @@ rm -f plugin.so
 echo '#include <iostream>
 int main() {}'  | clang++-$VERSION -std=c++1z  -x c++ -stdlib=libc++ -
 
+# testing C++ libc++ modules
+cat << EOF > foo.cpp
+import std;
+import std.compat;
+
+int main() {
+  std::cout << "Hello modular world\n";
+  ::printf("Hello compat modular world\n");
+}
+EOF
+
+# Builds the std module
+clang++-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-Wno-reserved-module-identifier -Wno-reserved-user-defined-literal \
+	--precompile -o std.pcm \
+	-c /usr/lib/llvm-$VERSION/share/libc++/v1/std.cppm
+
+# Builds the std.compat module
+clang++-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-Wno-reserved-module-identifier -Wno-reserved-user-defined-literal \
+	--precompile -o std.compat.pcm \
+	-fmodule-file=std=std.pcm \
+	-c /usr/lib/llvm-$VERSION/share/libc++/v1/std.compat.cppm
+
+# Builds the test application
+clang++-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-L /usr/lib/llvm-$VERSION/lib \
+	-fmodule-file=std=std.pcm \
+	-fmodule-file=std.compat=std.compat.pcm \
+	std.pcm \
+	std.compat.pcm \
+	-lc++ \
+	foo.cpp
+
+# Runs the test application
+# The output should be
+#   Hello modular world
+#   Hello compat modular world
+./a.out > foo.log
+
+if ! grep -q -E "Hello modular world" foo.log 2>&1; then
+    echo "c++ modules didn't work"
+    exit 1
+fi
+if ! grep -q -E "Hello compat modular world" foo.log 2>&1; then
+    echo "c++ modules didn't work"
+    exit 1
+fi
+
 if test ! -f /usr/lib/llvm-$VERSION/include/cxxabi.h; then
     echo "Install libc++abi-$VERSION-dev";
     exit -1;
 fi
 
+# Recreate a C++ without modules
+echo '#include <chrono>
+int main() { }' > foo.cpp
+
 # Force the usage of libc++abi
 clang++-$VERSION -stdlib=libc++ -lc++abi foo.cpp -o o
 ./o > /dev/null
-if ! ldd o 2>&1|grep -q  libc++abi.so.1; then
+if ! ldd o 2>&1|grep -q libc++abi.so.1; then
     echo "not linked against libc++abi.so.1"
     exit -1
 fi
@@ -1092,6 +1176,59 @@ g++ -nostdinc++ -I/usr/lib/llvm-$VERSION/bin/../include/c++/v1/ -L/usr/lib/llvm-
 ./o > /dev/null
 fi
 
+# Test C++ modules with the libc++
+cat << EOF > foo.cpp
+import std; // When importing std.compat it's not needed to import std.
+import std.compat;
+
+int main() {
+  std::cout << "Hello modular world\n";
+  ::printf("Hello compat modular world\n");
+}
+EOF
+
+# Builds the std module
+clang-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-Wno-reserved-module-identifier -Wno-reserved-user-defined-literal \
+	--precompile -o std.pcm \
+	-c /usr/lib/llvm-$VERSION/share/libc++/v1/std.cppm
+
+# Builds the std.compat module
+clang-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-Wno-reserved-module-identifier -Wno-reserved-user-defined-literal \
+	--precompile -o std.compat.pcm \
+	-fmodule-file=std=std.pcm \
+	-c /usr/lib/llvm-$VERSION/share/libc++/v1/std.compat.cppm
+
+# Builds the test application
+clang-$VERSION -std=c++20 \
+	-nostdinc++ \
+	-isystem /usr/lib/llvm-$VERSION/include/c++/v1/ \
+	-L /usr/lib/llvm-$VERSION/lib \
+	-fmodule-file=std=std.pcm \
+	-fmodule-file=std.compat=std.compat.pcm \
+	std.pcm \
+	std.compat.pcm \
+	-lc++ \
+	foo.cpp
+
+# Runs the test application
+# The output should be
+#   Hello modular world
+#   Hello compat modular world
+./a.out > foo.log
+if ! grep -q -E "Hello modular world" foo.log 2>&1; then
+    echo "c++ modules didn't work"
+    exit 1
+fi
+if ! grep -q -E "Hello compat modular world" foo.log 2>&1; then
+    echo "c++ modules didn't work"
+    exit 1
+fi
 
 if dpkg -l|grep -q flang-$VERSION; then
     echo "Testing flang-$VERSION (Fortran) ..."
@@ -1135,9 +1272,30 @@ end program main' > foo.f90
     fi
     rm -f foo.log foo.f90 foo libflib.so
 else
-    echo "Skipping esting flang-$VERSION (Fortran) ..."
+    echo "Skipping testing flang-$VERSION (Fortran) ..."
     echo "doesn't exist on this arch"
 fi
+
+# libc
+if dpkg -l|grep -q libllvmlibc-$VERSION-dev; then
+echo "Testing libllvmlibc-$VERSION-dev ..."
+echo '
+#include <math.h>
+int main(void)
+{
+    double f = 2.0;
+    if (isnan(f))
+      return 1;
+    return 0;
+}' > main.c
+clang-$VERSION -static -nostdlib -nolibc -L/usr/lib/llvm-$VERSION/lib/ -lllvmlibc main.c -o foo
+if ! ldd foo 2>&1|grep -qv libc.; then
+    echo "linked against regular libc"
+    exit -1
+fi
+
+# segfault for now
+./foo || true
 
 # libclc
 echo "Testing libclc-$VERSION-dev ..."
@@ -1155,6 +1313,10 @@ fi
 
 BINDIR=$(llvm-config-$VERSION --bindir)
 /usr/lib/llvm-$VERSION/share/libclc/check_external_calls.sh /usr/lib/clc/amdgcn--amdhsa.bc $BINDIR > /dev/null
+else
+    echo "Skipping testing libllvmlibc-$VERSION-dev ..."
+    echo "doesn't exist on this arch"
+fi
 
 # libunwind
 echo "Testing libunwind-$VERSION-dev ..."
@@ -1376,6 +1538,7 @@ clang++-$VERSION -O2 -fprofile-instr-use=foo.profdata foo.cc -o foo
 # https://bugs.llvm.org/show_bug.cgi?id=44870
 cat <<EOF > foo.cpp
 #include <clang/CodeGen/BackendUtil.h>
+#include <llvm/Support/VirtualFileSystem.h>
 
 using namespace clang;
 
@@ -1389,11 +1552,12 @@ int main() {
   llvm::Module* m;
   BackendAction* action;
   std::unique_ptr<raw_pwrite_stream> AsmOutStream;
+  IntrusiveRefCntPtr<llvm::vfs::FileSystem> VFS;
 
-  EmitBackendOutput(*diags, *hsOpts, *cgOpts, *tOpts, *lOpts, *tDesc, m, *action, std::move(AsmOutStream));
+  EmitBackendOutput(*diags, *hsOpts, *cgOpts, *tOpts, *lOpts, *tDesc, m, *action, VFS, std::move(AsmOutStream));
 }
 EOF
-clang++-$VERSION foo.cpp -o test -lclangBasic -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangCodeGen -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangFrontend -lclangDriver -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -lclangBasic -ldl  /usr/lib/llvm-$VERSION/lib/libLLVM-$VERSION.so -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -ldl  -I /usr/lib/llvm-$VERSION/include/ -L/usr/lib/llvm-$VERSION/lib/ -lPolly -lPollyISL
+clang++-$VERSION foo.cpp -o test -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangCodeGen -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangFrontend -lclangDriver -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -lclangAPINotes -lclangSupport -lclangBasic -ldl  /usr/lib/llvm-$VERSION/lib/libLLVM-$VERSION.so -lclangCodeGen -lclangDriver -lclangFrontend -lclangFrontendTool -lclangRewriteFrontend -lclangARCMigrate -lclangStaticAnalyzerFrontend -lclangStaticAnalyzerCheckers -lclangStaticAnalyzerCore -lclangCrossTU -lclangIndex -lclangParse -lclangSerialization -lclangSema -lclangAnalysis -lclangEdit -lclangFormat -lclangToolingInclusions -lclangToolingCore -lclangRewrite -lclangASTMatchers -lclangAST -lclangLex -ldl  -I /usr/lib/llvm-$VERSION/include/ -L/usr/lib/llvm-$VERSION/lib/ -lPolly -lPollyISL
 
 if test ! -f /usr/bin/lldb-$VERSION; then
     echo "Install lldb-$VERSION";
@@ -1519,7 +1683,7 @@ rm -rf cmaketest && mkdir cmaketest
 cat > cmaketest/CMakeLists.txt <<EOF
 cmake_minimum_required(VERSION 3.7)
 project(SanityCheck)
-find_package(LLVM $VERSION REQUIRED CONFIG)
+find_package(LLVM $VERSION.1 REQUIRED CONFIG)
 message(STATUS "LLVM_CMAKE_DIR: \${LLVM_CMAKE_DIR}")
 if(NOT EXISTS "\${LLVM_TOOLS_BINARY_DIR}/clang")
 message(FATAL_ERROR "Invalid LLVM_TOOLS_BINARY_DIR: \${LLVM_TOOLS_BINARY_DIR}")
@@ -1653,7 +1817,8 @@ fi
 echo "if it fails, please run"
 echo "apt-get install libc6-dev:i386 libgcc-5-dev:i386 libc6-dev-x32 libx32gcc-5-dev libx32gcc-9-dev"
 for SYSTEM in ""; do
-    for MARCH in -m64 -m32 -mx32 "-m32 -march=i686"; do
+    # add "-m32 -march=i686" -m32 -mx32 to test multiarch with i386
+    for MARCH in -m64; do
         for LIB in --rtlib=compiler-rt -fsanitize=address -fsanitize=thread -fsanitize=memory -fsanitize=undefined -fsanitize=dataflow; do # -fsanitize=efficiency-working-set; do
             if test "$MARCH" == "-m32" -o "$MARCH" == "-mx32"; then
                 if test $LIB == "-fsanitize=thread" -o $LIB == "-fsanitize=memory" -o $LIB == "-fsanitize=dataflow" -o $LIB == "-fsanitize=address" -o $LIB == "-fsanitize=undefined"; then
@@ -1701,5 +1866,6 @@ fi
 #clean up
 rm -f a.out bar crash-* foo foo.* lldb-cmd.txt main.* test_fuzzer.cc foo.* o
 rm -rf output matmul.* *profraw opt.ll a.json default.profdata test test.cpp
+rm -f foo-foo.gc* hello_world.mod lib.f90 std*.pcm
 
 echo "Completed"

@@ -1,18 +1,21 @@
-Index: llvm-toolchain-snapshot_16~++20220920091612+a7d2409bac7f/libcxx/include/atomic
+Index: llvm-toolchain-snapshot_18~++20231122103518+575c9bf940e5/libcxx/include/__atomic/aliases.h
 ===================================================================
---- llvm-toolchain-snapshot_16~++20220920091612+a7d2409bac7f.orig/libcxx/include/atomic
-+++ llvm-toolchain-snapshot_16~++20220920091612+a7d2409bac7f/libcxx/include/atomic
-@@ -2640,9 +2640,13 @@ typedef conditional<_LIBCPP_CONTENTION_L
- #endif
+--- llvm-toolchain-snapshot_18~++20231122103518+575c9bf940e5.orig/libcxx/include/__atomic/aliases.h
++++ llvm-toolchain-snapshot_18~++20231122103518+575c9bf940e5/libcxx/include/__atomic/aliases.h
+@@ -96,6 +96,7 @@ using __largest_lock_free_type = char;
+ #  endif
  
- #if !defined(_LIBCPP_NO_LOCK_FREE_TYPES)
+ #  ifndef _LIBCPP_NO_LOCK_FREE_TYPES
 +#ifndef NO_LOCK_FREE
- typedef atomic<__libcpp_signed_lock_free> atomic_signed_lock_free;
- typedef atomic<__libcpp_unsigned_lock_free> atomic_unsigned_lock_free;
- #endif
+ using __contention_t_or_largest =
+     __conditional_t<__libcpp_is_always_lock_free<__cxx_contention_t>::__value,
+                     __cxx_contention_t,
+@@ -105,6 +106,8 @@ using atomic_signed_lock_free   = atomic
+ using atomic_unsigned_lock_free = atomic<make_unsigned_t<__contention_t_or_largest>>;
+ #  endif // !_LIBCPP_NO_LOCK_FREE_TYPES
+ #endif   // C++20
 +#endif
-+
 +#undef NO_LOCK_FREE
  
- #define ATOMIC_FLAG_INIT {false}
- #define ATOMIC_VAR_INIT(__v) {__v}
+ _LIBCPP_END_NAMESPACE_STD
+ 

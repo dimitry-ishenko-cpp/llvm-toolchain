@@ -1,8 +1,8 @@
-Index: llvm-toolchain-16_16.0.0~+rc4/compiler-rt/lib/builtins/CMakeLists.txt
+Index: llvm-toolchain-18_18.1.2/compiler-rt/lib/builtins/CMakeLists.txt
 ===================================================================
---- llvm-toolchain-16_16.0.0~+rc4.orig/compiler-rt/lib/builtins/CMakeLists.txt
-+++ llvm-toolchain-16_16.0.0~+rc4/compiler-rt/lib/builtins/CMakeLists.txt
-@@ -750,6 +750,12 @@ else ()
+--- llvm-toolchain-18_18.1.2.orig/compiler-rt/lib/builtins/CMakeLists.txt
++++ llvm-toolchain-18_18.1.2/compiler-rt/lib/builtins/CMakeLists.txt
+@@ -772,6 +772,12 @@ else ()
      append_list_if(COMPILER_RT_ENABLE_CET -fcf-protection=full BUILTIN_CFLAGS)
    endif()
  
@@ -13,5 +13,5 @@ Index: llvm-toolchain-16_16.0.0~+rc4/compiler-rt/lib/builtins/CMakeLists.txt
 +  endif()
 +
    append_list_if(COMPILER_RT_HAS_STD_C11_FLAG -std=c11 BUILTIN_CFLAGS)
+   append_list_if(COMPILER_RT_HAS_WBUILTIN_DECLARATION_MISMATCH_FLAG -Werror=builtin-declaration-mismatch BUILTIN_CFLAGS)
  
-   # These flags would normally be added to CMAKE_C_FLAGS by the llvm

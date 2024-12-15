@@ -12,12 +12,15 @@ GXX_VERSIONED_PACKAGE    := $(shell dpkg-query -W -f '$${Depends}' g++ | grep -o
 GXX_VERSIONED_EXECUTABLE := $(shell dpkg -L $(GXX_VERSIONED_PACKAGE) | grep '/usr/bin/g++-[0-9][0-9.]*' | xargs ls -d | tail -n1 )
 GCC_VERSION              := $(subst /usr/bin/g++-,,$(GXX_VERSIONED_EXECUTABLE))
 
-LLVM_VERSION   := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 2:([0-9]+).*,\1,p")
-LLVM_VERSION_FULL := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 2:([0-9.]+)(~|-)(.*),\1,p")
-LLVM_VERSION_SNAPSHOT := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 2:(.*),\1,p")
+LLVM_EPOCH := 1:
+LLVM_VERSION   := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:([0-9]+).*,\1,p")
+LLVM_VERSION_FULL := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:([0-9.]+)(~|-)(.*),\1,p")
+LLVM_VERSION_MINOR := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:[0-9]+\.(.*)\..*,\1,p")
+LLVM_VERSION_SNAPSHOT := $(shell dpkg-parsechangelog | sed -rne "s,^Version: 1:(.*),\1,p")
 ifeq ($(LLVM_VERSION),$(LLVM_VERSION_FULL))
 	LLVM_VERSION_FULL := $(LLVM_VERSION).0.0
 endif
+LLVM_VERSION_NEXT := $(shell echo $(LLVM_VERSION_FULL) | awk -F. '{ OFS="."; $$NF+=1; print}')
 
 # dpkg-buildflags support
 # disable fixfilepath in favor of the llvm-project supplied flavor, disable lto
@@ -31,18 +34,33 @@ else
   BRANCH_NAME=$(LLVM_VERSION)
 endif
 
+VENDOR=$(shell lsb_release -is)
+DISTRO=$(shell lsb_release -sc)
+
 SONAME_EXT      := 1
 SONAME_OPENMP	:= 5
 # Manage the case when the version is 3.5~svn213052-1~exp1 or 3.4.2-1
-DEBIAN_REVISION := $(shell dpkg-parsechangelog |  sed -rne "s,^Version: 2:([0-9.]+)(~|-)(.*),\3,p")
+DEBIAN_REVISION := $(shell dpkg-parsechangelog |  sed -rne "s,^Version: 1:([0-9.]+)(~|-)(.*),\3,p")
 ifneq (,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
-  NJOBS := $(subst parallel=,,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
+  NCPUS := $(subst parallel=,,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
 else
-  NJOBS := $(shell nproc)
+  NCPUS := $(shell nproc)
 endif
 
-VENDOR=$(shell lsb_release -is)
-DISTRO=$(shell lsb_release -sc)
+# this contains all packages to be built. Note that for at least the clean target,
+# this always includes the binary-indep packages.
+packages := $(shell dh_listpackages)
+
+# flang has some memory hogs, of up to 6.2gb per process. Limit the parallel jobs
+# based on the available memory
+ifneq (,$(filter flang-$(LLVM_VERSION), $(packages)))
+  MEM_PER_CPU=4500
+else
+  MEM_PER_CPU=2100
+endif
+NJOBS := $(shell mt=`awk '/^(MemAvail|SwapFree)/ { mt += $$2 } END {print mt}' /proc/meminfo`; \
+		awk -vn=$(NCPUS) -vmt=$$mt -vm=$(MEM_PER_CPU) \
+		  'END { mt/=1024; n2 = int(mt/m); print n==1 || n2<=1 ? 1 : n2<=n ? n2 : n }' < /dev/null)
 
 DH_VERSION := $(shell dpkg -s debhelper | grep '^Version' | awk '{print $$2}')
 
@@ -51,9 +69,13 @@ include /usr/share/dpkg/architecture.mk
 CONFIGURE_EXTRA =
 
 # these are handled on a per stage / build basis
-export DEB_CFLAGS_MAINT_STRIP = -g -O2
-export DEB_CXXFLAGS_MAINT_STRIP = -g -O2
-
+ifeq ($(VENDOR)-$(DEB_HOST_ARCH),Ubuntu-ppc64el)
+  export DEB_CFLAGS_MAINT_STRIP = -g -O3
+  export DEB_CXXFLAGS_MAINT_STRIP = -g -O3
+else
+  export DEB_CFLAGS_MAINT_STRIP = -g -O2
+  export DEB_CXXFLAGS_MAINT_STRIP = -g -O2
+endif
 include /usr/share/dpkg/buildflags.mk
 
 # We use a stage2 build. It means that a first clang is built using gcc,
@@ -161,7 +183,6 @@ export CXX=g++-$(GCC_VERSION)
 
 ifneq (,$(findstring $(DEB_HOST_ARCH),armel))
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=arm-linux-gnueabi
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
 # align arch profile with debian baseline
 # https://wiki.debian.org/ArmEabiPort
   CFLAGS_EXTRA += -march=armv5t
@@ -176,8 +197,7 @@ ifneq (,$(findstring $(DEB_HOST_ARCH),armel))
 endif
 
 ifneq (,$(findstring $(DEB_HOST_ARCH),armhf))
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=arm-linux-gnueabihf
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
+  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=arm-pc-linux-gnueabihf
 # align arch profile with debian baseline
 # https://wiki.debian.org/ArmHardFloatPort#Minimum_CPU_.26_FPU
   CFLAGS_EXTRA += -march=armv7-a -mfpu=vfpv3-d16
@@ -186,44 +206,41 @@ endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),i386))
 # Sometimes, i386 needs help with the triple
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=i386-linux-gnu
-  CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=i386-linux-gnu
+  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=i386-pc-linux-gnu
+  CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=i386-pc-linux-gnu
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),mips64el))
 # avoid an issue with search path on mips64el
 # https://bugs.llvm.org/show_bug.cgi?id=41204
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=mips64el-linux-gnuabi64
+  CFLAGS_EXTRA += -mxgot
+  CXXFLAGS_EXTRA += -mxgot
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),powerpc))
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=powerpc-linux-gnu
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
+  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=powerpc-pc-linux-gnu
 endif
 
 # debug symbols OOM in Ubuntu Ubuntu and slows down build process.
 ifneq (,$(filter $(DEB_HOST_ARCH),riscv64))
   opt_flags = -O2 -DNDEBUG -g0
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_PARALLEL_LINK_JOBS=2
 else
   opt_flags = -O2 -DNDEBUG -g1
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),sparc))
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=sparc-linux-gnu
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
+  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=sparc-pc-linux-gnu
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_PARALLEL_LINK_JOBS=4
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),sparc64))
-  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=sparc64-linux-gnu
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
+  STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=sparc64-pc-linux-gnu
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_PARALLEL_LINK_JOBS=4
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),s390x))
   STAGE_ALL_CMAKE_EXTRA += -DLLVM_HOST_TRIPLE=s390x-linux-gnu
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
   LIBCXX_EXCEPTIONS := OFF
 # disable compiler-rt builtins (not supported for s390x)
   STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_BUILD_BUILTINS=OFF
@@ -232,7 +249,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH),s390x))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),mips64el))
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
   STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_BUILD_BUILTINS=OFF
   COMPILER_RT_USE_BUILTINS_LIBRARY := OFF
   LIBCXX_USE_COMPILER_RT := OFF
@@ -247,7 +263,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH),x32))
 endif
 
 ifneq (,$(filter $(DEB_HOST_ARCH),hurd-i386))
-  STAGE_ALL_CMAKE_EXTRA += -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON
 endif
 
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' g++-$(GCC_VERSION)) ge 4.8-20121128-1~ ; echo $$?),0)
@@ -271,7 +286,7 @@ ifndef LLVM_SPIRV
 endif
 
 # Disable spirv support for most of the distro versions
-# It needs llvm-spirv-16 and it is rarely available
+# It needs llvm-spirv-17 and it is rarely available
 # Be prescritive
 SPIRV_DISABLE_DISTRO := bionic buster lunar jammy focal buster bullseye bookworm
 ifndef LLVM_SPIRV
@@ -293,20 +308,49 @@ ifeq ($(LLVM_SPIRV_INSTALLED),yes)
 	LIBCLC_LLVM_SPIRV = -DLLVM_SPIRV=$(LLVM_SPIRV)
 endif
 
+MOLD_ENABLE=no
+# Use mold as a linker. Faster than the other.
+MOLD_DISABLE_DISTRO := bionic buster focal buster bullseye bookworm
+ifeq (,$(filter-out $(MOLD_DISABLE_DISTRO), $(DISTRO)))
+# mold is too old on this distro
+	MOLD_ENABLE=no
+#else
+# disable mold until https://github.com/rui314/mold/issues/1224 is fixed
+#	MOLD_ENABLE=yes
+#	STAGE_ALL_CMAKE_EXTRA += -DLLVM_USE_LINKER=mold
+#	control_vars += ', mold'
+endif
+
 BINUTILS_GOLD_ARCHS := amd64 arm64 armhf i386 ppc64 ppc64el x32 s390x hurd-i386 kfreebsd-amd64 kfreebsd-i386
 ifeq ($(shell dpkg --compare-versions $(shell dpkg-query -W -f '$${Version}' binutils) ge 2.23.1-1~exp3 ; echo $$?),0)
 ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
+ifeq (${MOLD_ENABLE},no)
+# don't do it when MOLD is enabled
 	STAGE_ALL_CMAKE_EXTRA += -DLLVM_USE_LINKER=gold
 	STAGE_ALL_CMAKE_EXTRA += -DLLVM_BINUTILS_INCDIR=/usr/include/
 endif
 endif
+endif
 
-ifneq (,$(filter bolt-$(LLVM_VERSION), $(shell dh_listpackages)))
+ifneq (,$(filter bolt-$(LLVM_VERSION), $(packages)))
     PROJECTS += ;bolt
 endif
 
+LIBC_ENABLE=no
+LIBC_DISABLE_DISTRO := bionic
+ifneq (,$(filter libllvmlibc-$(LLVM_VERSION)-dev, $(packages)))
+ifeq (,$(filter-out $(LIBC_DISABLE_DISTRO), $(DISTRO)))
+# disable libc on bionic. See https://github.com/llvm/llvm-project/issues/82467
+	LIBC_ENABLE=no
+else
+	BOOTSTRAP_CMAKE_EXTRA += -DBOOTSTRAP_LIBC_INCLUDE_DOCS=ON
+    RUNTIMES += ;libc
+	LIBC_ENABLE=yes
+endif
+endif
+
 # flang is only for 64bits
-ifneq (,$(filter flang-$(LLVM_VERSION), $(shell dh_listpackages)))
+ifneq (,$(filter flang-$(LLVM_VERSION), $(packages)))
     PROJECTS += ;flang
 endif
 
@@ -337,6 +381,8 @@ ifneq (,$(filter $(DEB_HOST_ARCH), s390x armel m68k mipsel mips64el hurd-i386 po
 # do not use compiler-rt builtins for libcxx (libcxxabi) when libunwind is
 # disabled since the gnu implementation in libgcc_s will then be required
   LIBCXX_USE_COMPILER_RT := OFF
+# See https://github.com/llvm/llvm-project/issues/77846
+  STAGE_ALL_CMAKE_EXTRA += -DLIBCXXABI_USE_LLVM_UNWINDER=OFF
 else
   RUNTIMES += ;libunwind
   STAGE_ALL_CMAKE_EXTRA += -DLIBCXXABI_USE_LLVM_UNWINDER=ON
@@ -368,8 +414,8 @@ ifeq (riscv64,$(DEB_HOST_ARCH))
 endif
 endif
 
-# llvm tests timeout, disable it on mips64el
-ifeq (mips64el,$(DEB_HOST_ARCH))
+# llvm tests timeout, disable it on mips64el and x32
+ifneq (,$(filter $(DEB_HOST_ARCH),mips64el x32))
 	RUN_TEST=no
 endif
 
@@ -407,7 +453,7 @@ else
 endif
 
 LLDB_ENABLE=yes
-LLDB_DISABLE_ARCHS := hurd-i386 ia64 powerpc powerpcspe ppc64 riscv64 sparc64 mips64el mipsel
+LLDB_DISABLE_ARCHS := hurd-i386 ia64 powerpc powerpcspe ppc64 sparc64 mips64el mipsel
 # hurd has threading issues
 ifeq (,$(filter-out $(LLDB_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 # Disable LLDB for this arch.
@@ -415,6 +461,17 @@ ifeq (,$(filter-out $(LLDB_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
 else
 	STAGE_ALL_CMAKE_EXTRA += -DLLDB_ENABLE_LUA=OFF
 	PROJECTS+=;lldb
+endif
+
+
+ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
+	INTEL_PT_DISABLE_DISTRO := bionic
+# Disable intel-pt on old distro, fails on bionic (too old)
+	ifeq (,$(filter $(DISTRO), $(INTEL_PT_DISABLE_DISTRO)))
+		STAGE_ALL_CMAKE_EXTRA += -DLLDB_BUILD_INTEL_PT=ON -DLIBIPT_INCLUDE_PATH=/usr/include -DLIBIPT_LIBRARY_PATH=/usr/lib/$(DEB_HOST_MULTIARCH)
+	else
+		$(info Intel PT disabled for $(DISTRO))
+    endif
 endif
 
 LLDB_PYTHON_DISABLE_DISTRO := bionic buster
@@ -435,6 +492,13 @@ ifeq (,$(filter-out $(LIBCXX_WASM_DISABLE_DISTRO), $(DISTRO)))
   LIBCXX_WASM_ENABLE=no
 endif
 
+DOC_GENERATION=yes
+DOC_GENERATION_DISTRO := buster bullseye bionic focal
+# LLVM upstream moved to myst_parser but it isn't available on old distro
+ifeq (,$(filter-out $(DOC_GENERATION_DISTRO), $(DISTRO)))
+  DOC_GENERATION=no
+endif
+
 ifneq (,$(filter $(DEB_HOST_ARCH),powerpc powerpcspe))
   LIBCXX_WASM_ENABLE=no
 endif
@@ -452,20 +516,13 @@ ifeq (,$(filter-out $(LLVM_ENABLE_ZSTD_DISABLE_DISTRO), $(DISTRO)))
        STAGE_ALL_CMAKE_EXTRA += -DLLVM_ENABLE_ZSTD=OFF
 endif
 
-LTO_ENABLE=no
-# Only enable it for archs supporting gold
-ifneq (,$(filter $(DEB_HOST_ARCH),$(BINUTILS_GOLD_ARCHS)))
-# LTO requires a bunch of memory. Don't do it everywhere
-LTO_DISABLE_ARCHS := i386 armhf s390x ppc64 x32
-ifeq (,$(filter-out $(LTO_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
-	LTO_ENABLE=no
-else
-# Disable for now because of
-# https://github.com/llvm/llvm-project/issues/58317#issuecomment-1276190743
-#	LTO_ENABLE=yes
-#	STAGE_2_CMAKE_EXTRA += -DLLVM_ENABLE_LTO="On"
-endif
-endif
+THINLTO_ENABLE=no
+THINLTO_ARCHS := amd64 arm64
+# Needs more work, disabling for now
+#ifneq (,$(filter $(DEB_HOST_ARCH),$(THINLTO_ARCHS)))
+#	BOOTSTRAP_CMAKE_EXTRA +=-DBOOTSTRAP_LLVM_ENABLE_LTO=Thin
+#	THINLTO_ENABLE=yes
+#endif
 
 # https://bugs.launchpad.net/bugs/2016471
 ifeq (,$(filter-out $(LTO_DISABLE_ARCHS), $(DEB_HOST_ARCH)))
@@ -477,7 +534,7 @@ endif
 
 DH_OPTIONS=
 OCAML_ENABLE= no
-OCAML_ARCHS := amd64 arm64 armhf ppc64el riscv64 s390x
+OCAML_ARCHS := amd64 arm64 ppc64el riscv64 s390x
 ifneq (,$(filter $(DEB_HOST_ARCH),$(OCAML_ARCHS)))
 # Enable OCAML for this arch.
 	OCAML_ENABLE=yes
@@ -510,7 +567,7 @@ SCCACHE_ENABLE=no
 SCCACHE_CMAKE =
 # if sccache is installed in the chroot, use it
 ifeq ($(shell test -e /opt/sccache/sccache && echo -n yes),yes)
-	ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
+	ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64 s390x))
 		STAGE_1_CMAKE_EXTRA += $(SCCACHE_CMAKE)
 		SCCACHE_ENABLE=yes
 		SCCACHE_PATH=/opt/sccache/
@@ -520,8 +577,25 @@ ifeq ($(shell test -e /opt/sccache/sccache && echo -n yes),yes)
 	endif
 endif
 
+COVERITY_ENABLE=0
+ifneq (,$(filter coverity,$(DEB_BUILD_OPTIONS)))
+# enable the build using coverity
+# pbuilder contains BINDMOUNTS="/opt/cov-analysis/"
+# And we have some pbuilder hooks to configure and pack the result
+# Where the binaries are installed on the jenkins instance
+        PRE_PROCESS=PATH=$$PATH:/opt/cov-analysis/bin/ cov-build --dir cov-int
+# We don't want to check the temporary files produced by the configure
+        PRE_PROCESS_CONF=
+        COVERITY_ENABLE=1
+        CONFIGURE_EXTRA += --enable-assertions
+        STAGE_ALL_CMAKE_EXTRA += -DLLVM_ENABLE_ASSERTIONS=ON
+		SCCACHE_ENABLE=no
+# no need to run tests in this case
+        RUN_TEST=no
+endif
+
 # enables cmake build targets like stage2-[target_name]
-ENABLED_STAGE2_CMAKE_BUILD_TARGETS = check-all;check-llvm;check-clang;check-clang-tools;check-lld;check-libcxx;check-libcxxabi;check-mlir;check-sanitizer;llvm-config;test-suite
+ENABLED_STAGE2_CMAKE_BUILD_TARGETS = check-all;check-llvm;check-clang;check-clang-tools;check-lld;check-cxx;check-cxxabi;check-mlir;check-libc;llvm-config;test-suite
 
 %:
 	dh $@ $(DH_OPTIONS)
@@ -530,8 +604,7 @@ ENABLED_STAGE2_CMAKE_BUILD_TARGETS = check-all;check-llvm;check-clang;check-clan
 PROJECTS_LIST := $(shell echo "$(PROJECTS)"|sed -e "s| ||g")
 RUNTIMES_LIST := $(shell echo "$(RUNTIMES)"|sed -e "s| ||g")
 
-preconfigure:
-
+stamps/preconfigure:
 	if ! grep -qs '/proc ' /proc/mounts; then \
 		echo "/proc needs to be mounted"; \
 		exit 1; \
@@ -541,17 +614,28 @@ preconfigure:
 		echo "llvm spriv isn't detected while it should probably for this distro"; \
 	fi
 
+	@echo "Memory:"
+	@if [ -e /proc/meminfo ]; then \
+		cat /proc/meminfo | grep -E '(Mem|Swap)Free|Cached'; \
+	else \
+		echo "  No memory info available"; \
+	fi
+	@echo "Processors: $$(cat /proc/cpuinfo | grep --count '^processor')"
+	@echo "Used Processors: $(NJOBS) (out of $(NCPUS)), $(MEM_PER_CPU)kb/processor"
+
 	@echo "DEB_BUILD_OPTIONS=$(DEB_BUILD_OPTIONS)"
 	@echo "DEB_HOST_MULTIARCH=$(DEB_HOST_MULTIARCH)"
 	@echo "DEB_HOST_GNU_TYPE=$(DEB_HOST_GNU_TYPE)"
 	@echo "DEB_HOST_ARCH_BITS=$(DEB_HOST_ARCH_BITS)"
 	@echo "DEB_HOST_ARCH=$(DEB_HOST_ARCH)"
 	@echo "DEB_HOST_ARCH_OS=$(DEB_HOST_ARCH_OS)"
+	@echo "DEB_BUILD_MAINT_OPTIONS=$(DEB_BUILD_MAINT_OPTIONS)"
 	@echo "DISTRO=$(DISTRO)"
 	@echo "GCC_VERSION=$(GCC_VERSION)"
 	@echo "PROJECTS=$(PROJECTS_LIST)"
 	@echo "RUNTIMES=$(RUNTIMES_LIST)"
 	@echo "LLVM_VERSION=$(LLVM_VERSION)"
+	@echo "LLVM_VERSION_MINOR=$(LLVM_VERSION_MINOR)"
 	@echo "LLVM_VERSION_FULL=$(LLVM_VERSION_FULL)"
 	@echo "LLVM_VERSION_SNAPSHOT=$(LLVM_VERSION_SNAPSHOT)"
 	@echo "PATH=$(PATH)"
@@ -559,14 +643,17 @@ preconfigure:
 	@echo "RUNTIMES_CXXFLAGS=$(RUNTIMES_CXXFLAGS)"
 	@echo "STAGE_1_CXXFLAGS=$(STAGE_1_CXXFLAGS)"
 	@echo "STAGE_2_CFLAGS=$(STAGE_2_CFLAGS)"
-	@echo "LDFLAGS_EXTRA=$(LDFLAGS_EXTRA)"
 	@echo "LIBFUZZER_ENABLE=$(LIBFUZZER_ENABLE)"
-	@echo "LTO_ENABLE=$(LTO_ENABLE)"
+	@echo "THINLTO_ENABLE=$(THINLTO_ENABLE)"
 	@echo "COMPILER_RT_WASM_ENABLE=$(COMPILER_RT_WASM_ENABLE)"
 	@echo "LIBCXX_WASM_ENABLE=$(LIBCXX_WASM_ENABLE)"
 	@echo "SCCACHE_ENABLE=$(SCCACHE_ENABLE)"
+	@echo "LIBC_ENABLE=$(LIBC_ENABLE)"
+	@echo "MOLD_ENABLE=$(MOLD_ENABLE)"
 	@echo "LLVM_SPIRV=$(LLVM_SPIRV)"
 	@echo "LLVM_SPIRV_INSTALLED=$(LLVM_SPIRV_INSTALLED)"
+	@echo "DOC_GENERATION=$(DOC_GENERATION)"
+	@echo "control_vars=$(control_vars)"
 
 	for f in debian/*.in; do \
 		f2=$$(echo $$f | sed 's/\.in$$//;s/X\.Y/$(LLVM_VERSION)/'); \
@@ -574,7 +661,10 @@ preconfigure:
 		sed -e 's|@DEB_HOST_MULTIARCH@|$(DEB_HOST_MULTIARCH)|g' \
 			-e "s|@BRANCH_NAME@|$(BRANCH_NAME)|g" \
 			-e "s|@OCAML_STDLIB_DIR@|$(OCAML_STDLIB_DIR)|g" \
+			-e "s|@LLVM_EPOCH@|$(LLVM_EPOCH)|g" \
 			-e "s|@LLVM_VERSION_FULL@|$(LLVM_VERSION_FULL)|g" \
+            -e "s|@LLVM_VERSION_MINOR@|$(LLVM_VERSION_MINOR)|g" \
+			-e "s|@LLVM_VERSION_NEXT@|$(LLVM_VERSION_NEXT)|g" \
 			-e "s|@LLVM_VERSION@|$(LLVM_VERSION)|g" $$f > $$f2; \
 	done
 
@@ -582,14 +672,25 @@ preconfigure:
 	chmod +x \
 		debian/clang-tools-$(LLVM_VERSION).install \
 		debian/libclang-$(LLVM_VERSION)-dev.install \
+		debian/libclang-common-$(LLVM_VERSION)-dev.install \
 		debian/libclang-rt-$(LLVM_VERSION)-dev.install \
 		debian/libpolly-$(LLVM_VERSION)-dev.install \
 		debian/libomp-$(LLVM_VERSION)-dev.install \
-		debian/libomp5-$(LLVM_VERSION)t64.install \
+		debian/libomp5-$(LLVM_VERSION).install \
 		debian/llvm-$(LLVM_VERSION)-dev.install \
 		debian/llvm-$(LLVM_VERSION)-linker-tools.install \
 		debian/llvm-$(LLVM_VERSION)-linker-tools.links \
 		debian/libbolt-$(LLVM_VERSION)-dev.install
+
+	# workaround the breaks/replaces/conflicts introduced with the libllvm move
+	# we update the version to make it work with apt.llvm.org
+	# Yeah, this is ugly but I don't know how to do better
+	if test "$(LLVM_VERSION)" = "18"; then \
+		if echo $(LLVM_VERSION_SNAPSHOT)| grep -q "~++"; then \
+		sed -i -e "s| (<< 1:18.1.8-9)|(<< 1:18.1.8~++20240830304741)|g" debian/control; \
+		sed -i -e "s| (<< 1:18.1.8-9)|(<< 1:18.1.8~++20240830304741)|g" debian/control; \
+		fi; \
+	fi
 
 	# llvm-spirv was found, so we can enable *.spv files. Debian
 	# buster and Ubuntu 18.04 don't have llvm-spirv to create the
@@ -602,6 +703,13 @@ preconfigure:
 	if test "$(LIBCXX_WASM_ENABLE)" = "no"; then \
 		echo "" > debian/libc++-$(LLVM_VERSION)-dev-wasm32.install; \
 		echo "" > debian/libc++abi-$(LLVM_VERSION)-dev-wasm32.install; \
+	else \
+		if ! dpkg -l|grep -q wasi-libc; then \
+			echo "Could not find wasi-libc on the system"; \
+			echo "Please check that the package is available on the system"; \
+			echo "it might be that the 'hello' package is installed by another constraint"; \
+			exit 1; \
+		fi; \
 	fi
 
 	# Conditionally enable install clangd grpc files
@@ -609,12 +717,23 @@ preconfigure:
 		sed -i -e "s|#grpc\ ||g" debian/libclang-$(LLVM_VERSION)-dev.install; \
 	fi
 
+	if ! dh_listpackages|grep -q clang-$(LLVM_VERSION); then \
+		echo "Could not find clang-$(LLVM_VERSION) in the list of packages"; \
+		echo "Refresh debian/control ?"; \
+		echo "Package list:"; \
+		dh_listpackages; \
+		exit 1; \
+	fi
+	@mkdir -p stamps
+	touch $@
+
 # Override this two targets. They are trying to manage the .in conversion for me
 override_dh_ocamlinit:
 override_dh_ocamlclean:
 override_dh_ocaml:
 
-override_dh_auto_configure: preconfigure
+override_dh_auto_configure: stamps/configure
+stamps/configure: stamps/preconfigure
 ifeq (${SCCACHE_ENABLE},yes)
 	ls -al $(SCCACHE_PATH)*
 endif
@@ -660,8 +779,13 @@ endif
 ifeq (${SCCACHE_ENABLE},yes)
 # Just in case...
 	$(SCCACHE_CMD) --stop-server||true
+ifneq (,$(filter $(DEB_HOST_ARCH),i386 amd64))
 # Start the sccache server with the right set of options to use GCP
 	SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_GCS_KEY_PATH=$(SCCACHE_PATH)/secret-gcp-storage.json SCCACHE_GCS_BUCKET=apt-llvm-org-sccache SCCACHE_GCS_RW_MODE=READ_WRITE $(SCCACHE_CMD) --start-server
+else
+# on s390x machine, use a local cache
+	SCCACHE_CACHE_SIZE=20G SCCACHE_LOG=sccache=debug SCCACHE_ERROR_LOG=$(SCCACHE_PATH)/sccache.log SCCACHE_DIR=/opt/sccache/cache/ SCCACHE_DIRECT=true $(SCCACHE_CMD) --start-server
+endif
 endif
 	echo "Running tests: $(RUN_TEST)"
 	echo "Using cmake: $(CMAKE_BIN)"; \
@@ -698,7 +822,6 @@ endif
 	-DCOMPILER_RT_INCLUDE_TESTS=OFF \
 	-DCOMPILER_RT_USE_LIBCXX=OFF \
 	-DCOMPILER_RT_USE_BUILTINS_LIBRARY=$(COMPILER_RT_USE_BUILTINS_LIBRARY) \
-	-DLIBUNWIND_USE_COMPILER_RT=ON \
 	-DLIBUNWIND_INSTALL_LIBRARY=OFF \
 	-DLIBCXXABI_ENABLE_EXCEPTIONS=$(LIBCXX_EXCEPTIONS) \
 	-DLIBCXXABI_USE_COMPILER_RT=$(LIBCXX_USE_COMPILER_RT) \
@@ -709,6 +832,8 @@ endif
 	-DLIBCXX_STATICALLY_LINK_ABI_IN_STATIC_LIBRARY=ON \
 	-DLIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY=OFF \
 	-DLIBCXX_INSTALL_LIBRARY=OFF \
+	-DLIBCXX_INSTALL_MODULES=ON \
+	-DBOOTSTRAP_LIBCXX_INSTALL_MODULES=ON \
 	-DOPENMP_ENABLE_LIBOMP_PROFILING=OFF \
 	-DOPENMP_ENABLE_LIBOMPTARGET_PROFILING=OFF \
 	-DLIBOMP_ENABLE_RTTI=OFF \
@@ -719,7 +844,7 @@ endif
 	-DRUNTIMES_CMAKE_ARGS="-DCMAKE_C_FLAGS=$(STAGE_1_CFLAGS);-DCMAKE_CXX_FLAGS=$(STAGE_1_CXXFLAGS);-DCMAKE_EXE_LINKER_FLAGS=$(STAGE_1_LDFLAGS);-DCMAKE_SHARED_LINKER_FLAGS=$(STAGE_1_LDFLAGS);-DCMAKE_MODULE_LINKER_FLAGS=$(STAGE_1_LDFLAGS);-DCMAKE_BUILD_TYPE=Release;-DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF" \
 	-DCLANG_ENABLE_BOOTSTRAP=ON \
 	-DCLANG_BOOTSTRAP_TARGETS="$(ENABLED_STAGE2_CMAKE_BUILD_TARGETS)" \
-	-DCLANG_BOOTSTRAP_PASSTHROUGH="CMAKE_INSTALL_PREFIX;CMAKE_SUPPRESS_REGENERATION;ENABLE_LINKER_BUILD_ID;LLVM_ENABLE_PIC;LLVM_ENABLE_RTTI;LLVM_INCLUDE_GO_TESTS;LLVM_USE_RELATIVE_PATHS_IN_FILES;CLANG_DEFAULT_LINKER;CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_RTLIB;COMPILER_RT_USE_LIBCXX;COMPILER_RT_USE_BUILTINS_LIBRARY;COMPILER_RT_INCLUDE_TESTS;LIBUNWIND_USE_COMPILER_RT;LIBCXXABI_ENABLE_EXCEPTIONS;LIBCXXABI_USE_COMPILER_RT;LIBCXX_USE_COMPILER_RT;LIBCXX_ENABLE_EXCEPTIONS;LIBCXX_ENABLE_STATIC_ABI_LIBRARY;LIBCXX_STATICALLY_LINK_ABI_IN_STATIC_LIBRARY;LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY;LIBOMP_ENABLE_RTTI;LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN;CLANG_FORCE_MATCHING_LIBCLANG_SOVERSION" \
+	-DCLANG_BOOTSTRAP_PASSTHROUGH="CMAKE_INSTALL_PREFIX;CMAKE_SUPPRESS_REGENERATION;ENABLE_LINKER_BUILD_ID;LLVM_ENABLE_PIC;LLVM_ENABLE_RTTI;LLVM_INCLUDE_GO_TESTS;LLVM_USE_RELATIVE_PATHS_IN_FILES;CLANG_DEFAULT_LINKER;CLANG_DEFAULT_CXX_STDLIB;CLANG_DEFAULT_RTLIB;COMPILER_RT_USE_LIBCXX;COMPILER_RT_USE_BUILTINS_LIBRARY;COMPILER_RT_DEFAULT_TARGET_ONLY;COMPILER_RT_INCLUDE_TESTS;LIBUNWIND_USE_COMPILER_RT;LIBCXXABI_ENABLE_EXCEPTIONS;LIBCXXABI_USE_COMPILER_RT;LIBCXX_USE_COMPILER_RT;LIBCXX_ENABLE_EXCEPTIONS;LIBCXX_ENABLE_STATIC_ABI_LIBRARY;LIBCXX_STATICALLY_LINK_ABI_IN_STATIC_LIBRARY;LIBCXX_STATICALLY_LINK_ABI_IN_SHARED_LIBRARY;LIBOMP_ENABLE_RTTI;LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN;CLANG_FORCE_MATCHING_LIBCLANG_SOVERSION;CMAKE_C_COMPILER_LAUNCHER;CMAKE_CXX_COMPILER_LAUNCHER;LLVM_EXPERIMENTAL_TARGETS_TO_BUILD" \
 	-DBOOTSTRAP_CMAKE_BUILD_TYPE=RelWithDebInfo \
 	-DBOOTSTRAP_CMAKE_C_FLAGS_RELWITHDEBINFO="$(opt_flags)" \
 	-DBOOTSTRAP_CMAKE_CXX_FLAGS_RELWITHDEBINFO="$(opt_flags)" \
@@ -754,10 +879,15 @@ endif
 		echo "mismatch of version. Found: $$FOUND_VERSION / Expected: $(LLVM_VERSION_FULL)"; \
 		exit 1; \
 	fi
+	@mkdir -p stamps
+# Detect the triple
+	TRIPLE=`grep ^LLVM_DEFAULT_TARGET_TRIPLE build-llvm/CMakeCache.txt|cut -d= -f2`; \
+	sed -i -e "s|@DEB_HOST_MULTIARCH_LLVM@|$$TRIPLE|g" debian/*.links
+	touch $@
 
 VERBOSE=-v
 
-debian-full-build:
+stamps/debian-full-build:
 	echo "Using cmake: $(CMAKE_BIN)"
 # linker hack so stage2 can link against stage1 libs at runtime
 	LD_LIBRARY_PATH=$(STAGE_1_LIB_DIR):$$LD_LIBRARY_PATH \
@@ -780,7 +910,7 @@ debian-full-build:
 	fi
 	touch $@
 
-debian-libfuzzer-build:
+stamps/debian-libfuzzer-build:
 ifeq (${LIBFUZZER_ENABLE},yes)
 	cd $(TARGET_BUILD); \
 	CFLAGS="$(opt_flags) $(STAGE_2_CFLAGS)"; \
@@ -792,7 +922,9 @@ ifeq (${LIBFUZZER_ENABLE},yes)
 endif
 	touch $@
 
-debian-libclc-build:
+stamps/debian-libclc-build:
+# workaround missing files on i386
+	cd $(TARGET_BUILD_STAGE2) && ninja opt llvm-link llvm-as
 # Builds libclc
 	mkdir -p libclc/build
 	echo "Using cmake: $(CMAKE_BIN)"
@@ -820,8 +952,8 @@ endif
 	touch $@
 
 # Remove some new flags introduced by dpkg 1.22.0;
-STAGE_2_WASM_CFLAGS := $(shell echo $(STAGE_2_CFLAGS) | sed -e "s/-fcf-protection//g")
-STAGE_2_WASM_CXXFLAGS := $(shell echo $(STAGE_2_CXXFLAGS) | sed -e "s/-fcf-protection//g")
+STAGE_2_WASM_CFLAGS := $(filter-out -march=% -mfpu=% -fcf-protection% -mbranch-protection%, $(STAGE_2_CFLAGS))
+STAGE_2_WASM_CXXFLAGS := $(filter-out -march=% -mfpu=% -fcf-protection% -mbranch-protection%, $(STAGE_2_CXXFLAGS))
 
 build-wasm/compiler-rt-%: cpu = $(@:build-wasm/compiler-rt-%=%)
 build-wasm/compiler-rt-%:
@@ -934,19 +1066,20 @@ build-wasm/libcxx-%-wasi: build-wasm/compiler-rt-%
 		-DLIBCXXABI_ENABLE_THREADS:BOOL=OFF \
 		-DLIBCXXABI_HAS_PTHREAD_API:BOOL=OFF \
 		-DLIBCXXABI_HAS_EXTERNAL_THREAD_API:BOOL=OFF \
-		-DLIBCXXABI_BUILD_EXTERNAL_THREAD_LIBRARY:BOOL=OFF
+		-DLIBCXXABI_BUILD_EXTERNAL_THREAD_LIBRARY:BOOL=OFF \
+		-DLIBCXXABI_USE_LLVM_UNWINDER:BOOL=OFF
 	ninja -C "$@" -j $(NJOBS) $(VERBOSE)
 endif
 
 # Build compiler-rt for wasm32 and wasm64. Build libcxx only for wasm32, as
 # libcxx requires wasi-libc, which only exists for wasm32 right now.
-debian-wasm-build: \
+stamps/debian-wasm-build: \
   build-wasm/compiler-rt-wasm32 \
   build-wasm/libcxx-wasm32-wasi \
   build-wasm/compiler-rt-wasm64
 	touch $@
 
-sccache-stats:
+stamps/sccache-stats:
 # If we used sccache, shows stats
 	if test -f $(SCCACHE_CMD); then \
 		ls -al $(SCCACHE_PATH)/; \
@@ -957,16 +1090,21 @@ sccache-stats:
 	touch $@
 
 override_dh_auto_build: \
-  debian-full-build \
-  debian-libfuzzer-build \
-  $(if $(filter libclc-%, $(shell dh_listpackages)),debian-libclc-build) \
-  $(if $(filter %-wasm32 %-wasm64, $(shell dh_listpackages)),debian-wasm-build) \
-  sccache-stats
+  stamps/debian-full-build \
+  stamps/debian-libfuzzer-build \
+  $(if $(filter libclc-%, $(packages)),stamps/debian-libclc-build) \
+  $(if $(filter %-wasm32 %-wasm64, $(packages)),stamps/debian-wasm-build) \
+  stamps/sccache-stats
 
-override_dh_prep: build_doc
+override_dh_prep: stamps/build_doc
 	dh_prep
 
-build_doc:
+ifeq ($(DOC_GENERATION), no)
+stamps/build_doc:
+	mkdir -p $(TARGET_BUILD)/tools/clang/stage2-bins/docs/ocamldoc/html/
+	@echo "Don't build doc on this distro $(DISTRO)"
+else
+stamps/build_doc:
 	BUILDDIR="_build"; \
 	ALLSPHINXOPTS="-d $$BUILDDIR/doctrees ."; \
 	cd $(CURDIR)/llvm/docs && \
@@ -1018,7 +1156,7 @@ endif
 		echo "Generating manpage of $$f"; \
 		LD_LIBRARY_PATH=$(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/:/usr/lib/*/libfakeroot help2man --no-info --version-string=$(LLVM_VERSION) $(TARGET_BUILD_STAGE2)/bin/$$f > debian/man/$$f-$(LLVM_VERSION).1 || true; \
 	done
-	# Create the following directory regardless as libomp-16-doc
+	# Create the following directory regardless as libomp-XX-doc
 	# is Architecture: all
 	mkdir -p openmp/runtime/doc/doxygen/generated/html/
 
@@ -1027,6 +1165,7 @@ endif
 		cd openmp/runtime/doc/doxygen/generated/html/ && rm jquery.js && ln -s /usr/share/javascript/jquery/jquery.js; \
 	fi
 	touch $@
+endif
 
 override_dh_auto_install:
 	# Clean up temporary files to make sure the install works
@@ -1034,6 +1173,16 @@ override_dh_auto_install:
 
 	# install/fast enables a make install without recompiling temporary files
 	LD_LIBRARY_PATH=$(STAGE_2_LIB_DIR):$$LD_LIBRARY_PATH DESTDIR=$(DEB_INST)/ ninja -C $(TARGET_BUILD) $(VERBOSE) stage2-install
+
+	# Move libLLVM to /usr/lib/TRIPLE/libLLVM-XX.so.1 to make it multiarch ready
+	mkdir -p $(DEB_INST)/usr/lib/$(DEB_HOST_MULTIARCH)/; \
+	mv $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM-$(LLVM_VERSION).so.1 $(DEB_INST)/usr/lib/$(DEB_HOST_MULTIARCH)/; \
+	mv $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM-$(LLVM_VERSION).so.$(LLVM_VERSION).1 $(DEB_INST)/usr/lib/$(DEB_HOST_MULTIARCH)/
+
+	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/libLLVM-$(LLVM_VERSION).so
+	cd $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/; \
+	ln -s ../../$(DEB_HOST_MULTIARCH)/libLLVM-$(LLVM_VERSION).so.1 libLLVM-$(LLVM_VERSION).so; \
+	ln -s ../../$(DEB_HOST_MULTIARCH)/libLLVM-$(LLVM_VERSION).so.1 libLLVM-$(LLVM_VERSION).so.1
 
 	# Not used on Linux.
 	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/bin/argdumper
@@ -1049,7 +1198,7 @@ override_dh_auto_install:
 
 	# Only run on executable, not script
 	chrpath -d `find $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/bin/ -type f -executable -exec file -i '{}' \; | grep 'x-executable; charset=binary'|cut -d: -f1`
-ifeq (,$(filter $(DEB_HOST_ARCH), powerpc powerpcspe sparc sparc64))
+ifeq (,$(filter $(DEB_HOST_ARCH), powerpc powerpcspe))
 ifneq (,$(filter $(DEB_HOST_ARCH_OS),linux))
 	# To fix custom-library-search-path
 	chrpath -d $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/clang/$(LLVM_VERSION)*/lib/linux/*.so
@@ -1057,13 +1206,13 @@ endif
 endif
 
 	if test "$(LIBUNWIND_ENABLE)" = yes; then \
-		mkdir -p debian/tmp/usr/include/libunwind; \
-		cp -R libunwind/include/* debian/tmp/usr/include/libunwind/; \
+		mkdir -p $(DEB_INST)/usr/include/libunwind; \
+		cp -R libunwind/include/* $(DEB_INST)/usr/include/libunwind/; \
 	fi
 
 	: # libomp
 	if test "$(OPENMP_ENABLE)" = yes; then \
-		cd debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib; \
+		cd $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib; \
 		ln -s libomp.so.$(SONAME_OPENMP) libomp.so; \
 		cp libomp.so.$(SONAME_OPENMP) libomp-$(LLVM_VERSION).so.$(SONAME_OPENMP); \
 	fi
@@ -1080,6 +1229,11 @@ ifeq (${LIBFUZZER_ENABLE},yes)
 	mkdir -p $(CURDIR)/debian/libfuzzer-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/
 	cp -v $(TARGET_BUILD)/libFuzzer.a $(CURDIR)/debian/libfuzzer-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/
 endif
+
+# Because of hurd, we are more flexible in what we include in libclang-X.Y-rt
+# but we don't want to install wasi files into libclang-rt as they have their own package
+# So, we remove this directory from the package
+	rm -f $(CURDIR)/debian/libclang-rt-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/wasi/
 
 # Create this fake directory to make the install libclang-common-dev happy
 # under the unsupported archs of compiler-rt
@@ -1107,7 +1261,7 @@ endif
 	$(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/build/utils/lit/lit/*/__pycache__/
 
 	# workaround issue https://github.com/llvm/llvm-project/issues/57101
-	find debian/tmp -iname 'libbolt_rt*.a' -path '*/build-llvm/*' -delete
+	find $(DEB_INST) -iname 'libbolt_rt*.a' -path '*/build-llvm/*' -delete
 	# Remove an osx file
 	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/libbolt_rt_instr_osx.a
 
@@ -1166,7 +1320,7 @@ endif
 	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/include/llvm/Support/LICENSE.TXT
 
 # Disable CMake's package validation checks for target files that we may remove.
-	sed -i '/_IMPORT_CHECK_TARGETS \(Polly\|sancov\|llvm-omp-device-info\|omptarget\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
+	sed -i '/_IMPORT_CHECK_TARGETS \(Polly\|sancov\|llvm-omp-device-info\|omptarget\|omp\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
 
 # Also disable mlir-* checks in the cmake
 	sed -i '/_IMPORT_CHECK_TARGETS \(mlir-\|MLIR\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake
@@ -1174,13 +1328,10 @@ endif
 	sed -i '/_cmake_import_check_files_for_.*\/bin\/.*/ {s|^|#|}'  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 	sed -i '/_IMPORT_CHECK_FILES_FOR_.*\/bin\/.*/ {s|^|#|}'  $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 	sed -i '/_IMPORT_CHECK_FILES_FOR_\(mlir-\|Polly\|MLIR\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
-	sed -i '/_cmake_import_check_files_for_\(mlir\|Polly\|MLIR\|omptarget\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
+	sed -i '/_cmake_import_check_files_for_\(mlir\|Polly\|MLIR\|omp\|omptarget\)/ {s|^|#|}' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/llvm/LLVMExports-*.cmake $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 
 # Disable CMake's package validation checks for binaries that may not be installed
 	sed -i 's|.*_IMPORT_CHECK_FILES_FOR_.*/bin/.*)|#&|' $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
-
-# Adjust to the existing symlink. See #994827
-	sed -i "s|libclang-$(LLVM_VERSION).so.$(LLVM_VERSION).*\"|libclang-$(LLVM_VERSION).so.1\"|" $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/clang/ClangTargets-*.cmake
 
 # Managed in python*-lldb-X.Y.links.in
 	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/python*/*-packages/lldb/_lldb.so
@@ -1196,9 +1347,14 @@ endif
 	fi
 
 	mkdir -p $(CURDIR)/debian/usr/share/doc/llvm-$(LLVM_VERSION)-doc/ $(CURDIR)/debian/usr/share/doc/clang-$(LLVM_VERSION)-doc/
-	cp -R $(TARGET_BUILD_STAGE2)/docs/html $(CURDIR)/debian/usr/share/doc/llvm-$(LLVM_VERSION)-doc/
-	cp -R $(TARGET_BUILD_STAGE2)/tools/clang/docs/html $(CURDIR)/debian/usr/share/doc/clang-$(LLVM_VERSION)-doc/
-	cp -R $(TARGET_BUILD_STAGE2)/tools/clang/tools/extra/docs/html $(CURDIR)/debian/usr/share/doc/clang-$(LLVM_VERSION)-doc/clang-extra
+	if test "$(DOC_GENERATION)" = yes; then \
+		cp -R $(TARGET_BUILD_STAGE2)/docs/html $(CURDIR)/debian/usr/share/doc/llvm-$(LLVM_VERSION)-doc/; \
+		cp -R $(TARGET_BUILD_STAGE2)/tools/clang/docs/html $(CURDIR)/debian/usr/share/doc/clang-$(LLVM_VERSION)-doc/; \
+		cp -R $(TARGET_BUILD_STAGE2)/tools/clang/tools/extra/docs/html $(CURDIR)/debian/usr/share/doc/clang-$(LLVM_VERSION)-doc/clang-extra; \
+	else \
+		mkdir -p llvm/docs/_build/html clang/docs/_build/html/ tools/clang/tools/extra/docs/html openmp/runtime/doc/doxygen/generated/html/ debian/man/ clang/docs/_build/man/ llvm/docs/_build/man/; \
+		rm debian/*$(LLVM_VERSION)*manpages; \
+	fi
 
 # Rename OCaml bindings
 	if test "$(OCAML_ENABLE)" = yes; then \
@@ -1222,25 +1378,33 @@ endif
 
 # Disable the python binding for buster. not sure why it regressed
 # regressed de4364f1ecaa..0745b0c0354a
-	if test "$(DISTRO)" = "buster" -o "$(DISTRO)" = "bionic" -o "$(DEB_HOST_ARCH)" = "mips64el"; then \
+	if test "$(DISTRO)" = "buster" -o "$(DEB_HOST_ARCH)" = "mips64el"; then \
 		mkdir -p $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/share/gdb/python/ompd/; \
 		touch $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/share/gdb/python/ompd/empty; \
 	fi
 	if test "$(LLDB_PYTHON_ENABLE)" = no; then \
 		echo "" > debian/python3-lldb-$(LLVM_VERSION).install; \
 	fi
+# if libc isn't built, remove what we want to install
+	if test "$(LIBC_ENABLE)" = no; then \
+		echo "" > debian/libllvmlibc-$(LLVM_VERSION)-dev.install; \
+	fi
+
+# Remove some mlir example
+	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/libMyExtensionCh*.a
 
 # Delete the target build directory to save some space on the build systems
 # All the files have been installed in $(CURDIR)/debian/tmp/ already
 	rm -rf $(TARGET_BUILD)
+# FIXME: why a stamp for dh_override_install ?
 	touch $@
 
 
 override_dh_makeshlibs:
-	dh_makeshlibs -plibclang$(SONAME_EXT)-$(LLVM_VERSION)t64
-	dh_makeshlibs -pliblldb-$(LLVM_VERSION)t64
-	dh_makeshlibs -plibllvm$(LLVM_VERSION)t64
-	dh_makeshlibs -plibomp$(SONAME_OPENMP)-$(LLVM_VERSION)t64
+	dh_makeshlibs -plibclang$(SONAME_EXT)-$(LLVM_VERSION)
+	dh_makeshlibs -pliblldb-$(LLVM_VERSION)
+	dh_makeshlibs -plibllvm$(LLVM_VERSION)
+	dh_makeshlibs -plibomp$(SONAME_OPENMP)-$(LLVM_VERSION)
 	dh_makeshlibs --remaining-packages -V
 
 override_dh_shlibdeps:
@@ -1261,10 +1425,10 @@ override_dh_strip:
 	find $(TARGET_BUILD) -name '*.o' -o -name '*.a' -type f | xargs -r rm -f
 ifeq (0, $(strip $(shell dpkg --compare-versions $(DH_VERSION) ge 9.20160114; echo $$?)))
 	: # If we don't have the right version of debhelper, don't run the option
-	dh_strip -p libclang$(SONAME_EXT)-$(LLVM_VERSION)t64 --dbgsym-migration='libclang$(SONAME_EXT)-$(LLVM_VERSION)t64-dbg'
-	dh_strip -p libllvm$(LLVM_VERSION)t64 --dbgsym-migration='libllvm$(LLVM_VERSION)t64-dbg'
-	dh_strip -p liblldb-$(LLVM_VERSION)t64 --dbgsym-migration='liblldb-$(LLVM_VERSION)t64-dbg'
-	dh_strip -p libomp$(SONAME_OPENMP)-$(LLVM_VERSION)t64 --dbgsym-migration='libomp$(SONAME_OPENMP)-$(LLVM_VERSION)t64-dbg'
+	dh_strip -p libclang$(SONAME_EXT)-$(LLVM_VERSION) --dbgsym-migration='libclang$(SONAME_EXT)-$(LLVM_VERSION)-dbg'
+	dh_strip -p libllvm$(LLVM_VERSION) --dbgsym-migration='libllvm$(LLVM_VERSION)-dbg'
+	dh_strip -p liblldb-$(LLVM_VERSION) --dbgsym-migration='liblldb-$(LLVM_VERSION)-dbg'
+	dh_strip -p libomp$(SONAME_OPENMP)-$(LLVM_VERSION) --dbgsym-migration='libomp$(SONAME_OPENMP)-$(LLVM_VERSION)-dbg'
 endif
 # ifeq (${LLD_ENABLE},yes)
 # 	PATH=$(CURDIR)/:$$PATH dh_strip -p liblld-$(LLVM_VERSION) --dbg-package=liblld-$(LLVM_VERSION)-dbg
@@ -1295,18 +1459,18 @@ endif
 override_dh_install:
 ifeq (${POLLY_ENABLE},yes)
 # only for arch:any builds
-ifneq (,$(filter libpolly-$(LLVM_VERSION)-dev, $(shell dh_listpackages)))
+ifneq (,$(filter libpolly-$(LLVM_VERSION)-dev, $(packages)))
 	dh_install -p libpolly-$(LLVM_VERSION)-dev usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly/*.cmake usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly
 # On old Debian & Ubuntu, removing the files is necessary
-	rm -rf debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly/*.cmake
+	rm -rf $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly/*.cmake
 else
-	rm -rf $(CURDIR)/debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly/*.cmake
+	rm -rf $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/cmake/polly/*.cmake
 endif
 endif
-	dh_install --fail-missing
+	dh_install --fail-missing ${skip_packages}
 # Move the libc++ abi files from libc++ to libc++-abi for the wasm32 packages
 # These packages are arch: all, so only do so when the packages are built
-ifneq (,$(filter libc++-$(LLVM_VERSION)-dev-wasm32, $(shell dh_listpackages)))
+ifneq (,$(filter libc++-$(LLVM_VERSION)-dev-wasm32, $(packages)))
 	mkdir -p $(CURDIR)/debian/libc++abi-$(LLVM_VERSION)-dev-wasm32/usr/lib/llvm-$(LLVM_VERSION)/include/wasm32-wasi/c++/v1
 	if test -f $(CURDIR)/debian/libc++-$(LLVM_VERSION)-dev-wasm32/usr/lib/llvm-$(LLVM_VERSION)/include/wasm32-wasi/c++/v1/__cxxabi_config.h; then \
 		mv $(CURDIR)/debian/libc++-$(LLVM_VERSION)-dev-wasm32/usr/lib/llvm-$(LLVM_VERSION)/include/wasm32-wasi/c++/v1/__cxxabi_config.h \
@@ -1320,19 +1484,19 @@ endif
 # So, we remove this directory from the package
 	rm -fr $(CURDIR)/debian/libclang-rt-$(LLVM_VERSION)-dev/usr/lib/llvm-$(LLVM_VERSION)/lib/clang/$(LLVM_VERSION)/lib/wasi/
 
-repack_a_llvm_ir:
-ifeq (${LTO_ENABLE},yes)
+stamps/repack_a_llvm_ir:
+ifeq (${THINLTO_ENABLE},yes)
 # with LTO, .a contains llvm ir instead of native code. So, recompile them
 	NJOBS="$(NJOBS)" P_TO_LLVM="$(CURDIR)" VERSION=$(LLVM_VERSION) bash -v debian/llvm-compile-lto-elf.sh $(CXXFLAGS_EXTRA)
 endif
 	touch $@
 
 
-override_dh_installdeb: repack_a_llvm_ir
+override_dh_installdeb: stamps/repack_a_llvm_ir
 # Managed by the package
 	dh_installdeb -a
 
-	rm -f $(CURDIR)/debian/tmp/usr/lib/llvm-$(LLVM_VERSION)/lib/python*/*-packages/lldb/__init__.pyc $(CURDIR)/debian/python*-lldb-$(LLVM_VERSION)/usr/lib/llvm-$(LLVM_VERSION)/lib/python*/*-packages/lldb/__init__.pyc
+	rm -f $(DEB_INST)/usr/lib/llvm-$(LLVM_VERSION)/lib/python*/*-packages/lldb/__init__.pyc $(CURDIR)/debian/python*-lldb-$(LLVM_VERSION)/usr/lib/llvm-$(LLVM_VERSION)/lib/python*/*-packages/lldb/__init__.pyc
 	rm -f $(CURDIR)/debian/clang-$(LLVM_VERSION)-examples/usr/share/doc/clang-$(LLVM_VERSION)-examples/examples/*Make*
 
 # the openmp header files moved to the same path as lib clang headers.
@@ -1371,14 +1535,16 @@ ifeq (${LLD_ENABLE},yes)
 	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-lld || true
 endif
 
-# Sanitizer
-	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-sanitizer || true
+# Cxx
+	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-cxx || true
 
-# Libcxx
-	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-libcxx || true
+# Libc
+ifeq (${LIBC_ENABLE},yes)
+	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-libc || true
+endif
 
-# Libcxxabi
-	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-libcxxabi || true
+# Cxxabi
+	ninja $(VERBOSE) -C $(TARGET_BUILD_STAGE2) check-cxxabi || true
 
 # MLIR
 ifeq (,$(filter $(DEB_HOST_ARCH), armel armhf i386 x32))
@@ -1431,8 +1597,11 @@ override_dh_auto_test:
 endif
 
 
-override_dh_gencontrol: sccache-stats
-	dh_gencontrol -- $(control_vars)
+override_dh_builddeb:
+	dh_builddeb ${skip_packages}
+
+override_dh_gencontrol: stamps/sccache-stats
+	dh_gencontrol ${skip_packages} -- $(control_vars)
 
 
 override_dh_auto_clean:
@@ -1463,6 +1632,7 @@ override_dh_auto_clean:
 	: # for some reason, the docs are written to debian/usr and debian/man ...
 	rm -rf debian/usr debian/man
 	: # remove extra stamps
-	rm -f debian-*-build override_dh_auto_install sccache-stats build_doc
+	rm -f override_dh_auto_install
+	rm -rf stamps
 
 .PHONY: override_dh_strip preconfigure

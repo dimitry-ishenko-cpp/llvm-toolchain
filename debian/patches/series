@@ -35,7 +35,6 @@ silent-more-tests.diff
 silent-MCJIIT-tests.diff
 silent-gold-utils.diff
 silent-test-failing-codeverage.diff
-silent-amd-tet.diff
 silent-test-macho.diff
 silent-llvm-isel-fuzzer.diff
 remove-test-freezing.diff
@@ -53,7 +52,6 @@ fix-scan-view-path.diff
 # lldb
 lldb/lldb-addversion-suffix-to-llvm-server-exec.patch
 lldb/lldb-missing-install.diff
-lldb/lldb-disable-swig-error.diff
 
 # Fix arch issue
 disable-error-xray.diff
@@ -123,6 +121,7 @@ lower-python-dep.diff
 scan-build-py-fix-default-bin.diff
 
 omp-riscv64.patch
+lldb/test-disable-lldb-i386.diff
 unbreak-atomic-mips.diff
 llvm-fix-lld-linker-check.diff
 openmp-fix-runtimes-build.diff
@@ -135,6 +134,7 @@ protobuf_3.21.patch
 compiler-rt/compilerrt-builtins-arch-fix-armhf.diff
 compiler-rt/compilerrt-build-scudo-standalone-option.diff
 
+
 # wasm patches
 wasm/wasm-ld-path.diff
 wasm/wasm-compiler-rt-default.diff
@@ -145,14 +145,17 @@ unwind-force-pthread-dl.diff
 force-sse2-compiler-rt.diff
 bolt-disable-emit-relocs.patch
 link-grpc.diff
-
-amdgpu/nonlinux.patch
-ubuntu-releases.patch
-new-cmake-build-fix.patch
-HIP-search-path-fix.patch
-D158066-simd-ppc64el.patch
-
-D142688-loong64.diff
-remove-unused-imp-module.diff
+libclang-major-version-only.diff
+D148945-revert.diff
+arm32-defaults.diff
 libsanitizer-timebits.diff
-asan-allocator.diff
+ubuntu-releases.patch
+clang-record-gcc-switches-by-default.patch
+rename-libllvm.diff
+link-with-package-metadata.diff
+llvm-toolchain-17-sve-types-aux-target.diff
+env-lld-package-metadata.diff
+
+rv64-fix-PCREL_HI20-issue.diff
+rv64-fix-mm-leak.diff
+backport-miscompile-floating-point.diff
