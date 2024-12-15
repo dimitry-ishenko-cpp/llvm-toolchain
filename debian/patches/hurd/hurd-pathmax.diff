@@ -12,9 +12,9 @@ Index: llvm-toolchain-snapshot_18~++20230928085653+a7f962c00745/clang/lib/Basic/
 +#endif
 +
 +
- void FileManager::GetUniqueIDMapping(
-     SmallVectorImpl<OptionalFileEntryRef> &UIDToFiles) const {
-   UIDToFiles.clear();
+ void FileManager::invalidateCache(FileEntryRef Entry) {
+   assert(Entry && "Cannot invalidate a NULL FileEntry");
+   FileEntriesToReread.insert(Entry);
 Index: llvm-toolchain-snapshot_18~++20230928085653+a7f962c00745/lldb/include/lldb/lldb-defines.h
 ===================================================================
 --- llvm-toolchain-snapshot_18~++20230928085653+a7f962c00745.orig/lldb/include/lldb/lldb-defines.h
